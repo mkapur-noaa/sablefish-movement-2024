@@ -1,3 +1,16 @@
+#' Sablefish Movement Model Fit Parameter Summaries
+#'
+#' @name fits
+#' @keywords datasets
+NULL
+
+#' @rdname fits
+"fit_region_average_pooled"
+
+#' @rdname fits
+"fit_region_average_length"
+
+
 #' Sablefish Harvest Rates
 #'
 #' A dataset containing annual sablefish harvest rates for spatial strata
@@ -61,7 +74,7 @@
 #'
 "numbers_at_length"
 
-#' Sablefish Tags Released
+#' Sablefish Tags Recovered
 #'
 #' A dataset containing sablefish tags recovered by date, released length,
 #' and spatial stratum in the northeast Pacific Ocean.

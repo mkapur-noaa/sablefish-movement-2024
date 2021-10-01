@@ -3,9 +3,9 @@
 \docType{data}
 \name{tags_recovered}
 \alias{tags_recovered}
-\title{Sablefish Tags Released}
+\title{Sablefish Tags Recovered}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 114721 rows and 12 columns.
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 114721 rows and 13 columns.
 }
 \source{
 see https://github.com/luke-a-rogers/sablefish-data
