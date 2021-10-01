@@ -13,18 +13,22 @@ License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Imports: 
     dplyr,
     fs,
     ggplot2,
     here,
     magrittr,
+    mmmstan,
     readr,
     rlang,
     targets,
     tictoc,
     tidyr,
     usethis
+Remotes:
+    github::stan-dev/cmdstanr,
+    github::luke-a-rogers/mmmstan
 Depends: 
     R (>= 2.10)
