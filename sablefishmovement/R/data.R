@@ -10,6 +10,12 @@ NULL
 #' @rdname fits
 "fit_region_average_length"
 
+#' @rdname fits
+"fit_region_season_pooled"
+
+#' @rdname fits
+"fit_region_season_length"
+
 
 #' Sablefish Harvest Rates
 #'
