@@ -32,7 +32,6 @@
 #' @param tag_loss_rate_ongoing [numeric()]
 #' @param natural_mortality_rate [numeric()]
 #' @param reporting_rates [numeric()]
-#' @param random_walk [numeric()]
 #' @param movement_rate_fudge [numeric()]
 #' @param predicted_tags_fudge [numeric()]
 #' @param h_prior_mean [numeric()]
@@ -41,7 +40,6 @@
 #' @param phi_prior_sd [numeric()]
 #' @param sigma_prior_mean [numeric()]
 #' @param sigma_prior_sd [numeric()]
-#' @param liberty_limited [logical()]
 #' @param ... additional arguments to pass to cmdstanr \code{$sample()} method
 #'
 #' @importFrom rlang .data
@@ -52,8 +50,6 @@
 fit_movement_model <- function (spatial_name, # region, subregion, omregion
                                 temporal_name, # average, season, year
                                 grouping_name,  # pooled, length
-                                # Options
-                                liberty_limited = FALSE,
                                 # CmdStanR arguments
                                 chains,
                                 nuts_step_size,
@@ -87,7 +83,6 @@ fit_movement_model <- function (spatial_name, # region, subregion, omregion
                                 tag_loss_rate_ongoing,
                                 natural_mortality_rate,
                                 reporting_rates,
-                                random_walk,
                                 movement_rate_fudge = 1e-12,
                                 predicted_tags_fudge = 1e-12,
                                 h_prior_mean = NULL,
@@ -133,13 +128,21 @@ fit_movement_model <- function (spatial_name, # region, subregion, omregion
   # G_harvest
   harvest_group_max <- length(group_list)
   # T_study
-  if (liberty_limited) {
-    study_time_max <- released_time_max + liberty_time_max - 1L
-  } else {
+  if (released_time_max < liberty_time_max) {
     study_time_max <- liberty_time_max
+  } else {
+    study_time_max <- released_time_max + liberty_time_max - 1L
   }
   # T_year
   year_time_max <- unit_to_time(released_time_unit)
+
+  # Prepare random walk argument -----------------------------------------------
+
+  if (temporal_name == "year") {
+    random_walk <- 1L
+  } else {
+    random_walk <- 0L
+  }
 
   # Prepare harvest prior parameters -------------------------------------------
 
@@ -243,11 +246,11 @@ fit_movement_model <- function (spatial_name, # region, subregion, omregion
       each = year_time_max
     )[seq_len(study_time_max)]
   } else if (temporal_name == "season") {
-    harvest_time_index <- seq_len(harvest_time_max) %>%
+    harvest_time_index <- (seq_len(harvest_time_max) %>%
       rep(each = 5) %>%
       array(c(5, year_time_max, harvest_time_max / year_time_max)) %>%
       aperm(c(2, 1, 3)) %>%
-      as.vector()
+      as.vector())[seq_len(study_time_max)]
   } else if (temporal_name == "year") {
     harvest_time_index <- rep(
       x = seq_len(ceiling(study_time_max / year_time_max)),
