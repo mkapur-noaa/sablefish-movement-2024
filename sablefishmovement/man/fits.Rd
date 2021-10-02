@@ -4,12 +4,27 @@
 \name{fits}
 \alias{fits}
 \alias{fit_region_average_pooled}
+\alias{fit_region_average_length}
+\alias{fit_region_season_pooled}
+\alias{fit_region_season_length}
 \title{Sablefish Movement Model Fit Parameter Summaries}
 \format{
+An object of class \code{list} of length 4.
+
+An object of class \code{list} of length 4.
+
+An object of class \code{list} of length 4.
+
 An object of class \code{list} of length 4.
 }
 \usage{
 fit_region_average_pooled
+
+fit_region_average_length
+
+fit_region_season_pooled
+
+fit_region_season_length
 }
 \description{
 Sablefish Movement Model Fit Parameter Summaries

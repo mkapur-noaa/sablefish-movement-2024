@@ -8,7 +8,6 @@ fit_movement_model(
   spatial_name,
   temporal_name,
   grouping_name,
-  liberty_limited = FALSE,
   chains,
   nuts_step_size,
   iter_warmup,
@@ -38,7 +37,6 @@ fit_movement_model(
   tag_loss_rate_ongoing,
   natural_mortality_rate,
   reporting_rates,
-  random_walk,
   movement_rate_fudge = 1e-12,
   predicted_tags_fudge = 1e-12,
   h_prior_mean = NULL,
@@ -56,8 +54,6 @@ fit_movement_model(
 \item{temporal_name}{\code{\link[=character]{character()}}}
 
 \item{grouping_name}{\code{\link[=character]{character()}}}
-
-\item{liberty_limited}{\code{\link[=logical]{logical()}}}
 
 \item{chains}{\code{\link[=numeric]{numeric()}}}
 
@@ -116,8 +112,6 @@ fit_movement_model(
 \item{natural_mortality_rate}{\code{\link[=numeric]{numeric()}}}
 
 \item{reporting_rates}{\code{\link[=numeric]{numeric()}}}
-
-\item{random_walk}{\code{\link[=numeric]{numeric()}}}
 
 \item{movement_rate_fudge}{\code{\link[=numeric]{numeric()}}}
 
