@@ -28,6 +28,18 @@ NULL
 #' @rdname fits
 "fit_omregion_average_length"
 
+#' @rdname fits
+"fit_subregion_average_pooled"
+
+#' @rdname fits
+"fit_subregion_average_length"
+
+#' @rdname fits
+"fit_subregion_season_pooled"
+
+#' @rdname fits
+"fit_subregion_season_length"
+
 
 
 #' @rdname fits

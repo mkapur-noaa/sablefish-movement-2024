@@ -11,6 +11,10 @@
 \alias{fit_region_year_length}
 \alias{fit_omregion_average_pooled}
 \alias{fit_omregion_average_length}
+\alias{fit_subregion_average_pooled}
+\alias{fit_subregion_average_length}
+\alias{fit_subregion_season_pooled}
+\alias{fit_subregion_season_length}
 \alias{fit_region_average_pooled_h_prior_sd_001}
 \alias{fit_region_average_pooled_h_prior_sd_003}
 \alias{fit_region_average_pooled_h_prior_sd_030}
@@ -23,6 +27,14 @@
 \alias{fit_region_average_pooled_w_incr_cc_50_pct}
 \title{Sablefish Movement Model Fit Parameter Summaries}
 \format{
+An object of class \code{list} of length 4.
+
+An object of class \code{list} of length 4.
+
+An object of class \code{list} of length 4.
+
+An object of class \code{list} of length 4.
+
 An object of class \code{list} of length 4.
 
 An object of class \code{list} of length 4.
@@ -75,6 +87,14 @@ fit_region_year_length
 fit_omregion_average_pooled
 
 fit_omregion_average_length
+
+fit_subregion_average_pooled
+
+fit_subregion_average_length
+
+fit_subregion_season_pooled
+
+fit_subregion_season_length
 
 fit_region_average_pooled_h_prior_sd_001
 
