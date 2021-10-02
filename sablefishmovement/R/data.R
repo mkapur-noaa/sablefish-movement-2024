@@ -16,6 +16,50 @@ NULL
 #' @rdname fits
 "fit_region_season_length"
 
+#' @rdname fits
+"fit_region_year_pooled"
+
+#' @rdname fits
+"fit_region_year_length"
+
+#' @rdname fits
+"fit_omregion_average_pooled"
+
+#' @rdname fits
+"fit_omregion_average_length"
+
+
+
+#' @rdname fits
+"fit_region_average_pooled_h_prior_sd_001"
+
+#' @rdname fits
+"fit_region_average_pooled_h_prior_sd_003"
+
+#' @rdname fits
+"fit_region_average_pooled_h_prior_sd_030"
+
+#' @rdname fits
+"fit_region_average_pooled_h_prior_sd_100"
+
+#' @rdname fits
+"fit_region_average_pooled_w_decr_ak_33_pct"
+
+#' @rdname fits
+"fit_region_average_pooled_w_decr_bc_33_pct"
+
+#' @rdname fits
+"fit_region_average_pooled_w_decr_cc_33_pct"
+
+#' @rdname fits
+"fit_region_average_pooled_w_incr_ak_50_pct"
+
+#' @rdname fits
+"fit_region_average_pooled_w_incr_bc_50_pct"
+
+#' @rdname fits
+"fit_region_average_pooled_w_incr_cc_50_pct"
+
 
 #' Sablefish Harvest Rates
 #'

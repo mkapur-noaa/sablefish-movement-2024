@@ -7,8 +7,50 @@
 \alias{fit_region_average_length}
 \alias{fit_region_season_pooled}
 \alias{fit_region_season_length}
+\alias{fit_region_year_pooled}
+\alias{fit_region_year_length}
+\alias{fit_omregion_average_pooled}
+\alias{fit_omregion_average_length}
+\alias{fit_region_average_pooled_h_prior_sd_001}
+\alias{fit_region_average_pooled_h_prior_sd_003}
+\alias{fit_region_average_pooled_h_prior_sd_030}
+\alias{fit_region_average_pooled_h_prior_sd_100}
+\alias{fit_region_average_pooled_w_decr_ak_33_pct}
+\alias{fit_region_average_pooled_w_decr_bc_33_pct}
+\alias{fit_region_average_pooled_w_decr_cc_33_pct}
+\alias{fit_region_average_pooled_w_incr_ak_50_pct}
+\alias{fit_region_average_pooled_w_incr_bc_50_pct}
+\alias{fit_region_average_pooled_w_incr_cc_50_pct}
 \title{Sablefish Movement Model Fit Parameter Summaries}
 \format{
+An object of class \code{list} of length 4.
+
+An object of class \code{list} of length 4.
+
+An object of class \code{list} of length 4.
+
+An object of class \code{list} of length 4.
+
+An object of class \code{list} of length 4.
+
+An object of class \code{list} of length 4.
+
+An object of class \code{list} of length 4.
+
+An object of class \code{list} of length 4.
+
+An object of class \code{list} of length 4.
+
+An object of class \code{list} of length 4.
+
+An object of class \code{list} of length 4.
+
+An object of class \code{list} of length 4.
+
+An object of class \code{list} of length 4.
+
+An object of class \code{list} of length 4.
+
 An object of class \code{list} of length 4.
 
 An object of class \code{list} of length 4.
@@ -25,6 +67,34 @@ fit_region_average_length
 fit_region_season_pooled
 
 fit_region_season_length
+
+fit_region_year_pooled
+
+fit_region_year_length
+
+fit_omregion_average_pooled
+
+fit_omregion_average_length
+
+fit_region_average_pooled_h_prior_sd_001
+
+fit_region_average_pooled_h_prior_sd_003
+
+fit_region_average_pooled_h_prior_sd_030
+
+fit_region_average_pooled_h_prior_sd_100
+
+fit_region_average_pooled_w_decr_ak_33_pct
+
+fit_region_average_pooled_w_decr_bc_33_pct
+
+fit_region_average_pooled_w_decr_cc_33_pct
+
+fit_region_average_pooled_w_incr_ak_50_pct
+
+fit_region_average_pooled_w_incr_bc_50_pct
+
+fit_region_average_pooled_w_incr_cc_50_pct
 }
 \description{
 Sablefish Movement Model Fit Parameter Summaries
