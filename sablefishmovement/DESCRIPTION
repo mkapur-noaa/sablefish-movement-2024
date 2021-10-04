@@ -1,6 +1,6 @@
 Package: sablefishmovement
 Title: Northeast Pacific Sablefish Movement Analysis
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: 
     c(person(given = c("Luke", "A."),
              family = "Rogers",

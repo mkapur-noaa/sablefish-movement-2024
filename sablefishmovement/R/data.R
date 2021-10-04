@@ -41,6 +41,11 @@ NULL
 "fit_subregion_season_length"
 
 
+#' @rdname fits
+"fit_subregion_year_pooled"
+
+#' @rdname fits
+"fit_subregion_year_length"
 
 #' @rdname fits
 "fit_region_average_pooled_h_prior_sd_001"
