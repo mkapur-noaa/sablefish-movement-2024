@@ -1,3 +1,32 @@
+#' Convert Area Number Vector to Short Name Factor
+#'
+#' @param n [numeric()]
+#'
+#' @return [factor()]
+#' @export
+#'
+area_to_short <- function (n) {
+  if (max(n) == 3) {
+    short <- factor(
+      c("AK", "BC", "CC")[n],
+      levels = c("AK", "BC", "CC")
+    )
+  } else if (max(n) == 6) {
+    short <- factor(
+      c("WAK", "EAK", "NBC", "SBC", "NCC", "SCC")[n],
+      levels = c("WAK", "EAK", "NBC", "SBC", "NCC", "SCC")
+    )
+  } else if (max(n) == 10) {
+    short <- factor(
+      c("BS", "AI", "WG", "CG", "EG", "SE", "NB", "SB", "NC", "SC")[n],
+      levels = c("BS", "AI", "WG", "CG", "EG", "SE", "NB", "SB", "NC", "SC")
+    )
+  } else {
+    stop("max(n) must be 3, 6 or 10")
+  }
+  return(short)
+}
+
 #' Modulo Function
 #'
 #' @param a [numeric()] [vector()]
@@ -33,6 +62,42 @@ read_from_path <- function (path) {
   envir <- environment()
   data_name <- load(path, envir = envir)
   get(data_name)
+}
+
+#' Round to Character
+#'
+#' @param x [numeric()] Value to round
+#' @param digits [numeric] Number of digits
+#'
+#' @return [character()]
+#'
+round_to_character <- function (x, digits) {
+  y <- character(length = length(x))
+  ind_low <- which(x < 10^(-digits))
+  ind_high <- which(x >= 10^(-digits))
+  # Assign
+  y[ind_low] <- paste0("<", sub(".", "", 10^(-digits)))
+  y[ind_high] <- as.character(round(x[ind_high], digits))
+  # Return
+  y
+}
+
+#' Time To Label
+#'
+#' @param n [numeric()]
+#'
+#' @return [vector()]
+#' @export
+#'
+time_to_label <- function (n) {
+  if (max(n) == 4) {
+    label <- factor(
+      c("Jan-Mar", "Apr-Jun", "Jul-Sep", "Oct-Dec")[n],
+      levels = c("Jan-Mar", "Apr-Jun", "Jul-Sep", "Oct-Dec"))
+  } else {
+    label <- c(1979:2018)[n]
+  }
+  return(label)
 }
 
 #' Convert Released Time Unit To Time Steps Per Year

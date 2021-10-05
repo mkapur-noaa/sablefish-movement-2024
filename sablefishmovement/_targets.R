@@ -1435,5 +1435,6 @@ list(
       write_data(fit_region_average_pooled_w_incr_cc_50_pct)
     )
   ),
+  # Plot
   list()
 )
