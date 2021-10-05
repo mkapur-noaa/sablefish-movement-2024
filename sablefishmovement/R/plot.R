@@ -106,7 +106,7 @@ heat_map_matrix <- function (data,
     ggplot2::ylab(ylab) +
     ggplot2::labs(fill = legend_name) +
     # Theme
-    ggplot2::theme_void() +
+    ggplot2::theme_minimal() +
     ggplot2::theme(
       legend.position = ifelse(is.null(legend_name), "none", "bottom"),
       panel.grid.major = ggplot2::element_blank(),
@@ -183,4 +183,71 @@ point_movement <- function (data,
       panel.grid.minor = ggplot2::element_blank(),
       strip.background = ggplot2::element_rect(fill = "white")
     )
+}
+
+#' Plot Heat Map Composite Figure
+#'
+#' @param data1 [data.frame()]
+#' @param data2 [data.frame()]
+#'
+#' @return [character()] file path
+#' @export
+#'
+plot_heat_composite <- function (data1, data2) {
+
+  # Define plot name
+  name <- "heat-composite"
+
+  # Heat region average small
+  p1 <- heat_map_matrix(
+    data = data1,
+    released_group = 1,
+    margin_x = 0,
+    margin_y = 0,
+    legend_name = NULL
+  )
+
+  # Heat region average large
+  p2 <- heat_map_matrix(
+    data = data1,
+    released_group = 2,
+    ytext = FALSE,
+    margin_x = 0,
+    margin_y = 0,
+    legend_name = NULL
+  )
+
+  # Heat region composite
+  p3 <- ggpubr::ggarrange(
+    p1, p2,
+    ncol = 2
+  )
+
+  # Heat subregion average pooled
+  p4 <- heat_map_matrix(
+    data = data2,
+    margin_x = 0,
+    margin_y = 0,
+    legend_name = "Movement rate"
+  )
+
+  # Heat composite
+  p5 <- ggpubr::ggarrange(
+    p3, p4,
+    heights = c(1, 2),
+    nrow = 2,
+    common.legend = TRUE,
+    legend = "bottom"
+  ) +
+    ggplot2::theme(plot.background = ggplot2::element_rect(fill = "white"))
+
+  # Save ggplot
+  ggplot2::ggsave(
+    here::here("manuscript", "figs", paste0(name, ".png")),
+    width = 4,
+    height = 6
+  )
+
+  # Return path
+  return(paste0("manuscript/", "figs/", name, ".png"))
 }
