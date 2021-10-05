@@ -1436,5 +1436,197 @@ list(
     )
   ),
   # Plot
+  list(
+    tar_target(
+      plot_pres_heat_region_average_pooled,
+      pres_heat_pooled(
+        data = fit_region_average_pooled$p,
+        name = "pres-heat-region-average-pooled",
+        movement_time = 1,
+        released_group = 1,
+        xlab = NULL,
+        ylab = NULL,
+        xtext = TRUE,
+        ytext = TRUE,
+        margin_x = -5,
+        margin_y = -6,
+        font_size_mean = 3,
+        font_nudge_mean = 0.15,
+        font_size_sd = 2,
+        font_nudge_sd = 0.15,
+        legend_name = "Movement rate",
+        width = 3.5,
+        height = 3.5
+      ),
+      format = "file"
+    ),
+    tar_target(
+      plot_pres_heat_subregion_average_pooled,
+      pres_heat_pooled(
+        data = fit_subregion_average_pooled$p,
+        name = "pres-heat-subregion-average-pooled",
+        movement_time = 1,
+        released_group = 1,
+        xlab = NULL,
+        ylab = NULL,
+        xtext = TRUE,
+        ytext = TRUE,
+        margin_x = 0,
+        margin_y = 0,
+        font_size_mean = 3,
+        font_nudge_mean = 0.15,
+        font_size_sd = 2,
+        font_nudge_sd = 0.15,
+        legend_name = "Movement rate",
+        width = 4,
+        height = 4
+      ),
+      format = "file"
+    ),
+    tar_target(
+      plot_pres_heat_omregion_average_pooled,
+      pres_heat_pooled(
+        data = fit_omregion_average_pooled$p,
+        name = "pres-heat-omregion-average-pooled",
+        movement_time = 1,
+        released_group = 1,
+        xlab = NULL,
+        ylab = NULL,
+        xtext = TRUE,
+        ytext = TRUE,
+        margin_x = 0,
+        margin_y = 0,
+        font_size_mean = 3,
+        font_nudge_mean = 0.15,
+        font_size_sd = 2,
+        font_nudge_sd = 0.15,
+        legend_name = "Movement rate",
+        width = 3.5,
+        height = 3.5
+      ),
+      format = "file"
+    ),
+    tar_target(
+      plot_pres_heat_region_average_length,
+      pres_heat_length(
+        data = fit_region_average_length$p,
+        name = "pres-heat-region-average-length",
+        movement_time = 1,
+        released_group = c(1, 2),
+        xlab = NULL,
+        ylab = NULL,
+        xtext = TRUE,
+        ytext = TRUE,
+        margin_x = -5,
+        margin_y = -6,
+        font_size_mean = 3,
+        font_nudge_mean = 0.15,
+        font_size_sd = 2,
+        font_nudge_sd = 0.15,
+        legend_name = "Movement rate",
+        width = 5,
+        height = 3
+      ),
+      format = "file"
+    ),
+    tar_target(
+      plot_pres_point_region_year_length,
+      pres_point_movement(
+        data = fit_region_year_pooled$p,
+        name = "pres-point-region-year-length",
+        released_group = 1,
+        point_size = 0.5,
+        xlab = NULL,
+        ylab = NULL,
+        xlim = c(1977, 2020),
+        ylim = NULL,
+        width = 5,
+        height = 4
+      ),
+      format = "file"
+    ),
+    tar_target(
+      plot_pres_bar_region_quarter_pooled,
+      pres_bar_quarter(
+        data = fit_region_season_pooled$p,
+        name = "pres-bar-region-season-pooled",
+        released_group = 1,
+        xlab = "Quarter",
+        ylab = "Movement rate",
+        ylim = c(0.6, 1),
+        xtext = TRUE,
+        ytext = TRUE,
+        width = 5,
+        height = 3,
+        legend_name = "Region"
+      ),
+      format = "file"
+    ),
+    tar_target(
+      plot_pres_bar_region_quarter_length,
+      pres_bar_quarter(
+        data = fit_region_season_length$p,
+        name = "pres-bar-region-season-length",
+        released_group = 1:2,
+        xlab = "Quarter",
+        ylab = "Movement rate",
+        ylim = c(0, 1),
+        xtext = TRUE,
+        ytext = TRUE,
+        width = 5,
+        height = 6,
+        legend_name = "Region"
+      ),
+      format = "file"
+    ),
+    tar_target(
+      plot_pres_harvest_region_average_pooled,
+      pres_harvest(
+        data = fit_region_average_pooled$h,
+        name = "pres-harvest-region-average-pooled",
+        harvest_group = 1,
+        xlab = "Year",
+        ylab = "Harvest rate",
+        xlim = c(1979, 2020),
+        ylim = c(0, 0.2),
+        point_size = 0.8,
+        width = 5,
+        height = 4
+      ),
+      format = "file"
+    ),
+    tar_target(
+      plot_pres_harvest_region_average_length,
+      pres_harvest_length(
+        data = fit_region_average_length$h,
+        name = "pres-harvest-region-average-length",
+        harvest_group = c(1, 2),
+        xlab = "Year",
+        ylab = "Harvest rate",
+        xlim = c(1979, 2020),
+        ylim = c(0, 0.2),
+        point_size = 0.8,
+        width = 5,
+        height = 4
+      ),
+      format = "file"
+    ),
+    tar_target(
+      plot_pres_harvest_subregion_average_pooled,
+      pres_harvest(
+        data = fit_subregion_average_pooled$h,
+        name = "pres-harvest-subregion-average-pooled",
+        harvest_group = 1,
+        xlab = "Year",
+        ylab = "Harvest rate",
+        xlim = c(1979, 2020),
+        ylim = c(0, 0.25),
+        point_size = 0.8,
+        width = 5,
+        height = 6
+      ),
+      format = "file"
+    )
+  ),
   list()
 )
