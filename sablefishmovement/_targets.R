@@ -1530,10 +1530,10 @@ list(
       format = "file"
     ),
     tar_target(
-      plot_pres_point_region_year_length,
+      plot_pres_point_region_year_pooled,
       pres_point_movement(
         data = fit_region_year_pooled$p,
-        name = "pres-point-region-year-length",
+        name = "pres-point-region-year-pooled",
         released_group = 1,
         point_size = 0.5,
         xlab = NULL,
