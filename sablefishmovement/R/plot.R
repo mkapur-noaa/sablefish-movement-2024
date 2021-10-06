@@ -782,3 +782,101 @@ pres_harvest_length <- function (data,
   # Return path
   return(paste0("manuscript/", "figs/", name, ".png"))
 }
+
+
+pres_abundance_exchange <- function (data,
+                                     numbers,
+                                     name,
+                                     ) {
+
+  # Prepare fit data -----------------------------------------------------------
+
+  p <- data %>%
+    dplyr::rename(length_class = .data$released_group) %>%
+    dplyr::mutate(year = time_to_label(.data$movement_time)) %>%
+    dplyr::select(
+      .data$year,
+      .data$length_class,
+      .data$previous_area,
+      .data$current_area,
+      .data$mean
+    )
+
+  # Assemble numbers -----------------------------------------------------------
+
+  n <- numbers %>%
+    dplyr::mutate(
+      length_class = ifelse(.data$length < 55, 1, 2)
+    ) %>%
+    dplyr::group_by(
+      .data$region_number,
+      .data$year,
+      .data$length_class
+    ) %>%
+    dplyr::mutate(
+      total = sum(.data$number)
+    ) %>%
+    dplyr::distinct(
+      .data$region_number,
+      .data$year,
+      .data$length_class,
+      .keep_all = TRUE
+    ) %>%
+    dplyr::ungroup() %>%
+     dplyr::select(
+      .data$region_number,
+      .data$year,
+      .data$length_class,
+      .data$total
+    ) %>%
+    dplyr::full_join(
+      y = p,
+      by = c(
+        "year",
+        "length_class",
+        "region_number" = "previous_area"
+      )
+    ) %>%
+    dplyr::arrange(
+      .data$region_number,
+      .data$year,
+      .data$current_area,
+      .data$length_class
+    ) %>%
+    dplyr::filter(abs(.data$region_number - .data$current_area) == 1) %>%
+    dplyr::mutate(number = .data$total * .data$mean) %>%
+    dplyr::select(
+      .data$region_number,
+      .data$current_area,
+      .data$year,
+      .data$number
+    ) %>%
+    dplyr::group_by(
+      .data$region_number,
+      .data$current_area,
+      .data$year
+    ) %>%
+    dplyr::mutate(total = sum(.data$number)) %>%
+    dplyr::ungroup() %>%
+    dplyr::distinct(
+      .data$region_number,
+      .data$current_area,
+      .data$year,
+      .data$total
+    ) %>%
+    dplyr::mutate(
+      name_1 = c("ak_", "bc_", "cc_")[.data$region_number],
+      name_2 = c("ak", "bc", "cc")[.data$current_area],
+      name = paste0(.data$name_1, .data$name_2)
+    ) %>%
+    dplyr::select(
+      .data$name,
+      .data$year,
+      .data$total
+    )
+
+  # Assemble figure ------------------------------------------------------------
+
+
+
+}
