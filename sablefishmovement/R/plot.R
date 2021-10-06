@@ -279,8 +279,8 @@ plot_heat_composite <- function (data1, data2) {
     nrow = 2,
     common.legend = TRUE,
     legend = "bottom"
-  ) +
-    ggplot2::theme(plot.background = ggplot2::element_rect(fill = "white"))
+  ) # +
+   # ggplot2::theme(plot.background = ggplot2::element_rect(fill = "white"))
 
   # Save ggplot
   ggplot2::ggsave(
@@ -346,8 +346,8 @@ pres_heat_pooled <- function (data,
                         font_nudge_mean = font_nudge_mean,
                         font_size_sd = font_size_sd,
                         font_nudge_sd = font_nudge_sd,
-                        legend_name = legend_name)  +
-    ggplot2::theme(plot.background = ggplot2::element_rect(fill = "white"))
+                        legend_name = legend_name) #  +
+  #  ggplot2::theme(plot.background = ggplot2::element_rect(fill = "white"))
 
   # Save ggplot ----------------------------------------------------------------
 
@@ -435,8 +435,8 @@ pres_heat_length <- function (data,
     ncol = 2,
     common.legend = TRUE,
     legend = "bottom"
-  ) +
-    ggplot2::theme(plot.background = ggplot2::element_rect(fill = "white"))
+  ) # +
+  #  ggplot2::theme(plot.background = ggplot2::element_rect(fill = "white"))
 
   # Save ggplot ----------------------------------------------------------------
 
@@ -563,11 +563,11 @@ pres_bar_quarter <- function (data,
       nrow = 2,
       legend = "right",
       common.legend = TRUE
-    ) +
-      ggplot2::theme(plot.background = ggplot2::element_rect(fill = "white"))
+    ) # +
+      # ggplot2::theme(plot.background = ggplot2::element_rect(fill = "white"))
   } else {
-    p4 <- p1  +
-      ggplot2::theme(plot.background = ggplot2::element_rect(fill = "white"))
+    # p4 <- p1  +
+    #   ggplot2::theme(plot.background = ggplot2::element_rect(fill = "white"))
   }
 
   # Save ggplot ----------------------------------------------------------------
