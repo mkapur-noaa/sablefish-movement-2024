@@ -1626,6 +1626,20 @@ list(
         height = 6
       ),
       format = "file"
+    ),
+    tar_target(
+      plot_pres_abundance_exchange,
+      pres_abundance_exchange(
+        data = fit_region_year_length$p,
+        numbers = numbers_at_length,
+        name = "pres-abundance-exchange-region",
+        years = 1979:2016,
+        xlim = c(1979, 2016),
+        ylim = c(-2e7, 1e7),
+        width = 5,
+        height = 4
+      ),
+      format = "file"
     )
   ),
   list()

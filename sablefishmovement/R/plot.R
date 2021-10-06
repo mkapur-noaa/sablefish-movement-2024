@@ -783,11 +783,28 @@ pres_harvest_length <- function (data,
   return(paste0("manuscript/", "figs/", name, ".png"))
 }
 
-
+#' Presentation Abundance Exchange
+#'
+#' @param data [data.frame()]
+#' @param numbers [data.frame()]
+#' @param name [character()]
+#' @param years [numeric()]
+#' @param xlim [numeric()]
+#' @param ylim [numeric()]
+#' @param width [numeric()]
+#' @param height [numeric()]
+#'
+#' @return [character()] file path
+#' @export
+#'
 pres_abundance_exchange <- function (data,
                                      numbers,
                                      name,
-                                     ) {
+                                     years,
+                                     xlim,
+                                     ylim,
+                                     width,
+                                     height) {
 
   # Prepare fit data -----------------------------------------------------------
 
@@ -867,16 +884,79 @@ pres_abundance_exchange <- function (data,
     dplyr::mutate(
       name_1 = c("ak_", "bc_", "cc_")[.data$region_number],
       name_2 = c("ak", "bc", "cc")[.data$current_area],
-      name = paste0(.data$name_1, .data$name_2)
+      name = paste0(.data$name_1, .data$name_2),
+      panel = ifelse(.data$name %in% c("ak_bc", "bc_ak"), "AK-BC", "BC-CC"),
+      direction = ifelse(.data$name %in% c("bc_ak", "cc_bc"), 1, -1),
+      fill = factor(
+        c("AK", "BC", "CC")[.data$region_number],
+        levels = c("AK", "BC", "CC")
+      ),
+      total = .data$total * .data$direction
     ) %>%
     dplyr::select(
       .data$name,
       .data$year,
+      .data$panel,
+      .data$fill,
+      .data$direction,
       .data$total
+    ) %>%
+    dplyr::filter(.data$year %in% years) %>%
+    dplyr::arrange(
+      .data$panel,
+      .data$name,
+      .data$year
     )
 
   # Assemble figure ------------------------------------------------------------
 
+  p1 <- ggplot2::ggplot(
+    data = n,
+    mapping = ggplot2::aes(
+      x = .data$year,
+      y = .data$total,
+      fill = .data$fill
+    )
+  ) +
+    ggplot2::geom_col() +
+    ggplot2::facet_grid(
+      rows = ggplot2::vars(.data$panel),
+      # scales = "free_y",
+      switch = "y"
+    ) +
+    ggplot2::scale_fill_brewer(
+      type = "qual",
+      palette = "Dark2",
+      direction = -1
+    ) +
+    ggplot2::labs(fill = "Origin") +
+    # ggplot2::xlab("Year") +
+    ggplot2::ylab("Abundance exchange") +
+    ggplot2::scale_x_continuous(
+      name = "Year",
+    ) +
+    ggplot2::scale_y_continuous(
+      name = "Abundance exchanged (1 000 000 fish)",
+      breaks = c(-2e7, -1e7, 0, 1e7),
+      labels = c("20", "10", "0", "10"),
+      position = "right"
+    ) +
+    ggplot2::coord_cartesian(xlim = xlim, ylim = ylim) +
+    ggplot2::theme_bw() +
+    ggplot2::theme(
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank(),
+      strip.background = ggplot2::element_rect(fill = "white")
+    )
 
+  # Save ggplot ----------------------------------------------------------------
 
+  ggplot2::ggsave(
+    here::here("manuscript", "figs", paste0(name, ".png")),
+    width = width,
+    height = height
+  )
+
+  # Return path
+  return(paste0("manuscript/", "figs/", name, ".png"))
 }
