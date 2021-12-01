@@ -47,7 +47,7 @@
 #' @return [mmmstan::mmmfit()] object
 #' @export
 #'
-fit_movement_model <- function (spatial_name, # region, subregion, omregion
+fit_movement_model <- function (spatial_name, # region, omregion
                                 temporal_name, # average, season, year
                                 grouping_name,  # pooled, length
                                 # CmdStanR arguments
@@ -276,6 +276,13 @@ fit_movement_model <- function (spatial_name, # region, subregion, omregion
   } else if (length(area_list) == 6) {
     # Movement between sequential areas at each time step
     z <- mmmstan::movement_index(n = 6, pattern = 0)
+  } else if (length(area_list) == 8) {
+    # Movement between sequential areas plus EG-BC at each time step
+    z <- mmmstan::movement_index(
+      n = 8,
+      pattern = 0,
+      allow = matrix(c(5, 7, 7, 5), nrow = 2, byrow = TRUE)
+    )
   } else if (length(area_list) == 10) {
     # Movement between sequential areas plus EG-NB at each time step
     z <- mmmstan::movement_index(
@@ -284,7 +291,7 @@ fit_movement_model <- function (spatial_name, # region, subregion, omregion
       allow = matrix(c(5, 7, 7, 5), nrow = 2, byrow = TRUE)
     )
   } else {
-    stop("length(area_list) must be 3, 6, or 10")
+    stop("length(area_list) must be 3, 6, 8, or 10")
   }
 
   # Assemble data list ---------------------------------------------------------
