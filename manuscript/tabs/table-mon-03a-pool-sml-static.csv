@@ -1,0 +1,4 @@
+Name,Class,Area,Estimate,SE
+Natural Mortality Rate,Pooled,All,0.10211504182130485,9.468862670956326e-4
+Fishing Mortality Bias,Pooled,All,0.9493922006223411,0.007700645698397839
+Negative Binomial Dispersion,Pooled,All,0.32426310971133343,0.00418757625500822
