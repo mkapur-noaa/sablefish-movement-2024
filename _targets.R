@@ -15,6 +15,7 @@ tar_option_set(
     "here",
     "magrittr",
     "mmmstan",
+    "patchwork",
     "readr",
     "rgeos",
     "rlang",
