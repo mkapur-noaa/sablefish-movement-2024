@@ -1,6 +1,7 @@
 library(targets)
 source("R/functions.R")
 source("R/plot.R")
+source("R/recenter.R")
 source("R/utils.R")
 
 # Set options
@@ -10,11 +11,16 @@ tar_option_set(
     "fs",
     "ggplot2",
     "ggpubr",
+    "ggspatial",
     "here",
     "magrittr",
     "mmmstan",
     "readr",
+    "rgeos",
     "rlang",
+    "rnaturalearth",
+    "rnaturalearthdata",
+    "sf",
     "tictoc",
     "tidyr",
     "usethis"
@@ -37,6 +43,16 @@ list(
       format = "file"
     ),
     tar_target(
+      watch_sf_omregions,
+      "data/sf_omregions.rda",
+      format = "file"
+    ),
+    tar_target(
+      watch_sf_regions,
+      "data/sf_regions.rda",
+      format = "file"
+    ),
+    tar_target(
       watch_tags_recovered,
       "data/tags_recovered.rda",
       format = "file"
@@ -51,6 +67,8 @@ list(
   list(
     tar_target(harvest_rates, read_from_path(watch_harvest_rates)),
     tar_target(numbers_at_length, read_from_path(watch_numbers_at_length)),
+    tar_target(sf_omregions, read_from_path(watch_sf_omregions)),
+    tar_target(sf_regions, read_from_path(watch_sf_regions)),
     tar_target(tags_recovered, read_from_path(watch_tags_recovered)),
     tar_target(tags_released, read_from_path(watch_tags_released))
   ),
@@ -1096,6 +1114,31 @@ list(
     )
   ),
   # Plot -----------------------------------------------------------------------
+  list(
+    tar_target(
+      plot_map_regions,
+      plot_map(
+        regions = sf_regions,
+        plot_name = "map-regions",
+        size_short = 2,
+        size_line = 0.25,
+        color_land = "white",
+        color_ocean = "grey98",
+        color_region = "grey30",
+        fill_land = "white",
+        fill_ocean = "grey95",
+        fill_region = "grey85",
+        xmin = 169,
+        ymin = 31,
+        xmax = 241,
+        ymax = 65.5,
+        width = 6,
+        height = 4
+      ),
+      format = "file"
+    )
+  ),
+
   # list(
   #   tar_target(
   #     plot_pres_heat_region_average_pooled,
