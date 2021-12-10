@@ -76,13 +76,22 @@ read_from_path <- function (path) {
 #'
 #' @return [character()]
 #'
-round_to_character <- function (x, digits) {
+#' @examples
+#' x <-seq(0, 0.1, 0.01)
+#' round_to_character(x, 2)
+#'
+round_to_character <- function (x, digits = 2) {
   y <- character(length = length(x))
   ind_low <- which(x < 10^(-digits))
   ind_high <- which(x >= 10^(-digits))
   # Assign
   y[ind_low] <- paste0("<", sub(".", "", 10^(-digits)))
-  y[ind_high] <- as.character(round(x[ind_high], digits))
+  # y[ind_high] <- as.character(round(x[ind_high], digits))
+  # Keep trailing zeros
+  y[ind_high] <- sprintf(
+    paste0("%.", digits, "f"),
+    round(x[ind_high], digits)
+  )
   # Return
   y
 }
