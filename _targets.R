@@ -15,7 +15,7 @@ tar_option_set(
     "here",
     "magrittr",
     "mmmstan",
-    "patchwork",
+    "patchwork", # check
     "readr",
     "rgeos",
     "rlang",
@@ -1124,7 +1124,7 @@ list(
         size_short = 2,
         size_line = 0.25,
         color_land = "white",
-        color_ocean = "grey98",
+        color_ocean = "grey96",
         color_region = "grey30",
         fill_land = "white",
         fill_ocean = "grey95",

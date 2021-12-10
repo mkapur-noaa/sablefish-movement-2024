@@ -131,16 +131,24 @@ plot_map <- function (regions,
     ggplot2::theme_bw() +
     ggplot2::theme(
       panel.background = ggplot2::element_rect(fill = fill_ocean, color = NA),
-      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.major = ggplot2::element_line(color = color_ocean),
       panel.grid.minor = ggplot2::element_blank()
     )  +
-    patchwork::inset_element(
-      inset,
-      left = grid::unit(0, "npc"),
-      bottom = grid::unit(0, "npc"),
-      right = grid::unit(0.4, "npc"),
-      top = grid::unit(0.4, "npc")
+    # patchwork::inset_element(
+    #   inset,
+    #   left = grid::unit(0, "npc"),
+    #   bottom = grid::unit(0, "npc"),
+    #   right = grid::unit(0.4, "npc"),
+    #   top = grid::unit(0.4, "npc")
+    # )
+    ggplot2::annotation_custom(
+      ggplot2::ggplotGrob(inset),
+      xmin = xmin,
+      ymin = ymin,
+      xmax = 200,
+      ymax = 45
     )
+
 
   # Save ggplot ----------------------------------------------------------------
 
