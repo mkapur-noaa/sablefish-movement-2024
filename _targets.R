@@ -11,6 +11,7 @@ tar_option_set(
     "fs",
     "ggplot2",
     "ggpubr",
+    "ggsidekick",
     "ggspatial",
     "here",
     "magrittr",
@@ -1147,19 +1148,20 @@ list(
         plot_name = "heat-region-average-pooled",
         movement_time = 1,
         released_group = 1,
+        size_text = 8,
         xlab = NULL,
         ylab = NULL,
         xtext = TRUE,
         ytext = TRUE,
-        margin_x = -2,
+        margin_x = -1,
         margin_y = -2,
         font_size_mean = 3,
         font_nudge_mean = 0.15,
         font_size_sd = 2,
         font_nudge_sd = 0.15,
-        legend_name = "Movement rate",
-        width = 4,
-        height = 4
+        legend_name = "Annual movement rate",
+        width = 90,
+        height = 98
       ),
       format = "file"
     )

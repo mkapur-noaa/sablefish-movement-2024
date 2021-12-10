@@ -21,6 +21,7 @@ plot_heat <- function (data,
                        plot_name,
                        movement_time = 1,
                        released_group = 1,
+                       size_text = 5,
                        xlab = NULL,
                        ylab = NULL,
                        xtext = TRUE,
@@ -32,8 +33,8 @@ plot_heat <- function (data,
                        font_size_sd = 2,
                        font_nudge_sd = 0.15,
                        legend_name = "Movement rate",
-                       width = 4,
-                       height = 4) {
+                       width = 90,
+                       height = 110) {
 
   # Prepare data ---------------------------------------------------------------
 
@@ -113,7 +114,13 @@ plot_heat <- function (data,
     # Theme
     ggplot2::theme_void() +
     ggplot2::theme(
+      axis.text = ggplot2::element_text(size = size_text),
       legend.position = ifelse(is.null(legend_name), "none", "bottom"),
+      legend.title = ggplot2::element_text(size = size_text),
+      legend.text = ggplot2::element_text(size = size_text),
+      legend.key.width = grid::unit(0.1, "npc"),
+      legend.key.height = grid::unit(0.03, "npc"),
+      legend.spacing.y = grid::unit(0.01, "npc"),
       panel.grid.major = ggplot2::element_blank(),
       panel.grid.minor = ggplot2::element_blank(),
       plot.background = ggplot2::element_rect(fill = "white"),
@@ -135,7 +142,8 @@ plot_heat <- function (data,
   ggplot2::ggsave(
     here::here("manuscript", "figs", paste0(plot_name, ".png")),
     width = width,
-    height = height
+    height = height,
+    units = "mm"
   )
 
   # Return path
@@ -183,9 +191,12 @@ plot_map <- function (regions,
 
   # Define outline -------------------------------------------------------------
 
+  xbuf <- 3
+  ybuf <- 2.5
+
   outline <- tibble::tibble(
-    x = c(xmin, xmin, xmax, xmax, xmin),
-    y = c(ymin, ymax, ymax, ymin, ymin)
+    x = c(xmin - xbuf, xmin - xbuf, xmax + xbuf, xmax + xbuf, xmin - xbuf),
+    y = c(ymin - ybuf, ymax + ybuf, ymax + ybuf, ymin - ybuf, ymin - ybuf)
   )
 
   # Define inset ---------------------------------------------------------------
@@ -199,7 +210,7 @@ plot_map <- function (regions,
     ) +
     ggplot2::geom_sf(
       data = coastline,
-      color = color_region,
+      color = "grey60",
       fill = NA,
       lwd = 0.25
     ) +
@@ -211,10 +222,10 @@ plot_map <- function (regions,
       data = outline,
       mapping = ggplot2::aes(x = x, y = y),
       fill = NA,
-      color = "grey30",
+      color = "grey60",
       size = 0.5
     ) +
-    ggplot2::theme_bw() +
+    ggsidekick::theme_sleek() +
     ggplot2::theme(
       axis.title.x = ggplot2::element_blank(),
       axis.title.y = ggplot2::element_blank(),
@@ -268,11 +279,13 @@ plot_map <- function (regions,
       width = grid::unit(0.2, "npc"),
       pad_x = grid::unit(0.8, "npc"),
       pad_y = grid::unit(0.72, "npc"),
-      style = ggspatial::north_arrow_fancy_orienteering
+      style = ggspatial::north_arrow_fancy_orienteering(
+        text_col = "grey60",
+        line_col = "grey60",
+        fill = c("white", "grey60")
+      )
     ) +
-    # ggplot2::xlab("Longitude") +
-    # ggplot2::ylab("Latitude") +
-    ggplot2::theme_bw() +
+    ggsidekick::theme_sleek() +
     ggplot2::theme(
       axis.title = ggplot2::element_blank(),
       axis.text = ggplot2::element_text(size = size_text),

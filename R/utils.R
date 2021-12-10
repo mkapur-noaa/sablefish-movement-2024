@@ -1,11 +1,11 @@
-#' Convert Area Number Vector to Short Name Factor
+#' Convert Region Number Vector to Short Name Factor
 #'
 #' @param n [numeric()]
 #'
 #' @return [factor()]
 #' @export
 #'
-area_to_short <- function (n) {
+number_to_short <- function (n) {
   if (max(n) == 3) {
     short <- factor(
       c("AK", "BC", "CC")[n],
@@ -16,13 +16,18 @@ area_to_short <- function (n) {
       c("WAK", "EAK", "NBC", "SBC", "NCC", "SCC")[n],
       levels = c("WAK", "EAK", "NBC", "SBC", "NCC", "SCC")
     )
+  } else if (max(n) == 8) {
+    short <- factor(
+      c("BS", "AI", "WG", "CG", "EG", "SE", "BC", "CC")[n],
+      levels = c("BS", "AI", "WG", "CG", "EG", "SE", "BC", "CC")
+    )
   } else if (max(n) == 10) {
     short <- factor(
       c("BS", "AI", "WG", "CG", "EG", "SE", "NB", "SB", "NC", "SC")[n],
       levels = c("BS", "AI", "WG", "CG", "EG", "SE", "NB", "SB", "NC", "SC")
     )
   } else {
-    stop("max(n) must be 3, 6 or 10")
+    stop("max(n) must be 3, 6, 8, or 10")
   }
   return(short)
 }
