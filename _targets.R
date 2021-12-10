@@ -1161,7 +1161,33 @@ list(
         font_nudge_sd = 0.15,
         legend_name = "Annual movement rate",
         width = 90,
-        height = 98
+        height = 98,
+        file_type = ".png"
+      ),
+      format = "file"
+    ),
+    tar_target(
+      plot_heat_region_average_length,
+      plot_heat_length(
+        data = region_average_length$p,
+        plot_name = "heat-region-average-length",
+        movement_time = 1,
+        released_group = c(1, 2),
+        size_text = 8,
+        xlab = NULL,
+        ylab = NULL,
+        xtext = TRUE,
+        ytext = TRUE,
+        margin_x = -1,
+        margin_y = -2,
+        font_size_mean = 3,
+        font_nudge_mean = 0.15,
+        font_size_sd = 2,
+        font_nudge_sd = 0.15,
+        legend_name = "Annual movement rate",
+        width = 190,
+        height = 105,
+        file_type = ".png"
       ),
       format = "file"
     )

@@ -34,7 +34,8 @@ plot_heat <- function (data,
                        font_nudge_sd = 0.15,
                        legend_name = "Movement rate",
                        width = 90,
-                       height = 110) {
+                       height = 110,
+                       file_type = ".png") {
 
   # Prepare data ---------------------------------------------------------------
 
@@ -54,6 +55,156 @@ plot_heat <- function (data,
 
   ggplot2::ggplot(
     data = data,
+    mapping = ggplot2::aes(
+      x = .data$current_short,
+      y = factor(
+        .data$previous_short,
+        levels = rev(levels(.data$previous_short))
+      ),
+      fill = .data$mean
+    )
+  ) +
+    ggplot2::geom_tile(
+      color = "white",
+      width = 0.975,
+      height = 0.975
+    ) +
+    # Use viridis
+    ggplot2::scale_fill_viridis_c(
+      direction = 1,
+      option = "plasma",
+      limits = c(0, 1),
+      breaks = seq(0, 1, 0.25)
+    ) +
+    # Use distiller
+    # ggplot2::scale_fill_distiller(
+    #   type = "seq",
+    #   palette = "Blues",
+    #   direction = 1
+    # ) +
+    # Add mean
+    ggplot2::geom_text(
+      mapping = ggplot2::aes(
+        label = round_to_character(.data$mean, 2),
+        col = as.factor(ifelse(.data$mean >= 0.5, 0, 1))
+      ),
+      fontface = "plain",
+      nudge_y = font_nudge_mean,
+      size = font_size_mean
+    ) +
+    # Add ci
+    ggplot2::geom_text(
+      mapping = ggplot2::aes(
+        label = paste0("(", round_to_character(.data$sd, 3), ")"),
+        col = as.factor(ifelse(.data$mean >= 0.5, 0, 1))
+      ),
+      fontface = "plain",
+      nudge_y = -font_nudge_sd,
+      size = font_size_sd
+    ) +
+    # Text to black and white
+    ggplot2::scale_color_grey(start = 0, end = 1) +
+    ggplot2::guides(
+      col = "none",
+      fill = if (is.null(legend_name)) {
+        "none"
+      } else {
+        ggplot2::guide_colorbar(
+          title.position = "top",
+          title.hjust = 0.5
+        )
+      }
+    ) +
+    ggplot2::xlab(xlab) +
+    ggplot2::ylab(ylab) +
+    ggplot2::labs(fill = legend_name) +
+    # Theme
+    ggplot2::theme_void() +
+    ggplot2::theme(
+      axis.text = ggplot2::element_text(size = size_text),
+      legend.position = ifelse(is.null(legend_name), "none", "bottom"),
+      legend.title = ggplot2::element_text(size = size_text),
+      legend.text = ggplot2::element_text(size = size_text),
+      legend.key.width = grid::unit(0.1, "npc"),
+      legend.key.height = grid::unit(0.03, "npc"),
+      legend.spacing.y = grid::unit(0.01, "npc"),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank(),
+      plot.background = ggplot2::element_rect(fill = "white", color = NA),
+      plot.margin = ggplot2::margin(t = 1, r = 1, b = 1, l = 2),
+      axis.text.x = if (xtext) {
+        ggplot2::element_text(margin = ggplot2::margin(t = margin_x))
+      } else {
+        NULL
+      },
+      axis.text.y = if (ytext) {
+        ggplot2::element_text(margin = ggplot2::margin(r = margin_y))
+      } else {
+        NULL
+      }
+    )
+
+  # Save ggplot ----------------------------------------------------------------
+
+  ggplot2::ggsave(
+    here::here("manuscript", "figs", paste0(plot_name, file_type)),
+    width = width,
+    height = height,
+    units = "mm"
+  )
+
+  # Return path
+  return(paste0("manuscript/", "figs/", plot_name, file_type))
+}
+
+plot_heat_length <- function (data,
+                              plot_name,
+                              movement_time = 1,
+                              released_group = c(1, 2),
+                              size_text = 5,
+                              xlab = NULL,
+                              ylab = NULL,
+                              xtext = TRUE,
+                              ytext = TRUE,
+                              margin_x = -15,
+                              margin_y = -15,
+                              font_size_mean = 3,
+                              font_nudge_mean = 0.15,
+                              font_size_sd = 2,
+                              font_nudge_sd = 0.15,
+                              legend_name = "Movement rate",
+                              width = 190,
+                              height = 110,
+                              file_type = ".png") {
+
+  # Prepare data ---------------------------------------------------------------
+
+  small <- data %>%
+    dplyr::ungroup() %>%
+    dplyr::filter(
+      .data$movement_time == .env$movement_time[1],
+      .data$released_group == .env$released_group[1],
+    ) %>%
+    dplyr::mutate(
+      previous_short = number_to_short(.data$previous_area),
+      current_short = number_to_short(.data$current_area)
+    )
+
+  large <- data %>%
+    dplyr::ungroup() %>%
+    dplyr::filter(
+      .data$movement_time == .env$movement_time[1],
+      .data$released_group == .env$released_group[2],
+    ) %>%
+    dplyr::mutate(
+      previous_short = number_to_short(.data$previous_area),
+      current_short = number_to_short(.data$current_area)
+    )
+
+  # Construct small panel ------------------------------------------------------
+
+  p1 <- ggplot2::ggplot(
+    data = small,
     mapping = ggplot2::aes(
       x = .data$current_short,
       y = factor(
@@ -119,12 +270,12 @@ plot_heat <- function (data,
       legend.title = ggplot2::element_text(size = size_text),
       legend.text = ggplot2::element_text(size = size_text),
       legend.key.width = grid::unit(0.1, "npc"),
-      legend.key.height = grid::unit(0.03, "npc"),
-      legend.spacing.y = grid::unit(0.01, "npc"),
+      legend.key.height = grid::unit(0.02, "npc"),
+      legend.spacing.y = grid::unit(0.005, "npc"),
       panel.grid.major = ggplot2::element_blank(),
       panel.grid.minor = ggplot2::element_blank(),
-      plot.background = ggplot2::element_rect(fill = "white"),
-      plot.margin = ggplot2::margin(t = 1, r = 1, b = 1, l = 2),
+      plot.background = ggplot2::element_rect(fill = "white", color = NA),
+      plot.margin = ggplot2::margin(t = 10, r = 1, b = 3, l = 2),
       axis.text.x = if (xtext) {
         ggplot2::element_text(margin = ggplot2::margin(t = margin_x))
       } else {
@@ -137,17 +288,122 @@ plot_heat <- function (data,
       }
     )
 
+  # Construct large panel ------------------------------------------------------
+
+  p2 <- ggplot2::ggplot(
+    data = large,
+    mapping = ggplot2::aes(
+      x = .data$current_short,
+      y = factor(
+        .data$previous_short,
+        levels = rev(levels(.data$previous_short))
+      ),
+      fill = .data$mean
+    )
+  ) +
+    ggplot2::geom_tile(
+      color = "white",
+      width = 0.975,
+      height = 0.975
+    ) +
+    # Use viridis
+    ggplot2::scale_fill_viridis_c(
+      direction = 1,
+      option = "plasma",
+      limits = c(0, 1),
+      breaks = seq(0, 1, 0.25)
+    ) +
+    # Add mean
+    ggplot2::geom_text(
+      mapping = ggplot2::aes(
+        label = round_to_character(.data$mean, 2),
+        col = as.factor(ifelse(.data$mean >= 0.5, 0, 1))
+      ),
+      fontface = "plain",
+      nudge_y = font_nudge_mean,
+      size = font_size_mean
+    ) +
+    # Add ci
+    ggplot2::geom_text(
+      mapping = ggplot2::aes(
+        label = paste0("(", round_to_character(.data$sd, 3), ")"),
+        col = as.factor(ifelse(.data$mean >= 0.5, 0, 1))
+      ),
+      fontface = "plain",
+      nudge_y = -font_nudge_sd,
+      size = font_size_sd
+    ) +
+    # Text to black and white
+    ggplot2::scale_color_grey(start = 0, end = 1) +
+    ggplot2::guides(
+      col = "none",
+      fill = if (is.null(legend_name)) {
+        "none"
+      } else {
+        ggplot2::guide_colorbar(
+          title.position = "top",
+          title.hjust = 0.5
+        )
+      }
+    ) +
+    ggplot2::xlab(xlab) +
+    ggplot2::ylab(ylab) +
+    ggplot2::labs(fill = legend_name) +
+    # Theme
+    ggplot2::theme_void() +
+    ggplot2::theme(
+      axis.text = ggplot2::element_text(size = size_text),
+      legend.position = ifelse(is.null(legend_name), "none", "bottom"),
+      legend.title = ggplot2::element_text(size = size_text),
+      legend.text = ggplot2::element_text(size = size_text),
+      legend.key.width = grid::unit(0.1, "npc"),
+      legend.key.height = grid::unit(0.02, "npc"),
+      legend.spacing.y = grid::unit(0.005, "npc"),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank(),
+      plot.background = ggplot2::element_rect(fill = "white", color = NA),
+      plot.margin = ggplot2::margin(t = 10, r = 1, b = 3, l = 2),
+      axis.text.x = if (xtext) {
+        ggplot2::element_text(margin = ggplot2::margin(t = margin_x))
+      } else {
+        NULL
+      },
+      axis.text.y = if (ytext) {
+        ggplot2::element_text(margin = ggplot2::margin(r = margin_y))
+      } else {
+        NULL
+      }
+    )
+
+  # Assemble panel figure ------------------------------------------------------
+
+  ggpubr::ggarrange(
+    p1,
+    p2 + ggpubr::rremove("y.text"),
+    labels = c("Small (400-549 mm)", "Large (550-800 mm)"),
+    font.label = list(size = size_text, face = "plain"),
+    label.x = 0,
+    hjust = c(-0.23, -0.075),
+    vjust = 1.7,
+    ncol = 2,
+    common.legend = TRUE,
+    legend = "bottom"
+  ) +
+    ggplot2::theme(
+      plot.background = ggplot2::element_rect(fill = "white", color = NA)
+    )
+
   # Save ggplot ----------------------------------------------------------------
 
   ggplot2::ggsave(
-    here::here("manuscript", "figs", paste0(plot_name, ".png")),
+    here::here("manuscript", "figs", paste0(plot_name, file_type)),
     width = width,
     height = height,
     units = "mm"
   )
 
   # Return path
-  return(paste0("manuscript/", "figs/", plot_name, ".png"))
+  return(paste0("manuscript/", "figs/", plot_name, file_type))
 }
 
 plot_map <- function (regions,
@@ -210,7 +466,7 @@ plot_map <- function (regions,
     ) +
     ggplot2::geom_sf(
       data = coastline,
-      color = "grey60",
+      color = color_region,
       fill = NA,
       lwd = 0.25
     ) +
@@ -297,8 +553,8 @@ plot_map <- function (regions,
     ) +
     ggplot2::annotation_custom(
       ggplot2::ggplotGrob(inset),
-      xmin = xmin - 5.8,
-      ymin = ymin - 4.7,
+      xmin = xmin - 5.6,
+      ymin = ymin - 4.5,
       xmax = 200,
       ymax = 45
     )
