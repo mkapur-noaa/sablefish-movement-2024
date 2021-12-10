@@ -1121,8 +1121,9 @@ list(
       plot_map(
         regions = sf_regions,
         plot_name = "map-regions",
-        size_short = 2,
+        size_short = 1.75,
         size_line = 0.25,
+        size_text = 5,
         color_land = "white",
         color_ocean = "grey96",
         color_region = "grey30",
@@ -1131,9 +1132,33 @@ list(
         fill_region = "grey85",
         xmin = 169,
         ymin = 31,
-        xmax = 241,
+        xmax = 240.5,
         ymax = 65.5,
-        width = 6,
+        width = 90,
+        height = 65,
+        file_type = ".png"
+      ),
+      format = "file"
+    ),
+    tar_target(
+      plot_heat_region_average_pooled,
+      plot_heat(
+        data = region_average_pooled$p,
+        plot_name = "heat-region-average-pooled",
+        movement_time = 1,
+        released_group = 1,
+        xlab = NULL,
+        ylab = NULL,
+        xtext = TRUE,
+        ytext = TRUE,
+        margin_x = -2,
+        margin_y = -2,
+        font_size_mean = 3,
+        font_nudge_mean = 0.15,
+        font_size_sd = 2,
+        font_nudge_sd = 0.15,
+        legend_name = "Movement rate",
+        width = 4,
         height = 4
       ),
       format = "file"
