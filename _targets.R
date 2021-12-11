@@ -1118,7 +1118,7 @@ list(
   # Plot -----------------------------------------------------------------------
   list(
     tar_target(
-      plot_map_regions,
+      map_regions,
       plot_map(
         regions = sf_regions,
         plot_name = "map-regions",
@@ -1142,7 +1142,7 @@ list(
       format = "file"
     ),
     tar_target(
-      plot_heat_region_average_pooled,
+      heat_region_average_pooled,
       plot_heat(
         data = region_average_pooled$p,
         plot_name = "heat-region-average-pooled",
@@ -1159,7 +1159,7 @@ list(
         font_nudge_mean = 0.15,
         font_size_sd = 2,
         font_nudge_sd = 0.15,
-        legend_name = "Annual movement rate",
+        legend_name = "Annual transition rates",
         width = 90,
         height = 98,
         file_type = ".png"
@@ -1167,7 +1167,7 @@ list(
       format = "file"
     ),
     tar_target(
-      plot_heat_region_average_length,
+      heat_region_average_length,
       plot_heat_length(
         data = region_average_length$p,
         plot_name = "heat-region-average-length",
@@ -1184,9 +1184,28 @@ list(
         font_nudge_mean = 0.15,
         font_size_sd = 2,
         font_nudge_sd = 0.15,
-        legend_name = "Annual movement rate",
+        legend_name = "Annual transition rates",
         width = 190,
         height = 105,
+        file_type = ".png"
+      ),
+      format = "file"
+    ),
+    tar_target(
+      bar_sensitivity_reporting,
+      plot_bar_sensitivity_reporting(
+        study = region_average_pooled$p,
+        increase_ak = region_average_pooled_w_incr_ak_50_pct$p,
+        increase_bc = region_average_pooled_w_incr_bc_50_pct$p,
+        increase_cc = region_average_pooled_w_incr_cc_50_pct$p,
+        decrease_ak = region_average_pooled_w_decr_ak_33_pct$p,
+        decrease_bc = region_average_pooled_w_decr_bc_33_pct$p,
+        decrease_cc = region_average_pooled_w_decr_cc_33_pct$p,
+        plot_name = "bar-sensitivity-reporting",
+        size_text = 8,
+        legend_name = "Annual reporting rates",
+        width = 190,
+        height = 150,
         file_type = ".png"
       ),
       format = "file"

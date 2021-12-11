@@ -1,3 +1,176 @@
+plot_bar_sensitivity_reporting <- function (study,
+                                            increase_ak,
+                                            increase_bc,
+                                            increase_cc,
+                                            decrease_ak,
+                                            decrease_bc,
+                                            decrease_cc,
+                                            plot_name,
+                                            size_text,
+                                            legend_name,
+                                            width = 190,
+                                            height = 150,
+                                            file_type = ".png") {
+
+  # Prepare data ---------------------------------------------------------------
+
+  # Increase
+  increase <- dplyr::bind_rows(
+    study %>%
+      dplyr::filter(.data$previous_area == .data$current_area) %>%
+      dplyr::mutate(id = "Study values"),
+    increase_ak %>%
+      dplyr::filter(.data$previous_area == .data$current_area) %>%
+      dplyr::mutate(id = "Change AK"),
+    increase_bc %>%
+      dplyr::filter(.data$previous_area == .data$current_area) %>%
+      dplyr::mutate(id = "Change BC"),
+    increase_bc %>%
+      dplyr::filter(.data$previous_area == .data$current_area) %>%
+      dplyr::mutate(id = "Change CC")
+  ) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(region_short = number_to_short(.data$previous_area))
+
+  # Decrease
+  decrease <- dplyr::bind_rows(
+    study %>%
+      dplyr::filter(.data$previous_area == .data$current_area) %>%
+      dplyr::mutate(id = "Study values"),
+    decrease_ak %>%
+      dplyr::filter(.data$previous_area == .data$current_area) %>%
+      dplyr::mutate(id = "Change AK"),
+    decrease_bc %>%
+      dplyr::filter(.data$previous_area == .data$current_area) %>%
+      dplyr::mutate(id = "Change BC"),
+    decrease_bc %>%
+      dplyr::filter(.data$previous_area == .data$current_area) %>%
+      dplyr::mutate(id = "Change CC")
+  ) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(region_short = number_to_short(.data$previous_area))
+
+  # Assemble increase panel ----------------------------------------------------
+
+  increase_panel <- ggplot2::ggplot(
+    data = increase,
+    mapping = ggplot2::aes(
+      x = .data$region_short,
+      y = .data$mean,
+      fill = .data$id
+    )
+  ) +
+    ggplot2::geom_bar(
+      stat = "identity",
+      position = "dodge",
+      color = "white"
+    ) +
+    ggplot2::geom_errorbar(
+      mapping = ggplot2::aes(
+        ymin = .data$mean - .data$sd,
+        ymax = .data$mean + .data$sd
+      ),
+      width = 0.2,
+      position = ggplot2::position_dodge(0.9)
+    ) +
+    ggplot2::scale_fill_brewer(
+      type = "div"
+    ) +
+    ggplot2::labs(fill = "Reporting rate") +
+    ggsidekick::theme_sleek() +
+    ggplot2::theme(
+      axis.title.x = ggplot2::element_blank(),
+      axis.text.x = ggplot2::element_blank(),
+      axis.ticks.x = ggplot2::element_blank(),
+      axis.title.y = ggplot2::element_blank(),
+      axis.text.y = ggplot2::element_text(size = size_text),
+      legend.title = ggplot2::element_text(size = size_text),
+      legend.text = ggplot2::element_text(size = size_text),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank()
+    )
+
+  # Assemble decrease panel ----------------------------------------------------
+
+  decrease_panel <- ggplot2::ggplot(
+    data = decrease,
+    mapping = ggplot2::aes(
+      x = .data$region_short,
+      y = .data$mean,
+      fill = .data$id
+    )
+  ) +
+    ggplot2::geom_bar(
+      stat = "identity",
+      position = "dodge",
+      color = "white"
+    ) +
+    ggplot2::geom_errorbar(
+      mapping = ggplot2::aes(
+        ymin = .data$mean - .data$sd,
+        ymax = .data$mean + .data$sd
+      ),
+      width = 0.2,
+      position = ggplot2::position_dodge(0.9)
+    ) +
+    ggplot2::scale_fill_brewer(
+      type = "div"
+    ) +
+    ggplot2::xlab("Region") +
+    ggplot2::labs(fill = "Reporting rate") +
+    ggsidekick::theme_sleek() +
+    ggplot2::theme(
+      axis.title.x = ggplot2::element_text(size = size_text),
+      axis.text.x = ggplot2::element_text(size = size_text),
+      axis.title.y = ggplot2::element_blank(),
+      axis.text.y = ggplot2::element_text(size = size_text),
+      legend.title = ggplot2::element_text(size = size_text),
+      legend.text = ggplot2::element_text(size = size_text),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank()
+    )
+
+  # Assemble panel figure ------------------------------------------------------
+
+  p0 <- ggpubr::ggarrange(
+    increase_panel,
+    decrease_panel,
+    nrow = 2,
+    labels = c("Increase 50%", "Decrease 33%"),
+    label.x = 0,
+    label.y = 1,
+    hjust = -0.7,
+    vjust = 3,
+    font.label = list(size = 8, color = "black", face = "plain"),
+    legend = "right",
+    common.legend = TRUE
+  )
+
+  ggpubr::annotate_figure(
+    p0,
+    left = ggpubr::text_grob(
+      "Annual retention rate",
+      size = size_text,
+      rot = 90
+    )
+  ) +
+    ggplot2::theme(
+      plot.background = ggplot2::element_rect(fill = "white", color = NA)
+    )
+
+  # Save ggplot ----------------------------------------------------------------
+
+  ggplot2::ggsave(
+    here::here("manuscript", "figs", paste0(plot_name, file_type)),
+    width = width,
+    height = height,
+    units = "mm"
+  )
+
+  # Return path
+  return(paste0("manuscript/", "figs/", plot_name, file_type))
+}
+
 #' Heat Map Matrix
 #'
 #' @param data [data.frame()]
@@ -50,7 +223,6 @@ plot_heat <- function (data,
       current_short = number_to_short(.data$current_area)
     )
 
-
   # Construct geom object ------------------------------------------------------
 
   ggplot2::ggplot(
@@ -71,17 +243,13 @@ plot_heat <- function (data,
     ) +
     # Use viridis
     ggplot2::scale_fill_viridis_c(
+      begin = 0,
+      end = 1,
       direction = 1,
       option = "plasma",
       limits = c(0, 1),
       breaks = seq(0, 1, 0.25)
     ) +
-    # Use distiller
-    # ggplot2::scale_fill_distiller(
-    #   type = "seq",
-    #   palette = "Blues",
-    #   direction = 1
-    # ) +
     # Add mean
     ggplot2::geom_text(
       mapping = ggplot2::aes(
