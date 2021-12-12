@@ -161,14 +161,14 @@ plot_bar_sensitivity_reporting <- function (study,
   # Save ggplot ----------------------------------------------------------------
 
   ggplot2::ggsave(
-    here::here("manuscript", "figs", paste0(plot_name, file_type)),
+    here::here("ms", "figs", paste0(plot_name, file_type)),
     width = width,
     height = height,
     units = "mm"
   )
 
   # Return path
-  return(paste0("manuscript/", "figs/", plot_name, file_type))
+  return(paste0("ms/", "figs/", plot_name, file_type))
 }
 
 #' Heat Map Matrix
@@ -315,14 +315,14 @@ plot_heat <- function (data,
   # Save ggplot ----------------------------------------------------------------
 
   ggplot2::ggsave(
-    here::here("manuscript", "figs", paste0(plot_name, file_type)),
+    here::here("ms", "figs", paste0(plot_name, file_type)),
     width = width,
     height = height,
     units = "mm"
   )
 
   # Return path
-  return(paste0("manuscript/", "figs/", plot_name, file_type))
+  return(paste0("ms/", "figs/", plot_name, file_type))
 }
 
 plot_heat_length <- function (data,
@@ -564,14 +564,14 @@ plot_heat_length <- function (data,
   # Save ggplot ----------------------------------------------------------------
 
   ggplot2::ggsave(
-    here::here("manuscript", "figs", paste0(plot_name, file_type)),
+    here::here("ms", "figs", paste0(plot_name, file_type)),
     width = width,
     height = height,
     units = "mm"
   )
 
   # Return path
-  return(paste0("manuscript/", "figs/", plot_name, file_type))
+  return(paste0("ms/", "figs/", plot_name, file_type))
 }
 
 plot_map <- function (regions,
@@ -731,12 +731,12 @@ plot_map <- function (regions,
   # Save ggplot ----------------------------------------------------------------
 
   ggplot2::ggsave(
-    here::here("manuscript", "figs", paste0(plot_name, file_type)),
+    here::here("ms", "figs", paste0(plot_name, file_type)),
     width = width,
     height = height,
     units = "mm"
   )
 
   # Return path
-  return(paste0("manuscript/", "figs/", plot_name, file_type))
+  return(paste0("ms/", "figs/", plot_name, file_type))
 }
