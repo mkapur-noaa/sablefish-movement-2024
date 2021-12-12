@@ -26,6 +26,7 @@ _targets/
 
 # PDFs
 *.pdf
+Rplots.pdf
 
 # Vignettes
 inst/doc
