@@ -50,6 +50,7 @@
 % Movement ecology and transboundary stock structure of sablefish in the northeast Pacific
 
 \author[1]{Luke A. Rogers}
+\author[]{...}
 % \author[2]{Brendan Connors}
 % \author[1]{Sean C. Anderson}
 % \author[3]{Melissa Haltuch}
@@ -68,6 +69,198 @@
 \maketitle
 \linenumbers
 \setcounter{secnumdepth}{0} % Removes section numbers
+
+\section{Overview}
+\subsection{One single eight-region spatial scale}
+Animal movement rates underlie spatial population dynamics and can influence the effectiveness of management strategies for harvested species. We quantified sablefish movement rates among geographic regions in the northeast Pacific by fitting Markov movement models to forty years of tag--recapture data. The simplest version of our model used eight geographic regions (\autoref{fig:map-regions}), time-averaged movement rates, and one pooled length class. Additional versions of the model increased the resolution of the model in time (seasonal or annual time-varying movement rates) and/or introduced length length classes (small: 400--549 mm; large: 550--800 mm). Models were identified by their temporal resolution (average, season, or year) and length class (pooled or length). Sablefish movement rates correspond to per-fish transition rates between geographic regions per year, equivalent to the probability that a sablefish moved from one region to another (emigration rate) or remained within a region (retention rate) per year.  
+
+% map-regions
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = 0.47\textwidth]{map-regions}
+    \caption{Geographic sablefish regions in the northeast Pacific Ocean. Regions are Bering Sea (BS), Aleutian Islands (AI), Western (WG), Central (CG), and Eastern Gulf of Alaska (EG), Southeast Alaska (SE), British Columbia (BC), and California Current (CC). Sablefish are managed separately in Alaska (BS--EG), Southeast Alaska, British Columbia, and California Current.}
+    \label{fig:map-regions}
+\end{figure}
+
+The movement model predicted annual tagged sablefish abundance in each region, and annual numbers of reported recovered tags from each release cohort. Annual survival rates were estimated from harvest, natural mortality, and tag loss rates. Reported tags were predicted using harvest rates and tag reporting rates. Movement rates, harvest rates, negative binomial dispersion, and random walk process errors (annual time-varying model only) were estimated within each model. Sablefish tag releases and recoveries were input as data. Natural mortality, tag reporting, tag loss, and initial tag loss rates were also model inputs. Stock assessment estimates were used as annual means for harvest rate priors. (See \autoref{tab:symbol-definitions}).
+
+\subsection{Questions}
+\begin{enumerate}
+    \item How much do sablefish move among geographic regions? 
+        \begin{itemize}
+            \item Model: \texttt{region-average-pooled}
+            \item Visual: \autoref{fig:heat-region-average-pooled}
+            \item Notes: standard data and priors
+        \end{itemize}
+    \item How sensitive are sablefish transition rates to alternative reporting rate assumptions?
+        \begin{itemize}
+            \item Model: \texttt{region-average-pooled}
+            \item Visual: \autoref{fig:bar-sensitivity-reporting} (SI)
+            \item Notes: six model fits---33\% increase or 50\% decrease for one region in each fit
+        \end{itemize}
+    \item How sensitive are sablefish transition rates to harvest rate priors?
+        \begin{itemize}
+            \item Model: \texttt{region-average-pooled}
+            \item Visual: TODO scatterplot; one panel per region; retention (and CIs) vs harvest prior sd multiplier (SI)
+            \item Notes: five model fits; harvest rate prior sd scaled to mean by progressively wider multiplier
+        \end{itemize}    
+    \item How much do sablefish transition rates vary by length class?
+        \begin{itemize}
+            \item Model: \texttt{region-average-length}
+            \item Visual: \autoref{fig:heat-region-average-length} (SI)
+            \item Notes: standard data and priors
+        \end{itemize}    
+    \item How much do sablefish transition rates vary by season?
+        \begin{itemize}
+            \item Model: \texttt{region-season-pooled}
+            \item Visual: TODO scatterplot matrix; transition rate (and CI) vs season  
+            \item Notes: standard data and priors
+        \end{itemize}    
+    \item How much do sablefish transition rates vary by year?
+        \begin{itemize}
+            \item Model: \texttt{region-year-pooled}
+            \item Visual: TODO scatterplot matrix; transition rate (and CI) vs year  
+            \item Notes: standard data and priors
+        \end{itemize}    
+    \item How much do sablefish transition rates by length class vary by season?
+        \begin{itemize}
+            \item Model: \texttt{region-season-length}
+            \item Visual: TODO scatterplot matrix; transition rate (and CI) vs season (SI)
+            \item Notes: standard data and priors
+        \end{itemize}
+    \item How many sablefish moved between regions each year?
+        \begin{itemize}
+            \item Model: \texttt{region-year-length}
+            \item Visual: TODO barplot; one panel per border; directional (bars) and net (line) movement
+            \item Notes: standard data and priors; abundance at length data (scaled proportional to survey biomass index for Alaska regions)
+        \end{itemize}    
+    \item What is the relationship between sablefish density and transition rates?
+        \begin{itemize}
+            \item Model: \texttt{region-year-pooled}
+            \item Visual: TBD
+            \item Notes: TBD ideally use annual biomass estimates as proxy for relative density
+        \end{itemize}    
+    \item Does the movement model recover known parameters on simulated data adequately?
+        \begin{itemize}
+            \item Model: \texttt{region-average-pooled}
+            \item Visual: TBD
+            \item Notes: TBD
+        \end{itemize}
+\end{enumerate}
+
+% heat-region-average-pooled
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = 0.47\textwidth]{heat-region-average-pooled}
+    \caption{Sablefish transition rates per year between geographic regions in the northeast Pacific Ocean. The main diagonal shows retention rates while the off-diagonals show emigration rates. Rows correspond to region of origin while columns represent destination. Transition rates are shown with (standard error). Regions are Regions are Bering Sea (BS), Aleutian Islands (AI), Western (WG), Central (CG), and Eastern Gulf of Alaska (EG), Southeast Alaska (SE), British Columbia (BC), and California Current (CC).}
+    \label{fig:heat-region-average-pooled}
+\end{figure}
+
+
+\section{Supplementary Information}
+% bar-sensitivity-reporting
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = 0.7\textwidth]{bar-sensitivity-reporting}
+    \caption{}
+    \label{fig:bar-sensitivity-reporting}
+\end{figure}
+
+% heat-region-average-length
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = \textwidth]{heat-region-average-length}
+    \caption{Sablefish transition rates per year between geographic regions in the northeast Pacific Ocean. Left: small released length class (400--549 mm); Right: large released length class (550--800 mm). The main diagonal shows retention rates while the off-diagonals show emigration rates. Rows correspond to region of origin while columns represent destination. Transition rates are shown with (standard error). Regions are Regions are Bering Sea (BS), Aleutian Islands (AI), Western (WG), Central (CG), and Eastern Gulf of Alaska (EG), Southeast Alaska (SE), British Columbia (BC), and California Current (CC).}
+    \label{fig:heat-region-average-length}
+\end{figure}
+
+\section{Tables}
+% Symbol definitions
+\begin{table}[ht]
+  \centering
+  \caption{Symbol definitions (in progress)}
+  \renewcommand\arraystretch{1.2}
+  \label{tab:symbol-definitions}
+  \begin{tabular}{l l l l r}
+    \toprule
+    \textbf{Symbol} & \textbf{Condition} & \textbf{Dimension} & \textbf{Definition} & \textbf{Type} \\
+    \midrule
+    % Index limits
+    $A$ & $\in \mathbb{Z}^{+}$ & $\in \mathbb{Z}$ & Number of geographic areas & Index limit \\
+    $G_{\mathrm{rel}}$ & $\in \mathbb{Z}^{+}$ & $\in \mathbb{Z}$ & Number of release length groups & Index limit \\
+    $G_{\mathrm{harv}}$ & $\in \mathbb{Z}^{+}$ & $\in \mathbb{Z}$ & Number of harvest rate length groups & Index limit \\
+    $T_{\mathrm{rel}}$ & $\in \mathbb{Z}^{+}$ & $\in \mathbb{Z}$ & Number of release time steps & Index limit \\
+    $T_{\mathrm{lib}}$ & $\in \mathbb{Z}^{+}$ & $\in \mathbb{Z}$ & Maximum at liberty time steps & Index limit \\
+    $T_{\mathrm{study}}$ & $\in \mathbb{Z}^{+}$ & $\in \mathbb{Z}$ & Number time steps in the study & Index limit \\
+    $T_{\mathrm{mov}}$ & $\in \mathbb{Z}^{+}$ & $\in \mathbb{Z}$ & Number of movement rate time steps & Index limit \\ 
+    $T_{\mathrm{harv}}$ & $\in \mathbb{Z}^{+}$ & $\in \mathbb{Z}$ & Number of harvest rate time steps & Index limit \\
+    $T_{\mathrm{rep}}$ & $\in \mathbb{Z}^{+}$ & $\in \mathbb{Z}$ & Number of reporting rate time steps & Index limit \\
+    $T_{\mathrm{year}}$ & $\in \mathbb{Z}^{+}$ & $\in \mathbb{Z}$ & Number of release time steps per year & Index limit \\
+    \midrule
+    % Index functions
+    $P_T \! \left(\right)$ & $\in \left[1 \, .. \, T_{\mathrm{mov}} \right]$ & $\in \mathbb{Z}$ & $P_T \colon \left[1 \, .. \, T_{\mathrm{study}} \right] \to \left[1 \, .. \, T_{\mathrm{mov}} \right]$ & Index function \\
+    $H_T \! \left(\right)$ & $\in \left[1 \, .. \, T_{\mathrm{harv}} \right]$ & $\in \mathbb{Z}$ & $H_T \colon \left[1 \, .. \, T_{\mathrm{study}} \right] \to \left[1 \, .. \, T_{\mathrm{harv}} \right]$ & Index function \\
+    $H_G \! \left(\right)$ & $\in \left[1 \, .. \, G_{\mathrm{harv}} \right]$ & $\in \mathbb{Z}$ & $H_G \colon \left[1 \, .. \, G_{\mathrm{rel}} \right] \to \left[1 \, .. \, G_{\mathrm{harv}} \right]$ & Index function \\
+    $W_T \! \left(\right)$ & $\in \left[1 \, .. \, T_{\mathrm{rep}} \right]$ & $\in \mathbb{Z}$ & $W_T \colon \left[1 \, .. \, T_{\mathrm{study}} \right] \to \left[1 \, .. \, T_{\mathrm{rep}} \right]$ & Index function \\
+    \midrule
+    % Index variables
+    $a_{\mathrm{rel}}$ & $\in \left[1 \, .. \, A \right]$ & $\in \mathbb{Z}$ & Release area & Index \\
+    $a_{\mathrm{prev}}$ & $\in \left[1 \, .. \, A \right]$ & $\in \mathbb{Z}$ & Previous area & Index \\
+    $a_{\mathrm{curr}}$ & $\in \left[1 \, .. \, A \right]$ & $\in \mathbb{Z}$ & Current area & Index \\
+    $g_{\mathrm{rel}}$ & $\in \left[1 \, .. \, G_{\mathrm{rel}} \right]$ & $\in \mathbb{Z}$ & Release length group & Index \\
+    $g_{\mathrm{harv}}$ & $\in \left[1 \, .. \, G_{\mathrm{harv}} \right]$ & $\in \mathbb{Z}$ & Harvest rate length group & Index \\
+    $t_{\mathrm{rel}}$ & $\in \left[1 \, .. \, T_{\mathrm{rel}} \right]$ & $\in \mathbb{Z}$ & Release time step & Index \\
+    $t_{\mathrm{lib}}$ & $\in \left[1 \, .. \, T_{\mathrm{lib}} \right]$ & $\in \mathbb{Z}$ & At liberty time step & Index \\
+    $t_{\mathrm{curr}}$ & $\in \left[1 \, .. \, T_{\mathrm{study}} \right]$ & $\in \mathbb{Z}$ & Current time step & Index \\
+    $t_{\mathrm{mov}}$ & $\in \left[1 \, .. \, T_{\mathrm{mov}} \right]$ & $\in \mathbb{Z}$ & Movement rate time step & Index \\
+    $t_{\mathrm{rep}}$ & $\in \left[1 \, .. \, T_{\mathrm{rep}} \right]$ & $\in \mathbb{Z}$ & Reporting rate time step & Index \\
+    \midrule
+    % Input data
+
+
+    % Predicted values
+    % Parameters
+    $\bm{p}$ & $\in \left[0, 1 \right]$ & $\in \mathbb{R}^{A \times A \times T_{\mathrm{mov}} \times G_{\mathrm{rel}}}$ & Annual movement rates between areas & Parameters \\
+    $\bm{h}$ & $\in \left[0, 1 \right]$ & $\in \mathbb{R}^{G_{\mathrm{harv}} \times T_{\mathrm{harv}} \times A}$ & Annual harvest rates & Parameters \\
+    $\phi$ & $\in \mathbb{R}^{+}$ & $\in \mathbb{R}$ & Negative binomial dispersion & Parameters \\
+    $\bm{\sigma}$ & $\in \mathbb{R}^{+}$ & $\in \mathbb{R}^{A}$ & Optional random walk standard deviation & Parameters \\
+    
+    % $s$ & holder & Release Time & Index \\
+    % $r$ & holder & Release Area & Index \\
+    % $g$ & holder & Release Class & Index \\
+    % $t$ & holder & Time & Index \\
+    % $a$ & holder & Area & Index \\
+    % $i$ & holder & Area & Index \\
+    % $T_{s,r,g}$ & holder & Tags Released & Model input \\
+    % $R_{s,r,g,t,a}$ & holder & Tags Recovered & Model input \\
+    % $F_{t,a}$ & holder & Fishing Mortality Rate & Model input \\
+    % $W_{t,a}$ & holder & Tag Reporting Rate & Model input  \\
+    % $h$ & holder & Tag Loss Rate & Model input \\
+    % $c$ & holder & Initial Tag Loss Rate & Model input  \\
+    % $N_{s,r,g,t,a}$ & holder & Tag Abundance & Model output \\
+    % $\hat{R}_{s,r,g,t,a}$ & holder & Model output Tags Recovered & Model output \\
+    % $S_{t,a}$ & holder & Survival Rate & Model output \\
+    % $\Phi_{i,a}$ & holder & Movement Parameters & Model output \\
+    % $P_{i,a}$ & holder & Movement Rates & Model output  \\
+    % $b_{g}$ & holder & Selectivity and Bias & Model output  \\
+    % $M$ & holder & Natural Mortality Rate & Model output  \\
+    % $\phi$ & holder & Negative Binomial Dispersion & Model output \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+
+
+\newpage
+\vspace{20mm}
+
+\section{Everything below here subject to extensive revision}
+
+\vspace{20mm}
+
+
+
 
 
 \section{Overview}
@@ -203,85 +396,10 @@ The movement model predicted annual tagged sablefish abundance in each region, a
 \end{enumerate}
 
 
-% Symbol definitions
-\begin{table}[ht]
-  \centering
-  \caption{Symbol definitions}
-  \renewcommand\arraystretch{1.2}
-  \label{tab:symbol-definitions}
-  \begin{tabular}{l l l l r}
-    \toprule
-    \textbf{Symbol} & \textbf{Condition} & \textbf{Dimension} & \textbf{Definition} & \textbf{Type} \\
-    \midrule
-    % Index limits
-    $A$ & $\in \mathbb{Z}^{+}$ & $\in \mathbb{Z}$ & Number of geographic areas & Index limit \\
-    $G_{\mathrm{rel}}$ & $\in \mathbb{Z}^{+}$ & $\in \mathbb{Z}$ & Number of release length groups & Index limit \\
-    $G_{\mathrm{harv}}$ & $\in \mathbb{Z}^{+}$ & $\in \mathbb{Z}$ & Number of harvest rate length groups & Index limit \\
-    $T_{\mathrm{rel}}$ & $\in \mathbb{Z}^{+}$ & $\in \mathbb{Z}$ & Number of release time steps & Index limit \\
-    $T_{\mathrm{lib}}$ & $\in \mathbb{Z}^{+}$ & $\in \mathbb{Z}$ & Maximum at liberty time steps & Index limit \\
-    $T_{\mathrm{study}}$ & $\in \mathbb{Z}^{+}$ & $\in \mathbb{Z}$ & Number time steps in the study & Index limit \\
-    $T_{\mathrm{mov}}$ & $\in \mathbb{Z}^{+}$ & $\in \mathbb{Z}$ & Number of movement rate time steps & Index limit \\ 
-    $T_{\mathrm{harv}}$ & $\in \mathbb{Z}^{+}$ & $\in \mathbb{Z}$ & Number of harvest rate time steps & Index limit \\
-    $T_{\mathrm{rep}}$ & $\in \mathbb{Z}^{+}$ & $\in \mathbb{Z}$ & Number of reporting rate time steps & Index limit \\
-    $T_{\mathrm{year}}$ & $\in \mathbb{Z}^{+}$ & $\in \mathbb{Z}$ & Number of release time steps per year & Index limit \\
-    \midrule
-    % Index functions
-    $P_T \! \left(\right)$ & $\in \left[1 \, .. \, T_{\mathrm{mov}} \right]$ & $\in \mathbb{Z}$ & $P_T \colon \left[1 \, .. \, T_{\mathrm{study}} \right] \to \left[1 \, .. \, T_{\mathrm{mov}} \right]$ & Index function \\
-    $H_T \! \left(\right)$ & $\in \left[1 \, .. \, T_{\mathrm{harv}} \right]$ & $\in \mathbb{Z}$ & $H_T \colon \left[1 \, .. \, T_{\mathrm{study}} \right] \to \left[1 \, .. \, T_{\mathrm{harv}} \right]$ & Index function \\
-    $H_G \! \left(\right)$ & $\in \left[1 \, .. \, G_{\mathrm{harv}} \right]$ & $\in \mathbb{Z}$ & $H_G \colon \left[1 \, .. \, G_{\mathrm{rel}} \right] \to \left[1 \, .. \, G_{\mathrm{harv}} \right]$ & Index function \\
-    $W_T \! \left(\right)$ & $\in \left[1 \, .. \, T_{\mathrm{rep}} \right]$ & $\in \mathbb{Z}$ & $W_T \colon \left[1 \, .. \, T_{\mathrm{study}} \right] \to \left[1 \, .. \, T_{\mathrm{rep}} \right]$ & Index function \\
-    \midrule
-    % Index variables
-    $a_{\mathrm{rel}}$ & $\in \left[1 \, .. \, A \right]$ & $\in \mathbb{Z}$ & Release area & Index \\
-    $a_{\mathrm{prev}}$ & $\in \left[1 \, .. \, A \right]$ & $\in \mathbb{Z}$ & Previous area & Index \\
-    $a_{\mathrm{curr}}$ & $\in \left[1 \, .. \, A \right]$ & $\in \mathbb{Z}$ & Current area & Index \\
-    $g_{\mathrm{rel}}$ & $\in \left[1 \, .. \, G_{\mathrm{rel}} \right]$ & $\in \mathbb{Z}$ & Release length group & Index \\
-    $g_{\mathrm{harv}}$ & $\in \left[1 \, .. \, G_{\mathrm{harv}} \right]$ & $\in \mathbb{Z}$ & Harvest rate length group & Index \\
-    $t_{\mathrm{rel}}$ & $\in \left[1 \, .. \, T_{\mathrm{rel}} \right]$ & $\in \mathbb{Z}$ & Release time step & Index \\
-    $t_{\mathrm{lib}}$ & $\in \left[1 \, .. \, T_{\mathrm{lib}} \right]$ & $\in \mathbb{Z}$ & At liberty time step & Index \\
-    $t_{\mathrm{curr}}$ & $\in \left[1 \, .. \, T_{\mathrm{study}} \right]$ & $\in \mathbb{Z}$ & Current time step & Index \\
-    $t_{\mathrm{mov}}$ & $\in \left[1 \, .. \, T_{\mathrm{mov}} \right]$ & $\in \mathbb{Z}$ & Movement rate time step & Index \\
-    $t_{\mathrm{rep}}$ & $\in \left[1 \, .. \, T_{\mathrm{rep}} \right]$ & $\in \mathbb{Z}$ & Reporting rate time step & Index \\
-    \midrule
-    % Input data
-
-
-    % Predicted values
-    % Parameters
-    $\bm{p}$ & $\in \left[0, 1 \right]$ & $\in \mathbb{R}^{A \times A \times T_{\mathrm{mov}} \times G_{\mathrm{rel}}}$ & Annual movement rates between areas & Parameters \\
-    $\bm{h}$ & $\in \left[0, 1 \right]$ & $\in \mathbb{R}^{G_{\mathrm{harv}} \times T_{\mathrm{harv}} \times A}$ & Annual harvest rates & Parameters \\
-    $\phi$ & $\in \mathbb{R}^{+}$ & $\in \mathbb{R}$ & Negative binomial dispersion & Parameters \\
-    $\bm{\sigma}$ & $\in \mathbb{R}^{+}$ & $\in \mathbb{R}^{A}$ & Optional movement rate random walk standard deviation & Parameters \\
-    
-    % $s$ & holder & Release Time & Index \\
-    % $r$ & holder & Release Area & Index \\
-    % $g$ & holder & Release Class & Index \\
-    % $t$ & holder & Time & Index \\
-    % $a$ & holder & Area & Index \\
-    % $i$ & holder & Area & Index \\
-    % $T_{s,r,g}$ & holder & Tags Released & Model input \\
-    % $R_{s,r,g,t,a}$ & holder & Tags Recovered & Model input \\
-    % $F_{t,a}$ & holder & Fishing Mortality Rate & Model input \\
-    % $W_{t,a}$ & holder & Tag Reporting Rate & Model input  \\
-    % $h$ & holder & Tag Loss Rate & Model input \\
-    % $c$ & holder & Initial Tag Loss Rate & Model input  \\
-    % $N_{s,r,g,t,a}$ & holder & Tag Abundance & Model output \\
-    % $\hat{R}_{s,r,g,t,a}$ & holder & Model output Tags Recovered & Model output \\
-    % $S_{t,a}$ & holder & Survival Rate & Model output \\
-    % $\Phi_{i,a}$ & holder & Movement Parameters & Model output \\
-    % $P_{i,a}$ & holder & Movement Rates & Model output  \\
-    % $b_{g}$ & holder & Selectivity and Bias & Model output  \\
-    % $M$ & holder & Natural Mortality Rate & Model output  \\
-    % $\phi$ & holder & Negative Binomial Dispersion & Model output \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-
 \newpage
 \vspace{20mm}
 
-\section{Everything below here subject to extensive revision}
+\section{Everything below here subject to EVEN MORE extensive revision}
 
 \vspace{20mm}
 
