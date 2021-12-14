@@ -35,7 +35,7 @@
 #' @param movement_rate_fudge [numeric()]
 #' @param predicted_tags_fudge [numeric()]
 #' @param h_prior_mean [numeric()]
-#' @param h_prior_sd [numeric()]
+#' @param h_prior_sd_pct [numeric()]
 #' @param phi_prior_mean [numeric()]
 #' @param phi_prior_sd [numeric()]
 #' @param sigma_prior_mean [numeric()]
@@ -86,7 +86,7 @@ fit_movement_model <- function (spatial_name, # region, omregion
                                 movement_rate_fudge = 1e-12,
                                 predicted_tags_fudge = 1e-12,
                                 h_prior_mean = NULL,
-                                h_prior_sd,
+                                h_prior_sd_pct,
                                 phi_prior_mean,
                                 phi_prior_sd,
                                 sigma_prior_mean = numeric(0),
@@ -195,6 +195,8 @@ fit_movement_model <- function (spatial_name, # region, omregion
   for (i in seq_len(harvest_group_max)) {
     h_prior_mean[i, , ] <- h_prior_mean_matrix
   }
+
+  h_prior_sd <- h_prior_mean * h_prior_sd_pct
 
   # Prepare random walk standard deviation prior parameters --------------------
 
@@ -320,7 +322,7 @@ fit_movement_model <- function (spatial_name, # region, omregion
     h_group_index = array(harvest_group_index),
     random_walk = random_walk,
     h_prior_mean = h_prior_mean,
-    h_prior_sd = array(h_prior_sd, dim = h_dim),
+    h_prior_sd = h_prior_sd,
     phi_prior_mean = phi_prior_mean,
     phi_prior_sd = phi_prior_sd,
     sigma_prior_mean = sigma_prior_mean,
