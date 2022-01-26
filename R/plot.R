@@ -1,3 +1,94 @@
+plot_bar_sensitivity_harvest_prior <- function(study,
+                                               sd_001,
+                                               sd_005,
+                                               sd_010,
+                                               sd_015,
+                                               sd_020,
+                                               plot_name,
+                                               size_text,
+                                               legend_name,
+                                               width = 190,
+                                               height = 150,
+                                               file_type = ".png") {
+
+  # Prepare data ---------------------------------------------------------------
+
+  data <- dplyr::bind_rows(
+    sd_001 %>%
+      dplyr::filter(.data$previous_area == .data$current_area) %>%
+      dplyr::mutate(id = "0.01"),
+    sd_005 %>%
+      dplyr::filter(.data$previous_area == .data$current_area) %>%
+      dplyr::mutate(id = "0.05"),
+    sd_010 %>%
+      dplyr::filter(.data$previous_area == .data$current_area) %>%
+      dplyr::mutate(id = "0.10"),
+    sd_015 %>%
+      dplyr::filter(.data$previous_area == .data$current_area) %>%
+      dplyr::mutate(id = "0.15"),
+    sd_020 %>%
+      dplyr::filter(.data$previous_area == .data$current_area) %>%
+      dplyr::mutate(id = "0.20"),
+  ) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(region_short = number_to_short(.data$previous_area))
+
+  # Assemble figure ------------------------------------------------------------
+
+  p1 <- ggplot2::ggplot(
+    data = data,
+    mapping = ggplot2::aes(
+      x = .data$region_short,
+      y = .data$mean,
+      fill = .data$id
+    )
+  ) +
+    ggplot2::geom_bar(
+      stat = "identity",
+      position = "dodge",
+      color = "white"
+    ) +
+    ggplot2::geom_errorbar(
+      mapping = ggplot2::aes(
+        ymin = .data$mean - .data$sd,
+        ymax = .data$mean + .data$sd
+      ),
+      width = 0.2,
+      position = ggplot2::position_dodge(0.9)
+    ) +
+    ggplot2::scale_fill_brewer(
+      type = "div"
+    ) +
+    ggplot2::xlab("Region") +
+    ggplot2::ylab("Annual retention rate") +
+    ggplot2::labs(fill = legend_name) +
+    ggsidekick::theme_sleek() +
+    ggplot2::theme(
+      axis.title.x = ggplot2::element_blank(),
+      axis.text.x = ggplot2::element_blank(),
+      axis.ticks.x = ggplot2::element_blank(),
+      axis.title.y = ggplot2::element_blank(),
+      axis.text.y = ggplot2::element_text(size = size_text),
+      legend.position = "right",
+      legend.title = ggplot2::element_text(size = size_text),
+      legend.text = ggplot2::element_text(size = size_text),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank()
+    )
+
+  # Save ggplot ----------------------------------------------------------------
+
+  ggplot2::ggsave(
+    here::here("ms", "figs", paste0(plot_name, file_type)),
+    width = width,
+    height = height,
+    units = "mm"
+  )
+
+  # Return path
+  return(paste0("ms/", "figs/", plot_name, file_type))
+}
+
 plot_bar_sensitivity_reporting <- function (study,
                                             increase_ak,
                                             increase_bc,
@@ -76,7 +167,7 @@ plot_bar_sensitivity_reporting <- function (study,
     ggplot2::scale_fill_brewer(
       type = "div"
     ) +
-    ggplot2::labs(fill = "Reporting rate") +
+    ggplot2::labs(fill = legend_name) +
     ggsidekick::theme_sleek() +
     ggplot2::theme(
       axis.title.x = ggplot2::element_blank(),
@@ -117,7 +208,7 @@ plot_bar_sensitivity_reporting <- function (study,
       type = "div"
     ) +
     ggplot2::xlab("Region") +
-    ggplot2::labs(fill = "Reporting rate") +
+    ggplot2::labs(fill = legend_name) +
     ggsidekick::theme_sleek() +
     ggplot2::theme(
       axis.title.x = ggplot2::element_text(size = size_text),

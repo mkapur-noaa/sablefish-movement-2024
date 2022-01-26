@@ -131,14 +131,15 @@ unit_to_time <- function (unit) {
   c(1L, 4L, 12L)[which(c("year", "quarter", "month") == unit)]
 }
 
-#' Write An Object To Data And Return The Path
+#' Write An Object And Return The Path
 #'
+#' @param path [character()] folder path
 #' @param ... Unquoted name of an existing object to write to \code{data/}.
 #'
 #' @return [character()] file path
 #' @export
 #'
-write_data <- function (...) {
+write_data <- function (..., path = "data") {
   if (...length() != 1) stop("write_data() takes exactly 1 argument")
   args <- list(...)
   if (is.null(names(args))) {
@@ -147,6 +148,7 @@ write_data <- function (...) {
     name <- names(args)[1]
   }
   assign(x = name, value = ..1)
-  save(..., file = paste0("data/", name, ".rda"))
-  file.path("data", fs::path_ext_set(name, ".rda"))
+  save(..., file = paste0(path, "/", name, ".rda"))
+  file.path(path, fs::path_ext_set(name, ".rda"))
 }
+
