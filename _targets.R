@@ -1270,17 +1270,17 @@ list(
       format = "file"
     ),
     tar_target(
-      bar_sensitivity_harvest_prior,
-      plot_bar_sensitivity_harvest_prior(
+      bar_sensitivity_harvest_priors,
+      plot_bar_sensitivity_harvest_priors(
         study = region_average_pooled$p,
         sd_001 = region_average_pooled_h_prior_sd_001_pct$p,
         sd_005 = region_average_pooled_h_prior_sd_005_pct$p,
         sd_010 = region_average_pooled_h_prior_sd_010_pct$p,
         sd_015 = region_average_pooled_h_prior_sd_015_pct$p,
         sd_020 = region_average_pooled_h_prior_sd_020_pct$p,
-        plot_name = "bar-sensitivity-harvest-prior",
+        plot_name = "bar-sensitivity-harvest-priors",
         size_text = 8,
-        legend_name = "SD percent",
+        legend_name = "Prior SD/Mean",
         width = 190,
         height = 80,
         file_type = ".png"

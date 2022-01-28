@@ -1,15 +1,15 @@
-plot_bar_sensitivity_harvest_prior <- function(study,
-                                               sd_001,
-                                               sd_005,
-                                               sd_010,
-                                               sd_015,
-                                               sd_020,
-                                               plot_name,
-                                               size_text,
-                                               legend_name,
-                                               width = 190,
-                                               height = 150,
-                                               file_type = ".png") {
+plot_bar_sensitivity_harvest_priors <- function(study,
+                                                sd_001,
+                                                sd_005,
+                                                sd_010,
+                                                sd_015,
+                                                sd_020,
+                                                plot_name,
+                                                size_text,
+                                                legend_name,
+                                                width = 190,
+                                                height = 150,
+                                                file_type = ".png") {
 
   # Prepare data ---------------------------------------------------------------
 
