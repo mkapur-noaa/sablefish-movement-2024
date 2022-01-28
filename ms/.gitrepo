@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://git.overleaf.com/5eb078b74a86f80001efc257
 	branch = master
-	commit = 6370b25b6a40db02ea33bc0c6f7d822b60401879
-	parent = e5c5ae56b8813d081f649bb94bc5c9f709ce78f0
+	commit = bfde99a931abe936d1e8e83eff97f0f2cbcdbc0a
+	parent = e75771020fa231cb7a2938319e493db3ef183925
 	method = merge
 	cmdver = 0.4.3
