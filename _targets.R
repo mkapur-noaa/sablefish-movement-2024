@@ -160,7 +160,7 @@ list(
     ),
     tar_target(
       write_region_average_pooled,
-      write_data(region_average_pooled)
+      write_data(region_average_pooled, path = "fits")
     )
   ),
   # Fit region-average-length --------------------------------------------------
@@ -219,342 +219,345 @@ list(
       write_data(region_average_length, path = "fits")
     )
   ),
-  # # Fit region-season-pooled --------------------------------------------------
-  # list(
-  #   tar_target(
-  #     region_season_pooled,
-  #     fit_movement_model(
-  #       # Identifiers
-  #       spatial_name = "region",
-  #       temporal_name = "season",
-  #       grouping_name = "pooled",
-  #       # CmdStanR arguments
-  #       chains = chains,
-  #       nuts_step_size = nuts_step_size,
-  #       iter_warmup = iter_warmup,
-  #       iter_sampling = iter_sampling,
-  #       use_reduce_sum = use_reduce_sum,
-  #       threads_per_chain = threads_per_chain,
-  #       # Data
-  #       tags_released = tags_released,
-  #       tags_recovered = tags_recovered,
-  #       harvest_rates = harvest_rates,
-  #       # Data arguments
-  #       released_time_unit = released_time_unit,
-  #       released_time_max = released_time_max,
-  #       liberty_time_max = liberty_time_max,
-  #       colname_released_date = "released_date",
-  #       colname_released_area = "released_region",
-  #       colname_group = "released_length",
-  #       colname_recovered_date = "recovered_date",
-  #       colname_recovered_area = "recovered_region",
-  #       colname_id = "tag_id",
-  #       area_list = area_list_region,
-  #       group_list = list(pooled = 400:800),
-  #       released_date_start = released_date_start,
-  #       released_date_end = released_date_end,
-  #       # Data list arguments
-  #       movement_time_max = 4,
-  #       harvest_time_max = 32,
-  #       reporting_time_max = 1,
-  #       tag_loss_rate_initial = tag_loss_rate_initial,
-  #       tag_loss_rate_ongoing = tag_loss_rate_ongoing,
-  #       natural_mortality_rate = natural_mortality_rate,
-  #       reporting_rates = array(c(rep(.4, 6), .5, .3), c(1, 8)),
-  #       movement_rate_fudge = movement_rate_fudge,
-  #       predicted_tags_fudge = predicted_tags_fudge,
-  #       h_prior_sd_pct = h_prior_sd_pct,
-  #       phi_prior_mean = phi_prior_mean,
-  #       phi_prior_sd = phi_prior_sd,
-  #       sigma_prior_mean = numeric(0),
-  #       sigma_prior_sd = numeric(0)
-  #     )$summaries
-  #   ),
-  #   tar_target(
-  #     write_region_season_pooled,
-  #     write_data(region_season_pooled, path = "fits")
-  #   )
-  # ),
-  # # Fit region-season-length --------------------------------------------------
-  # list(
-  #   tar_target(
-  #     region_season_length,
-  #     fit_movement_model(
-  #       # Identifiers
-  #       spatial_name = "region",
-  #       temporal_name = "season",
-  #       grouping_name = "length",
-  #       # CmdStanR arguments
-  #       chains = chains,
-  #       nuts_step_size = nuts_step_size,
-  #       iter_warmup = iter_warmup,
-  #       iter_sampling = iter_sampling,
-  #       use_reduce_sum = use_reduce_sum,
-  #       threads_per_chain = threads_per_chain,
-  #       # Data
-  #       tags_released = tags_released,
-  #       tags_recovered = tags_recovered,
-  #       harvest_rates = harvest_rates,
-  #       # Data arguments
-  #       released_time_unit = released_time_unit,
-  #       released_time_max = released_time_max,
-  #       liberty_time_max = liberty_time_max,
-  #       colname_released_date = "released_date",
-  #       colname_released_area = "released_region",
-  #       colname_group = "released_length",
-  #       colname_recovered_date = "recovered_date",
-  #       colname_recovered_area = "recovered_region",
-  #       colname_id = "tag_id",
-  #       area_list = area_list_region,
-  #       group_list = list(small = 400:549, large = 550:800),
-  #       released_date_start = released_date_start,
-  #       released_date_end = released_date_end,
-  #       # Data list arguments
-  #       movement_time_max = 4,
-  #       harvest_time_max = 32,
-  #       reporting_time_max = 1,
-  #       tag_loss_rate_initial = tag_loss_rate_initial,
-  #       tag_loss_rate_ongoing = tag_loss_rate_ongoing,
-  #       natural_mortality_rate = natural_mortality_rate,
-  #       reporting_rates = array(c(rep(.4, 6), .5, .3), c(1, 8)),
-  #       movement_rate_fudge = movement_rate_fudge,
-  #       predicted_tags_fudge = predicted_tags_fudge,
-  #       h_prior_sd_pct = h_prior_sd_pct,
-  #       phi_prior_mean = phi_prior_mean,
-  #       phi_prior_sd = phi_prior_sd,
-  #       sigma_prior_mean = numeric(0),
-  #       sigma_prior_sd = numeric(0)
-  #     )$summaries
-  #   ),
-  #   tar_target(
-  #     write_region_season_length,
-  #     write_data(region_season_length, path = "fits")
-  #   )
-  # ),
-  # # Fit region-year-pooled --------------------------------------------------
-  # list(
-  #   tar_target(
-  #     region_year_pooled,
-  #     fit_movement_model(
-  #       # Identifiers
-  #       spatial_name = "region",
-  #       temporal_name = "year",
-  #       grouping_name = "pooled",
-  #       # CmdStanR arguments
-  #       chains = chains,
-  #       nuts_step_size = nuts_step_size,
-  #       iter_warmup = iter_warmup,
-  #       iter_sampling = iter_sampling,
-  #       use_reduce_sum = use_reduce_sum,
-  #       threads_per_chain = threads_per_chain,
-  #       # Data
-  #       tags_released = tags_released,
-  #       tags_recovered = tags_recovered,
-  #       harvest_rates = harvest_rates,
-  #       # Data arguments
-  #       released_time_unit = released_time_unit,
-  #       released_time_max = released_time_max,
-  #       liberty_time_max = liberty_time_max,
-  #       colname_released_date = "released_date",
-  #       colname_released_area = "released_region",
-  #       colname_group = "released_length",
-  #       colname_recovered_date = "recovered_date",
-  #       colname_recovered_area = "recovered_region",
-  #       colname_id = "tag_id",
-  #       area_list = area_list_region,
-  #       group_list = list(pooled = 400:800),
-  #       released_date_start = released_date_start,
-  #       released_date_end = released_date_end,
-  #       # Data list arguments
-  #       movement_time_max = 40,
-  #       harvest_time_max = 40,
-  #       reporting_time_max = 1,
-  #       tag_loss_rate_initial = tag_loss_rate_initial,
-  #       tag_loss_rate_ongoing = tag_loss_rate_ongoing,
-  #       natural_mortality_rate = natural_mortality_rate,
-  #       reporting_rates = array(c(rep(.4, 6), .5, .3), c(1, 8)),
-  #       movement_rate_fudge = movement_rate_fudge,
-  #       predicted_tags_fudge = predicted_tags_fudge,
-  #       h_prior_sd_pct = h_prior_sd_pct,
-  #       phi_prior_mean = phi_prior_mean,
-  #       phi_prior_sd = phi_prior_sd,
-  #       sigma_prior_mean = 0.01,
-  #       sigma_prior_sd = 0.005
-  #     )$summaries
-  #   ),
-  #   tar_target(
-  #     write_region_year_pooled,
-  #     write_data(region_year_pooled, path = "fits")
-  #   )
-  # ),
-  # # Fit region-year-length --------------------------------------------------
-  # list(
-  #   tar_target(
-  #     region_year_length,
-  #     fit_movement_model(
-  #       # Identifiers
-  #       spatial_name = "region",
-  #       temporal_name = "year",
-  #       grouping_name = "length",
-  #       # CmdStanR arguments
-  #       chains = chains,
-  #       nuts_step_size = nuts_step_size,
-  #       iter_warmup = iter_warmup,
-  #       iter_sampling = iter_sampling,
-  #       use_reduce_sum = use_reduce_sum,
-  #       threads_per_chain = threads_per_chain,
-  #       # Data
-  #       tags_released = tags_released,
-  #       tags_recovered = tags_recovered,
-  #       harvest_rates = harvest_rates,
-  #       # Data arguments
-  #       released_time_unit = released_time_unit,
-  #       released_time_max = released_time_max,
-  #       liberty_time_max = liberty_time_max,
-  #       colname_released_date = "released_date",
-  #       colname_released_area = "released_region",
-  #       colname_group = "released_length",
-  #       colname_recovered_date = "recovered_date",
-  #       colname_recovered_area = "recovered_region",
-  #       colname_id = "tag_id",
-  #       area_list = area_list_region,
-  #       group_list = list(small = 400:549, large = 550:800),
-  #       released_date_start = released_date_start,
-  #       released_date_end = released_date_end,
-  #       # Data list arguments
-  #       movement_time_max = 40,
-  #       harvest_time_max = 40,
-  #       reporting_time_max = 1,
-  #       tag_loss_rate_initial = tag_loss_rate_initial,
-  #       tag_loss_rate_ongoing = tag_loss_rate_ongoing,
-  #       natural_mortality_rate = natural_mortality_rate,
-  #       reporting_rates = array(c(rep(.4, 6), .5, .3), c(1, 8)),
-  #       movement_rate_fudge = movement_rate_fudge,
-  #       predicted_tags_fudge = predicted_tags_fudge,
-  #       h_prior_sd_pct = h_prior_sd_pct,
-  #       phi_prior_mean = phi_prior_mean,
-  #       phi_prior_sd = phi_prior_sd,
-  #       sigma_prior_mean = 0.01,
-  #       sigma_prior_sd = 0.005
-  #     )$summaries
-  #   ),
-  #   tar_target(
-  #     write_region_year_length,
-  #     write_data(region_year_length, path = "fits")
-  #   )
-  # ),
-  # # Fit omregion-average-pooled --------------------------------------------------
-  # list(
-  #   tar_target(
-  #     omregion_average_pooled,
-  #     fit_movement_model(
-  #       # Identifiers
-  #       spatial_name = "omregion",
-  #       temporal_name = "average",
-  #       grouping_name = "pooled",
-  #       # CmdStanR arguments
-  #       chains = chains,
-  #       nuts_step_size = nuts_step_size,
-  #       iter_warmup = iter_warmup,
-  #       iter_sampling = iter_sampling,
-  #       use_reduce_sum = use_reduce_sum,
-  #       threads_per_chain = threads_per_chain,
-  #       # Data
-  #       tags_released = tags_released,
-  #       tags_recovered = tags_recovered,
-  #       harvest_rates = harvest_rates,
-  #       # Data arguments
-  #       released_time_unit = released_time_unit,
-  #       released_time_max = released_time_max,
-  #       liberty_time_max = liberty_time_max,
-  #       colname_released_date = "released_date",
-  #       colname_released_area = "released_omregion",
-  #       colname_group = "released_length",
-  #       colname_recovered_date = "recovered_date",
-  #       colname_recovered_area = "recovered_omregion",
-  #       colname_id = "tag_id",
-  #       area_list = area_list_omregion,
-  #       group_list = list(pooled = 400:800),
-  #       released_date_start = released_date_start,
-  #       released_date_end = released_date_end,
-  #       # Data list arguments
-  #       movement_time_max = 1,
-  #       harvest_time_max = 40,
-  #       reporting_time_max = 1,
-  #       tag_loss_rate_initial = tag_loss_rate_initial,
-  #       tag_loss_rate_ongoing = tag_loss_rate_ongoing,
-  #       natural_mortality_rate = natural_mortality_rate,
-  #       reporting_rates = array(c(.4, .4, .5, .5, .3, .3), c(1, 6)),
-  #       movement_rate_fudge = movement_rate_fudge,
-  #       predicted_tags_fudge = predicted_tags_fudge,
-  #       h_prior_sd_pct = h_prior_sd_pct,
-  #       phi_prior_mean = phi_prior_mean,
-  #       phi_prior_sd = phi_prior_sd,
-  #       sigma_prior_mean = numeric(0),
-  #       sigma_prior_sd = numeric(0)
-  #     )$summaries
-  #   ),
-  #   tar_target(
-  #     write_omregion_average_pooled,
-  #     write_data(omregion_average_pooled, path = "fits")
-  #   )
-  # ),
-  # # Fit omregion-average-length --------------------------------------------------
-  # list(
-  #   tar_target(
-  #     omregion_average_length,
-  #     fit_movement_model(
-  #       # Identifiers
-  #       spatial_name = "omregion",
-  #       temporal_name = "average",
-  #       grouping_name = "length",
-  #       # CmdStanR arguments
-  #       chains = chains,
-  #       nuts_step_size = nuts_step_size,
-  #       iter_warmup = iter_warmup,
-  #       iter_sampling = iter_sampling,
-  #       use_reduce_sum = use_reduce_sum,
-  #       threads_per_chain = threads_per_chain,
-  #       # Data
-  #       tags_released = tags_released,
-  #       tags_recovered = tags_recovered,
-  #       harvest_rates = harvest_rates,
-  #       # Data arguments
-  #       released_time_unit = released_time_unit,
-  #       released_time_max = released_time_max,
-  #       liberty_time_max = liberty_time_max,
-  #       colname_released_date = "released_date",
-  #       colname_released_area = "released_omregion",
-  #       colname_group = "released_length",
-  #       colname_recovered_date = "recovered_date",
-  #       colname_recovered_area = "recovered_omregion",
-  #       colname_id = "tag_id",
-  #       area_list = area_list_omregion,
-  #       group_list = list(small = 400:549, large = 550:800),
-  #       released_date_start = released_date_start,
-  #       released_date_end = released_date_end,
-  #       # Data list arguments
-  #       movement_time_max = 1,
-  #       harvest_time_max = 40,
-  #       reporting_time_max = 1,
-  #       tag_loss_rate_initial = tag_loss_rate_initial,
-  #       tag_loss_rate_ongoing = tag_loss_rate_ongoing,
-  #       natural_mortality_rate = natural_mortality_rate,
-  #       reporting_rates = array(c(.4, .4, .5, .5, .3, .3), c(1, 6)),
-  #       movement_rate_fudge = movement_rate_fudge,
-  #       predicted_tags_fudge = predicted_tags_fudge,
-  #       h_prior_sd_pct = h_prior_sd_pct,
-  #       phi_prior_mean = phi_prior_mean,
-  #       phi_prior_sd = phi_prior_sd,
-  #       sigma_prior_mean = numeric(0),
-  #       sigma_prior_sd = numeric(0)
-  #     )$summaries
-  #   ),
-  #   tar_target(
-  #     write_omregion_average_length,
-  #     write_data(omregion_average_length, path = "fits")
-  #   )
-  # ),
+  # Fit region-season-pooled --------------------------------------------------
+  list(
+    tar_target(
+      region_season_pooled,
+      fit_movement_model(
+        # Identifiers
+        spatial_name = "region",
+        temporal_name = "season",
+        grouping_name = "pooled",
+        # CmdStanR arguments
+        chains = chains,
+        nuts_step_size = nuts_step_size,
+        iter_warmup = iter_warmup,
+        iter_sampling = iter_sampling,
+        use_reduce_sum = use_reduce_sum,
+        threads_per_chain = threads_per_chain,
+        # Data
+        tags_released = tags_released,
+        tags_recovered = tags_recovered,
+        harvest_rates = harvest_rates,
+        # Data arguments
+        released_time_unit = released_time_unit,
+        released_time_max = released_time_max,
+        liberty_time_max = liberty_time_max,
+        colname_released_date = "released_date",
+        colname_released_area = "released_region",
+        colname_group = "released_length",
+        colname_recovered_date = "recovered_date",
+        colname_recovered_area = "recovered_region",
+        colname_id = "tag_id",
+        area_list = area_list_region,
+        group_list = list(pooled = 400:800),
+        released_date_start = released_date_start,
+        released_date_end = released_date_end,
+        # Data list arguments
+        movement_time_max = 4,
+        harvest_time_max = 32,
+        reporting_time_max = 1,
+        tag_loss_rate_initial = tag_loss_rate_initial,
+        tag_loss_rate_ongoing = tag_loss_rate_ongoing,
+        natural_mortality_rate = natural_mortality_rate,
+        reporting_rates = array(c(rep(.4, 6), .5, .3), c(1, 8)),
+        movement_rate_fudge = movement_rate_fudge,
+        predicted_tags_fudge = predicted_tags_fudge,
+        h_prior_sd_pct = h_prior_sd_pct,
+        phi_prior_mean = phi_prior_mean,
+        phi_prior_sd = phi_prior_sd,
+        sigma_prior_mean = numeric(0),
+        sigma_prior_sd = numeric(0)
+      )$summaries
+    ),
+    tar_target(
+      write_region_season_pooled,
+      write_data(region_season_pooled, path = "fits")
+    )
+  ),
+  # Fit region-season-length --------------------------------------------------
+  list(
+    tar_target(
+      region_season_length,
+      fit_movement_model(
+        # Identifiers
+        spatial_name = "region",
+        temporal_name = "season",
+        grouping_name = "length",
+        # CmdStanR arguments
+        chains = chains,
+        nuts_step_size = nuts_step_size,
+        iter_warmup = iter_warmup,
+        iter_sampling = iter_sampling,
+        use_reduce_sum = use_reduce_sum,
+        threads_per_chain = threads_per_chain,
+        # Data
+        tags_released = tags_released,
+        tags_recovered = tags_recovered,
+        harvest_rates = harvest_rates,
+        # Data arguments
+        released_time_unit = released_time_unit,
+        released_time_max = released_time_max,
+        liberty_time_max = liberty_time_max,
+        colname_released_date = "released_date",
+        colname_released_area = "released_region",
+        colname_group = "released_length",
+        colname_recovered_date = "recovered_date",
+        colname_recovered_area = "recovered_region",
+        colname_id = "tag_id",
+        area_list = area_list_region,
+        group_list = list(small = 400:549, large = 550:800),
+        released_date_start = released_date_start,
+        released_date_end = released_date_end,
+        # Data list arguments
+        movement_time_max = 4,
+        harvest_time_max = 32,
+        reporting_time_max = 1,
+        tag_loss_rate_initial = tag_loss_rate_initial,
+        tag_loss_rate_ongoing = tag_loss_rate_ongoing,
+        natural_mortality_rate = natural_mortality_rate,
+        reporting_rates = array(c(rep(.4, 6), .5, .3), c(1, 8)),
+        movement_rate_fudge = movement_rate_fudge,
+        predicted_tags_fudge = predicted_tags_fudge,
+        h_prior_sd_pct = h_prior_sd_pct,
+        phi_prior_mean = phi_prior_mean,
+        phi_prior_sd = phi_prior_sd,
+        sigma_prior_mean = numeric(0),
+        sigma_prior_sd = numeric(0)
+      )$summaries
+    ),
+    tar_target(
+      write_region_season_length,
+      write_data(region_season_length, path = "fits")
+    )
+  ),
+  # Fit region-year-pooled --------------------------------------------------
+  list(
+    tar_target(
+      region_year_pooled,
+      fit_movement_model(
+        # Identifiers
+        spatial_name = "region",
+        temporal_name = "year",
+        grouping_name = "pooled",
+        # CmdStanR arguments
+        chains = chains,
+        nuts_step_size = nuts_step_size,
+        iter_warmup = iter_warmup,
+        iter_sampling = iter_sampling,
+        use_reduce_sum = use_reduce_sum,
+        threads_per_chain = threads_per_chain,
+        # Data
+        tags_released = tags_released,
+        tags_recovered = tags_recovered,
+        harvest_rates = harvest_rates,
+        # Data arguments
+        released_time_unit = released_time_unit,
+        released_time_max = released_time_max,
+        liberty_time_max = liberty_time_max,
+        colname_released_date = "released_date",
+        colname_released_area = "released_region",
+        colname_group = "released_length",
+        colname_recovered_date = "recovered_date",
+        colname_recovered_area = "recovered_region",
+        colname_id = "tag_id",
+        area_list = area_list_region,
+        group_list = list(pooled = 400:800),
+        released_date_start = released_date_start,
+        released_date_end = released_date_end,
+        # Data list arguments
+        movement_time_max = 40,
+        harvest_time_max = 40,
+        reporting_time_max = 1,
+        tag_loss_rate_initial = tag_loss_rate_initial,
+        tag_loss_rate_ongoing = tag_loss_rate_ongoing,
+        natural_mortality_rate = natural_mortality_rate,
+        reporting_rates = array(c(rep(.4, 6), .5, .3), c(1, 8)),
+        movement_rate_fudge = movement_rate_fudge,
+        predicted_tags_fudge = predicted_tags_fudge,
+        h_prior_sd_pct = h_prior_sd_pct,
+        phi_prior_mean = phi_prior_mean,
+        phi_prior_sd = phi_prior_sd,
+        sigma_prior_mean = 0.01,
+        sigma_prior_sd = 0.005,
+        # Cmdstanr::sample()
+        max_treedepth = 12,
+        adapt_delta = 0.95
+      )$summaries
+    ),
+    tar_target(
+      write_region_year_pooled,
+      write_data(region_year_pooled, path = "fits")
+    )
+  ),
+  # Fit region-year-length --------------------------------------------------
+  list(
+    tar_target(
+      region_year_length,
+      fit_movement_model(
+        # Identifiers
+        spatial_name = "region",
+        temporal_name = "year",
+        grouping_name = "length",
+        # CmdStanR arguments
+        chains = chains,
+        nuts_step_size = nuts_step_size,
+        iter_warmup = iter_warmup,
+        iter_sampling = iter_sampling,
+        use_reduce_sum = use_reduce_sum,
+        threads_per_chain = threads_per_chain,
+        # Data
+        tags_released = tags_released,
+        tags_recovered = tags_recovered,
+        harvest_rates = harvest_rates,
+        # Data arguments
+        released_time_unit = released_time_unit,
+        released_time_max = released_time_max,
+        liberty_time_max = liberty_time_max,
+        colname_released_date = "released_date",
+        colname_released_area = "released_region",
+        colname_group = "released_length",
+        colname_recovered_date = "recovered_date",
+        colname_recovered_area = "recovered_region",
+        colname_id = "tag_id",
+        area_list = area_list_region,
+        group_list = list(small = 400:549, large = 550:800),
+        released_date_start = released_date_start,
+        released_date_end = released_date_end,
+        # Data list arguments
+        movement_time_max = 40,
+        harvest_time_max = 40,
+        reporting_time_max = 1,
+        tag_loss_rate_initial = tag_loss_rate_initial,
+        tag_loss_rate_ongoing = tag_loss_rate_ongoing,
+        natural_mortality_rate = natural_mortality_rate,
+        reporting_rates = array(c(rep(.4, 6), .5, .3), c(1, 8)),
+        movement_rate_fudge = movement_rate_fudge,
+        predicted_tags_fudge = predicted_tags_fudge,
+        h_prior_sd_pct = h_prior_sd_pct,
+        phi_prior_mean = phi_prior_mean,
+        phi_prior_sd = phi_prior_sd,
+        sigma_prior_mean = 0.01,
+        sigma_prior_sd = 0.005
+      )$summaries
+    ),
+    tar_target(
+      write_region_year_length,
+      write_data(region_year_length, path = "fits")
+    )
+  ),
+  # Fit omregion-average-pooled --------------------------------------------------
+  list(
+    tar_target(
+      omregion_average_pooled,
+      fit_movement_model(
+        # Identifiers
+        spatial_name = "omregion",
+        temporal_name = "average",
+        grouping_name = "pooled",
+        # CmdStanR arguments
+        chains = chains,
+        nuts_step_size = nuts_step_size,
+        iter_warmup = iter_warmup,
+        iter_sampling = iter_sampling,
+        use_reduce_sum = use_reduce_sum,
+        threads_per_chain = threads_per_chain,
+        # Data
+        tags_released = tags_released,
+        tags_recovered = tags_recovered,
+        harvest_rates = harvest_rates,
+        # Data arguments
+        released_time_unit = released_time_unit,
+        released_time_max = released_time_max,
+        liberty_time_max = liberty_time_max,
+        colname_released_date = "released_date",
+        colname_released_area = "released_omregion",
+        colname_group = "released_length",
+        colname_recovered_date = "recovered_date",
+        colname_recovered_area = "recovered_omregion",
+        colname_id = "tag_id",
+        area_list = area_list_omregion,
+        group_list = list(pooled = 400:800),
+        released_date_start = released_date_start,
+        released_date_end = released_date_end,
+        # Data list arguments
+        movement_time_max = 1,
+        harvest_time_max = 40,
+        reporting_time_max = 1,
+        tag_loss_rate_initial = tag_loss_rate_initial,
+        tag_loss_rate_ongoing = tag_loss_rate_ongoing,
+        natural_mortality_rate = natural_mortality_rate,
+        reporting_rates = array(c(.4, .4, .5, .5, .3, .3), c(1, 6)),
+        movement_rate_fudge = movement_rate_fudge,
+        predicted_tags_fudge = predicted_tags_fudge,
+        h_prior_sd_pct = h_prior_sd_pct,
+        phi_prior_mean = phi_prior_mean,
+        phi_prior_sd = phi_prior_sd,
+        sigma_prior_mean = numeric(0),
+        sigma_prior_sd = numeric(0)
+      )$summaries
+    ),
+    tar_target(
+      write_omregion_average_pooled,
+      write_data(omregion_average_pooled, path = "fits")
+    )
+  ),
+  # Fit omregion-average-length --------------------------------------------------
+  list(
+    tar_target(
+      omregion_average_length,
+      fit_movement_model(
+        # Identifiers
+        spatial_name = "omregion",
+        temporal_name = "average",
+        grouping_name = "length",
+        # CmdStanR arguments
+        chains = chains,
+        nuts_step_size = nuts_step_size,
+        iter_warmup = iter_warmup,
+        iter_sampling = iter_sampling,
+        use_reduce_sum = use_reduce_sum,
+        threads_per_chain = threads_per_chain,
+        # Data
+        tags_released = tags_released,
+        tags_recovered = tags_recovered,
+        harvest_rates = harvest_rates,
+        # Data arguments
+        released_time_unit = released_time_unit,
+        released_time_max = released_time_max,
+        liberty_time_max = liberty_time_max,
+        colname_released_date = "released_date",
+        colname_released_area = "released_omregion",
+        colname_group = "released_length",
+        colname_recovered_date = "recovered_date",
+        colname_recovered_area = "recovered_omregion",
+        colname_id = "tag_id",
+        area_list = area_list_omregion,
+        group_list = list(small = 400:549, large = 550:800),
+        released_date_start = released_date_start,
+        released_date_end = released_date_end,
+        # Data list arguments
+        movement_time_max = 1,
+        harvest_time_max = 40,
+        reporting_time_max = 1,
+        tag_loss_rate_initial = tag_loss_rate_initial,
+        tag_loss_rate_ongoing = tag_loss_rate_ongoing,
+        natural_mortality_rate = natural_mortality_rate,
+        reporting_rates = array(c(.4, .4, .5, .5, .3, .3), c(1, 6)),
+        movement_rate_fudge = movement_rate_fudge,
+        predicted_tags_fudge = predicted_tags_fudge,
+        h_prior_sd_pct = h_prior_sd_pct,
+        phi_prior_mean = phi_prior_mean,
+        phi_prior_sd = phi_prior_sd,
+        sigma_prior_mean = numeric(0),
+        sigma_prior_sd = numeric(0)
+      )$summaries
+    ),
+    tar_target(
+      write_omregion_average_length,
+      write_data(omregion_average_length, path = "fits")
+    )
+  ),
   # Fit region-average-pooled-h-prior-sd-001-pct -------------------------------
   list(
     tar_target(
@@ -835,457 +838,456 @@ list(
       write_data(region_average_pooled_h_prior_sd_020_pct, path = "fits")
     )
   ),
-  # # Fit region-average-pooled-w-decr-ak-33-pct ---------------------------------
-  # list(
-  #   tar_target(
-  #     region_average_pooled_w_decr_ak_33_pct,
-  #     fit_movement_model(
-  #       # Identifiers
-  #       spatial_name = "region",
-  #       temporal_name = "average",
-  #       grouping_name = "pooled",
-  #       # CmdStanR arguments
-  #       chains = chains,
-  #       nuts_step_size = nuts_step_size,
-  #       iter_warmup = iter_warmup,
-  #       iter_sampling = iter_sampling,
-  #       use_reduce_sum = use_reduce_sum,
-  #       threads_per_chain = threads_per_chain,
-  #       # Data
-  #       tags_released = tags_released,
-  #       tags_recovered = tags_recovered,
-  #       harvest_rates = harvest_rates,
-  #       # Data arguments
-  #       released_time_unit = released_time_unit,
-  #       released_time_max = released_time_max,
-  #       liberty_time_max = liberty_time_max,
-  #       colname_released_date = "released_date",
-  #       colname_released_area = "released_region",
-  #       colname_group = "released_length",
-  #       colname_recovered_date = "recovered_date",
-  #       colname_recovered_area = "recovered_region",
-  #       colname_id = "tag_id",
-  #       area_list = area_list_region,
-  #       group_list = list(pooled = 400:800),
-  #       released_date_start = released_date_start,
-  #       released_date_end = released_date_end,
-  #       # Data list arguments
-  #       movement_time_max = 1,
-  #       harvest_time_max = 40,
-  #       reporting_time_max = 1,
-  #       tag_loss_rate_initial = tag_loss_rate_initial,
-  #       tag_loss_rate_ongoing = tag_loss_rate_ongoing,
-  #       natural_mortality_rate = natural_mortality_rate,
-  #       reporting_rates = array(c(rep(.4, 6) * .67, .5, .3), c(1, 8)),
-  #       movement_rate_fudge = movement_rate_fudge,
-  #       predicted_tags_fudge = predicted_tags_fudge,
-  #       h_prior_sd_pct = h_prior_sd_pct,
-  #       phi_prior_mean = phi_prior_mean,
-  #       phi_prior_sd = phi_prior_sd,
-  #       sigma_prior_mean = numeric(0),
-  #       sigma_prior_sd = numeric(0)
-  #     )$summaries
-  #   ),
-  #   tar_target(
-  #     write_region_average_pooled_w_decr_ak_33_pct,
-  #     write_data(region_average_pooled_w_decr_ak_33_pct, path = "fits")
-  #   )
-  # ),
-  # # Fit region-average-pooled-w-decr-bc-33-pct ---------------------------------
-  # list(
-  #   tar_target(
-  #     region_average_pooled_w_decr_bc_33_pct,
-  #     fit_movement_model(
-  #       # Identifiers
-  #       spatial_name = "region",
-  #       temporal_name = "average",
-  #       grouping_name = "pooled",
-  #       # CmdStanR arguments
-  #       chains = chains,
-  #       nuts_step_size = nuts_step_size,
-  #       iter_warmup = iter_warmup,
-  #       iter_sampling = iter_sampling,
-  #       use_reduce_sum = use_reduce_sum,
-  #       threads_per_chain = threads_per_chain,
-  #       # Data
-  #       tags_released = tags_released,
-  #       tags_recovered = tags_recovered,
-  #       harvest_rates = harvest_rates,
-  #       # Data arguments
-  #       released_time_unit = released_time_unit,
-  #       released_time_max = released_time_max,
-  #       liberty_time_max = liberty_time_max,
-  #       colname_released_date = "released_date",
-  #       colname_released_area = "released_region",
-  #       colname_group = "released_length",
-  #       colname_recovered_date = "recovered_date",
-  #       colname_recovered_area = "recovered_region",
-  #       colname_id = "tag_id",
-  #       area_list = area_list_region,
-  #       group_list = list(pooled = 400:800),
-  #       released_date_start = released_date_start,
-  #       released_date_end = released_date_end,
-  #       # Data list arguments
-  #       movement_time_max = 1,
-  #       harvest_time_max = 40,
-  #       reporting_time_max = 1,
-  #       tag_loss_rate_initial = tag_loss_rate_initial,
-  #       tag_loss_rate_ongoing = tag_loss_rate_ongoing,
-  #       natural_mortality_rate = natural_mortality_rate,
-  #       reporting_rates = array(c(rep(.4, 6), .5 * .67, .3), c(1, 8)),
-  #       movement_rate_fudge = movement_rate_fudge,
-  #       predicted_tags_fudge = predicted_tags_fudge,
-  #       h_prior_sd_pct = h_prior_sd_pct,
-  #       phi_prior_mean = phi_prior_mean,
-  #       phi_prior_sd = phi_prior_sd,
-  #       sigma_prior_mean = numeric(0),
-  #       sigma_prior_sd = numeric(0)
-  #     )$summaries
-  #   ),
-  #   tar_target(
-  #     write_region_average_pooled_w_decr_bc_33_pct,
-  #     write_data(region_average_pooled_w_decr_bc_33_pct, path = "fits")
-  #   )
-  # ),
-  # # Fit region-average-pooled-w-decr-cc-33-pct ---------------------------------
-  # list(
-  #   tar_target(
-  #     region_average_pooled_w_decr_cc_33_pct,
-  #     fit_movement_model(
-  #       # Identifiers
-  #       spatial_name = "region",
-  #       temporal_name = "average",
-  #       grouping_name = "pooled",
-  #       # CmdStanR arguments
-  #       chains = chains,
-  #       nuts_step_size = nuts_step_size,
-  #       iter_warmup = iter_warmup,
-  #       iter_sampling = iter_sampling,
-  #       use_reduce_sum = use_reduce_sum,
-  #       threads_per_chain = threads_per_chain,
-  #       # Data
-  #       tags_released = tags_released,
-  #       tags_recovered = tags_recovered,
-  #       harvest_rates = harvest_rates,
-  #       # Data arguments
-  #       released_time_unit = released_time_unit,
-  #       released_time_max = released_time_max,
-  #       liberty_time_max = liberty_time_max,
-  #       colname_released_date = "released_date",
-  #       colname_released_area = "released_region",
-  #       colname_group = "released_length",
-  #       colname_recovered_date = "recovered_date",
-  #       colname_recovered_area = "recovered_region",
-  #       colname_id = "tag_id",
-  #       area_list = area_list_region,
-  #       group_list = list(pooled = 400:800),
-  #       released_date_start = released_date_start,
-  #       released_date_end = released_date_end,
-  #       # Data list arguments
-  #       movement_time_max = 1,
-  #       harvest_time_max = 40,
-  #       reporting_time_max = 1,
-  #       tag_loss_rate_initial = tag_loss_rate_initial,
-  #       tag_loss_rate_ongoing = tag_loss_rate_ongoing,
-  #       natural_mortality_rate = natural_mortality_rate,
-  #       reporting_rates = array(c(rep(.4, 6), .5, .3 * .67), c(1, 8)),
-  #       movement_rate_fudge = movement_rate_fudge,
-  #       predicted_tags_fudge = predicted_tags_fudge,
-  #       h_prior_sd_pct = h_prior_sd_pct,
-  #       phi_prior_mean = phi_prior_mean,
-  #       phi_prior_sd = phi_prior_sd,
-  #       sigma_prior_mean = numeric(0),
-  #       sigma_prior_sd = numeric(0)
-  #     )$summaries
-  #   ),
-  #   tar_target(
-  #     write_region_average_pooled_w_decr_cc_33_pct,
-  #     write_data(region_average_pooled_w_decr_cc_33_pct, path = "fits")
-  #   )
-  # ),
-  # # Fit region-average-pooled-w-incr-ak-50-pct ---------------------------------
-  # list(
-  #   tar_target(
-  #     region_average_pooled_w_incr_ak_50_pct,
-  #     fit_movement_model(
-  #       # Identifiers
-  #       spatial_name = "region",
-  #       temporal_name = "average",
-  #       grouping_name = "pooled",
-  #       # CmdStanR arguments
-  #       chains = chains,
-  #       nuts_step_size = nuts_step_size,
-  #       iter_warmup = iter_warmup,
-  #       iter_sampling = iter_sampling,
-  #       use_reduce_sum = use_reduce_sum,
-  #       threads_per_chain = threads_per_chain,
-  #       # Data
-  #       tags_released = tags_released,
-  #       tags_recovered = tags_recovered,
-  #       harvest_rates = harvest_rates,
-  #       # Data arguments
-  #       released_time_unit = released_time_unit,
-  #       released_time_max = released_time_max,
-  #       liberty_time_max = liberty_time_max,
-  #       colname_released_date = "released_date",
-  #       colname_released_area = "released_region",
-  #       colname_group = "released_length",
-  #       colname_recovered_date = "recovered_date",
-  #       colname_recovered_area = "recovered_region",
-  #       colname_id = "tag_id",
-  #       area_list = area_list_region,
-  #       group_list = list(pooled = 400:800),
-  #       released_date_start = released_date_start,
-  #       released_date_end = released_date_end,
-  #       # Data list arguments
-  #       movement_time_max = 1,
-  #       harvest_time_max = 40,
-  #       reporting_time_max = 1,
-  #       tag_loss_rate_initial = tag_loss_rate_initial,
-  #       tag_loss_rate_ongoing = tag_loss_rate_ongoing,
-  #       natural_mortality_rate = natural_mortality_rate,
-  #       reporting_rates = array(c(rep(.4, 6) * 1.5, .5, .3), c(1, 8)),
-  #       movement_rate_fudge = movement_rate_fudge,
-  #       predicted_tags_fudge = predicted_tags_fudge,
-  #       h_prior_sd_pct = h_prior_sd_pct,
-  #       phi_prior_mean = phi_prior_mean,
-  #       phi_prior_sd = phi_prior_sd,
-  #       sigma_prior_mean = numeric(0),
-  #       sigma_prior_sd = numeric(0)
-  #     )$summaries
-  #   ),
-  #   tar_target(
-  #     write_region_average_pooled_w_incr_ak_50_pct,
-  #     write_data(region_average_pooled_w_incr_ak_50_pct, path = "fits")
-  #   )
-  # ),
-  # # Fit region-average-pooled-w-incr-bc-50-pct ---------------------------------
-  # list(
-  #   tar_target(
-  #     region_average_pooled_w_incr_bc_50_pct,
-  #     fit_movement_model(
-  #       # Identifiers
-  #       spatial_name = "region",
-  #       temporal_name = "average",
-  #       grouping_name = "pooled",
-  #       # CmdStanR arguments
-  #       chains = chains,
-  #       nuts_step_size = nuts_step_size,
-  #       iter_warmup = iter_warmup,
-  #       iter_sampling = iter_sampling,
-  #       use_reduce_sum = use_reduce_sum,
-  #       threads_per_chain = threads_per_chain,
-  #       # Data
-  #       tags_released = tags_released,
-  #       tags_recovered = tags_recovered,
-  #       harvest_rates = harvest_rates,
-  #       # Data arguments
-  #       released_time_unit = released_time_unit,
-  #       released_time_max = released_time_max,
-  #       liberty_time_max = liberty_time_max,
-  #       colname_released_date = "released_date",
-  #       colname_released_area = "released_region",
-  #       colname_group = "released_length",
-  #       colname_recovered_date = "recovered_date",
-  #       colname_recovered_area = "recovered_region",
-  #       colname_id = "tag_id",
-  #       area_list = area_list_region,
-  #       group_list = list(pooled = 400:800),
-  #       released_date_start = released_date_start,
-  #       released_date_end = released_date_end,
-  #       # Data list arguments
-  #       movement_time_max = 1,
-  #       harvest_time_max = 40,
-  #       reporting_time_max = 1,
-  #       tag_loss_rate_initial = tag_loss_rate_initial,
-  #       tag_loss_rate_ongoing = tag_loss_rate_ongoing,
-  #       natural_mortality_rate = natural_mortality_rate,
-  #       reporting_rates = array(c(rep(.4, 6), .5 * 1.5, .3), c(1, 8)),
-  #       movement_rate_fudge = movement_rate_fudge,
-  #       predicted_tags_fudge = predicted_tags_fudge,
-  #       h_prior_sd_pct = h_prior_sd_pct,
-  #       phi_prior_mean = phi_prior_mean,
-  #       phi_prior_sd = phi_prior_sd,
-  #       sigma_prior_mean = numeric(0),
-  #       sigma_prior_sd = numeric(0)
-  #     )$summaries
-  #   ),
-  #   tar_target(
-  #     write_region_average_pooled_w_incr_bc_50_pct,
-  #     write_data(region_average_pooled_w_incr_bc_50_pct, path = "fits")
-  #   )
-  # ),
-  # # Fit region-average-pooled-w-incr-cc-50-pct ---------------------------------
-  # list(
-  #   tar_target(
-  #     region_average_pooled_w_incr_cc_50_pct,
-  #     fit_movement_model(
-  #       # Identifiers
-  #       spatial_name = "region",
-  #       temporal_name = "average",
-  #       grouping_name = "pooled",
-  #       # CmdStanR arguments
-  #       chains = chains,
-  #       nuts_step_size = nuts_step_size,
-  #       iter_warmup = iter_warmup,
-  #       iter_sampling = iter_sampling,
-  #       use_reduce_sum = use_reduce_sum,
-  #       threads_per_chain = threads_per_chain,
-  #       # Data
-  #       tags_released = tags_released,
-  #       tags_recovered = tags_recovered,
-  #       harvest_rates = harvest_rates,
-  #       # Data arguments
-  #       released_time_unit = released_time_unit,
-  #       released_time_max = released_time_max,
-  #       liberty_time_max = liberty_time_max,
-  #       colname_released_date = "released_date",
-  #       colname_released_area = "released_region",
-  #       colname_group = "released_length",
-  #       colname_recovered_date = "recovered_date",
-  #       colname_recovered_area = "recovered_region",
-  #       colname_id = "tag_id",
-  #       area_list = area_list_region,
-  #       group_list = list(pooled = 400:800),
-  #       released_date_start = released_date_start,
-  #       released_date_end = released_date_end,
-  #       # Data list arguments
-  #       movement_time_max = 1,
-  #       harvest_time_max = 40,
-  #       reporting_time_max = 1,
-  #       tag_loss_rate_initial = tag_loss_rate_initial,
-  #       tag_loss_rate_ongoing = tag_loss_rate_ongoing,
-  #       natural_mortality_rate = natural_mortality_rate,
-  #       reporting_rates = array(c(rep(.4, 6), .5, .3 * 1.5), c(1, 8)),
-  #       movement_rate_fudge = movement_rate_fudge,
-  #       predicted_tags_fudge = predicted_tags_fudge,
-  #       h_prior_sd_pct = h_prior_sd_pct,
-  #       phi_prior_mean = phi_prior_mean,
-  #       phi_prior_sd = phi_prior_sd,
-  #       sigma_prior_mean = numeric(0),
-  #       sigma_prior_sd = numeric(0)
-  #     )$summaries
-  #   ),
-  #   tar_target(
-  #     write_region_average_pooled_w_incr_cc_50_pct,
-  #     write_data(region_average_pooled_w_incr_cc_50_pct, path = "fits")
-  #   )
-  # ),
-  # # Plot -----------------------------------------------------------------------
-  # list(
-  #   tar_target(
-  #     map_regions,
-  #     plot_map(
-  #       regions = sf_regions,
-  #       plot_name = "map-regions",
-  #       size_short = 1.75,
-  #       size_line = 0.25,
-  #       size_text = 5,
-  #       color_land = "white",
-  #       color_ocean = "grey96",
-  #       color_region = "grey30",
-  #       fill_land = "white",
-  #       fill_ocean = "grey95",
-  #       fill_region = "grey85",
-  #       xmin = 169,
-  #       ymin = 31,
-  #       xmax = 240.5,
-  #       ymax = 65.5,
-  #       width = 90,
-  #       height = 65,
-  #       file_type = ".png"
-  #     ),
-  #     format = "file"
-  #   ),
-  #   tar_target(
-  #     heat_region_average_pooled,
-  #     plot_heat(
-  #       data = region_average_pooled$p,
-  #       plot_name = "heat-region-average-pooled",
-  #       movement_time = 1,
-  #       released_group = 1,
-  #       size_text = 8,
-  #       xlab = NULL,
-  #       ylab = NULL,
-  #       xtext = TRUE,
-  #       ytext = TRUE,
-  #       margin_x = -1,
-  #       margin_y = -2,
-  #       font_size_mean = 3,
-  #       font_nudge_mean = 0.15,
-  #       font_size_sd = 2,
-  #       font_nudge_sd = 0.15,
-  #       legend_name = "Annual transition rates",
-  #       width = 90,
-  #       height = 98,
-  #       file_type = ".png"
-  #     ),
-  #     format = "file"
-  #   ),
-  #   tar_target(
-  #     heat_region_average_length,
-  #     plot_heat_length(
-  #       data = region_average_length$p,
-  #       plot_name = "heat-region-average-length",
-  #       movement_time = 1,
-  #       released_group = c(1, 2),
-  #       size_text = 8,
-  #       xlab = NULL,
-  #       ylab = NULL,
-  #       xtext = TRUE,
-  #       ytext = TRUE,
-  #       margin_x = -1,
-  #       margin_y = -2,
-  #       font_size_mean = 3,
-  #       font_nudge_mean = 0.15,
-  #       font_size_sd = 2,
-  #       font_nudge_sd = 0.15,
-  #       legend_name = "Annual transition rates",
-  #       width = 190,
-  #       height = 105,
-  #       file_type = ".png"
-  #     ),
-  #     format = "file"
-  #   ),
-  #   tar_target(
-  #     bar_sensitivity_reporting,
-  #     plot_bar_sensitivity_reporting(
-  #       study = region_average_pooled$p,
-  #       increase_ak = region_average_pooled_w_incr_ak_50_pct$p,
-  #       increase_bc = region_average_pooled_w_incr_bc_50_pct$p,
-  #       increase_cc = region_average_pooled_w_incr_cc_50_pct$p,
-  #       decrease_ak = region_average_pooled_w_decr_ak_33_pct$p,
-  #       decrease_bc = region_average_pooled_w_decr_bc_33_pct$p,
-  #       decrease_cc = region_average_pooled_w_decr_cc_33_pct$p,
-  #       plot_name = "bar-sensitivity-reporting",
-  #       size_text = 8,
-  #       legend_name = "Reporting rate",
-  #       width = 190,
-  #       height = 150,
-  #       file_type = ".png"
-  #     ),
-  #     format = "file"
-  #   ),
-  #   tar_target(
-  #     bar_sensitivity_harvest_prior,
-  #     plot_bar_sensitivity_harvest_prior(
-  #       study = region_average_pooled$p,
-  #       sd_001 = region_average_pooled_h_prior_sd_001_pct$p,
-  #       sd_005 = region_average_pooled_h_prior_sd_005_pct$p,
-  #       sd_010 = region_average_pooled_h_prior_sd_010_pct$p,
-  #       sd_015 = region_average_pooled_h_prior_sd_015_pct$p,
-  #       sd_020 = region_average_pooled_h_prior_sd_020_pct$p,
-  #       plot_name = "bar-sensitivity-harvest-prior",
-  #       size_text = 8,
-  #       legend_name = "SD percent",
-  #       width = 190,
-  #       height = 150,
-  #       file_type = ".png"
-  #     ),
-  #     format = "file"
-  #   )
-  # ),
-  #
+  # Fit region-average-pooled-w-decr-ak-33-pct ---------------------------------
+  list(
+    tar_target(
+      region_average_pooled_w_decr_ak_33_pct,
+      fit_movement_model(
+        # Identifiers
+        spatial_name = "region",
+        temporal_name = "average",
+        grouping_name = "pooled",
+        # CmdStanR arguments
+        chains = chains,
+        nuts_step_size = nuts_step_size,
+        iter_warmup = iter_warmup,
+        iter_sampling = iter_sampling,
+        use_reduce_sum = use_reduce_sum,
+        threads_per_chain = threads_per_chain,
+        # Data
+        tags_released = tags_released,
+        tags_recovered = tags_recovered,
+        harvest_rates = harvest_rates,
+        # Data arguments
+        released_time_unit = released_time_unit,
+        released_time_max = released_time_max,
+        liberty_time_max = liberty_time_max,
+        colname_released_date = "released_date",
+        colname_released_area = "released_region",
+        colname_group = "released_length",
+        colname_recovered_date = "recovered_date",
+        colname_recovered_area = "recovered_region",
+        colname_id = "tag_id",
+        area_list = area_list_region,
+        group_list = list(pooled = 400:800),
+        released_date_start = released_date_start,
+        released_date_end = released_date_end,
+        # Data list arguments
+        movement_time_max = 1,
+        harvest_time_max = 40,
+        reporting_time_max = 1,
+        tag_loss_rate_initial = tag_loss_rate_initial,
+        tag_loss_rate_ongoing = tag_loss_rate_ongoing,
+        natural_mortality_rate = natural_mortality_rate,
+        reporting_rates = array(c(rep(.4, 6) * .67, .5, .3), c(1, 8)),
+        movement_rate_fudge = movement_rate_fudge,
+        predicted_tags_fudge = predicted_tags_fudge,
+        h_prior_sd_pct = h_prior_sd_pct,
+        phi_prior_mean = phi_prior_mean,
+        phi_prior_sd = phi_prior_sd,
+        sigma_prior_mean = numeric(0),
+        sigma_prior_sd = numeric(0)
+      )$summaries
+    ),
+    tar_target(
+      write_region_average_pooled_w_decr_ak_33_pct,
+      write_data(region_average_pooled_w_decr_ak_33_pct, path = "fits")
+    )
+  ),
+  # Fit region-average-pooled-w-decr-bc-33-pct ---------------------------------
+  list(
+    tar_target(
+      region_average_pooled_w_decr_bc_33_pct,
+      fit_movement_model(
+        # Identifiers
+        spatial_name = "region",
+        temporal_name = "average",
+        grouping_name = "pooled",
+        # CmdStanR arguments
+        chains = chains,
+        nuts_step_size = nuts_step_size,
+        iter_warmup = iter_warmup,
+        iter_sampling = iter_sampling,
+        use_reduce_sum = use_reduce_sum,
+        threads_per_chain = threads_per_chain,
+        # Data
+        tags_released = tags_released,
+        tags_recovered = tags_recovered,
+        harvest_rates = harvest_rates,
+        # Data arguments
+        released_time_unit = released_time_unit,
+        released_time_max = released_time_max,
+        liberty_time_max = liberty_time_max,
+        colname_released_date = "released_date",
+        colname_released_area = "released_region",
+        colname_group = "released_length",
+        colname_recovered_date = "recovered_date",
+        colname_recovered_area = "recovered_region",
+        colname_id = "tag_id",
+        area_list = area_list_region,
+        group_list = list(pooled = 400:800),
+        released_date_start = released_date_start,
+        released_date_end = released_date_end,
+        # Data list arguments
+        movement_time_max = 1,
+        harvest_time_max = 40,
+        reporting_time_max = 1,
+        tag_loss_rate_initial = tag_loss_rate_initial,
+        tag_loss_rate_ongoing = tag_loss_rate_ongoing,
+        natural_mortality_rate = natural_mortality_rate,
+        reporting_rates = array(c(rep(.4, 6), .5 * .67, .3), c(1, 8)),
+        movement_rate_fudge = movement_rate_fudge,
+        predicted_tags_fudge = predicted_tags_fudge,
+        h_prior_sd_pct = h_prior_sd_pct,
+        phi_prior_mean = phi_prior_mean,
+        phi_prior_sd = phi_prior_sd,
+        sigma_prior_mean = numeric(0),
+        sigma_prior_sd = numeric(0)
+      )$summaries
+    ),
+    tar_target(
+      write_region_average_pooled_w_decr_bc_33_pct,
+      write_data(region_average_pooled_w_decr_bc_33_pct, path = "fits")
+    )
+  ),
+  # Fit region-average-pooled-w-decr-cc-33-pct ---------------------------------
+  list(
+    tar_target(
+      region_average_pooled_w_decr_cc_33_pct,
+      fit_movement_model(
+        # Identifiers
+        spatial_name = "region",
+        temporal_name = "average",
+        grouping_name = "pooled",
+        # CmdStanR arguments
+        chains = chains,
+        nuts_step_size = nuts_step_size,
+        iter_warmup = iter_warmup,
+        iter_sampling = iter_sampling,
+        use_reduce_sum = use_reduce_sum,
+        threads_per_chain = threads_per_chain,
+        # Data
+        tags_released = tags_released,
+        tags_recovered = tags_recovered,
+        harvest_rates = harvest_rates,
+        # Data arguments
+        released_time_unit = released_time_unit,
+        released_time_max = released_time_max,
+        liberty_time_max = liberty_time_max,
+        colname_released_date = "released_date",
+        colname_released_area = "released_region",
+        colname_group = "released_length",
+        colname_recovered_date = "recovered_date",
+        colname_recovered_area = "recovered_region",
+        colname_id = "tag_id",
+        area_list = area_list_region,
+        group_list = list(pooled = 400:800),
+        released_date_start = released_date_start,
+        released_date_end = released_date_end,
+        # Data list arguments
+        movement_time_max = 1,
+        harvest_time_max = 40,
+        reporting_time_max = 1,
+        tag_loss_rate_initial = tag_loss_rate_initial,
+        tag_loss_rate_ongoing = tag_loss_rate_ongoing,
+        natural_mortality_rate = natural_mortality_rate,
+        reporting_rates = array(c(rep(.4, 6), .5, .3 * .67), c(1, 8)),
+        movement_rate_fudge = movement_rate_fudge,
+        predicted_tags_fudge = predicted_tags_fudge,
+        h_prior_sd_pct = h_prior_sd_pct,
+        phi_prior_mean = phi_prior_mean,
+        phi_prior_sd = phi_prior_sd,
+        sigma_prior_mean = numeric(0),
+        sigma_prior_sd = numeric(0)
+      )$summaries
+    ),
+    tar_target(
+      write_region_average_pooled_w_decr_cc_33_pct,
+      write_data(region_average_pooled_w_decr_cc_33_pct, path = "fits")
+    )
+  ),
+  # Fit region-average-pooled-w-incr-ak-50-pct ---------------------------------
+  list(
+    tar_target(
+      region_average_pooled_w_incr_ak_50_pct,
+      fit_movement_model(
+        # Identifiers
+        spatial_name = "region",
+        temporal_name = "average",
+        grouping_name = "pooled",
+        # CmdStanR arguments
+        chains = chains,
+        nuts_step_size = nuts_step_size,
+        iter_warmup = iter_warmup,
+        iter_sampling = iter_sampling,
+        use_reduce_sum = use_reduce_sum,
+        threads_per_chain = threads_per_chain,
+        # Data
+        tags_released = tags_released,
+        tags_recovered = tags_recovered,
+        harvest_rates = harvest_rates,
+        # Data arguments
+        released_time_unit = released_time_unit,
+        released_time_max = released_time_max,
+        liberty_time_max = liberty_time_max,
+        colname_released_date = "released_date",
+        colname_released_area = "released_region",
+        colname_group = "released_length",
+        colname_recovered_date = "recovered_date",
+        colname_recovered_area = "recovered_region",
+        colname_id = "tag_id",
+        area_list = area_list_region,
+        group_list = list(pooled = 400:800),
+        released_date_start = released_date_start,
+        released_date_end = released_date_end,
+        # Data list arguments
+        movement_time_max = 1,
+        harvest_time_max = 40,
+        reporting_time_max = 1,
+        tag_loss_rate_initial = tag_loss_rate_initial,
+        tag_loss_rate_ongoing = tag_loss_rate_ongoing,
+        natural_mortality_rate = natural_mortality_rate,
+        reporting_rates = array(c(rep(.4, 6) * 1.5, .5, .3), c(1, 8)),
+        movement_rate_fudge = movement_rate_fudge,
+        predicted_tags_fudge = predicted_tags_fudge,
+        h_prior_sd_pct = h_prior_sd_pct,
+        phi_prior_mean = phi_prior_mean,
+        phi_prior_sd = phi_prior_sd,
+        sigma_prior_mean = numeric(0),
+        sigma_prior_sd = numeric(0)
+      )$summaries
+    ),
+    tar_target(
+      write_region_average_pooled_w_incr_ak_50_pct,
+      write_data(region_average_pooled_w_incr_ak_50_pct, path = "fits")
+    )
+  ),
+  # Fit region-average-pooled-w-incr-bc-50-pct ---------------------------------
+  list(
+    tar_target(
+      region_average_pooled_w_incr_bc_50_pct,
+      fit_movement_model(
+        # Identifiers
+        spatial_name = "region",
+        temporal_name = "average",
+        grouping_name = "pooled",
+        # CmdStanR arguments
+        chains = chains,
+        nuts_step_size = nuts_step_size,
+        iter_warmup = iter_warmup,
+        iter_sampling = iter_sampling,
+        use_reduce_sum = use_reduce_sum,
+        threads_per_chain = threads_per_chain,
+        # Data
+        tags_released = tags_released,
+        tags_recovered = tags_recovered,
+        harvest_rates = harvest_rates,
+        # Data arguments
+        released_time_unit = released_time_unit,
+        released_time_max = released_time_max,
+        liberty_time_max = liberty_time_max,
+        colname_released_date = "released_date",
+        colname_released_area = "released_region",
+        colname_group = "released_length",
+        colname_recovered_date = "recovered_date",
+        colname_recovered_area = "recovered_region",
+        colname_id = "tag_id",
+        area_list = area_list_region,
+        group_list = list(pooled = 400:800),
+        released_date_start = released_date_start,
+        released_date_end = released_date_end,
+        # Data list arguments
+        movement_time_max = 1,
+        harvest_time_max = 40,
+        reporting_time_max = 1,
+        tag_loss_rate_initial = tag_loss_rate_initial,
+        tag_loss_rate_ongoing = tag_loss_rate_ongoing,
+        natural_mortality_rate = natural_mortality_rate,
+        reporting_rates = array(c(rep(.4, 6), .5 * 1.5, .3), c(1, 8)),
+        movement_rate_fudge = movement_rate_fudge,
+        predicted_tags_fudge = predicted_tags_fudge,
+        h_prior_sd_pct = h_prior_sd_pct,
+        phi_prior_mean = phi_prior_mean,
+        phi_prior_sd = phi_prior_sd,
+        sigma_prior_mean = numeric(0),
+        sigma_prior_sd = numeric(0)
+      )$summaries
+    ),
+    tar_target(
+      write_region_average_pooled_w_incr_bc_50_pct,
+      write_data(region_average_pooled_w_incr_bc_50_pct, path = "fits")
+    )
+  ),
+  # Fit region-average-pooled-w-incr-cc-50-pct ---------------------------------
+  list(
+    tar_target(
+      region_average_pooled_w_incr_cc_50_pct,
+      fit_movement_model(
+        # Identifiers
+        spatial_name = "region",
+        temporal_name = "average",
+        grouping_name = "pooled",
+        # CmdStanR arguments
+        chains = chains,
+        nuts_step_size = nuts_step_size,
+        iter_warmup = iter_warmup,
+        iter_sampling = iter_sampling,
+        use_reduce_sum = use_reduce_sum,
+        threads_per_chain = threads_per_chain,
+        # Data
+        tags_released = tags_released,
+        tags_recovered = tags_recovered,
+        harvest_rates = harvest_rates,
+        # Data arguments
+        released_time_unit = released_time_unit,
+        released_time_max = released_time_max,
+        liberty_time_max = liberty_time_max,
+        colname_released_date = "released_date",
+        colname_released_area = "released_region",
+        colname_group = "released_length",
+        colname_recovered_date = "recovered_date",
+        colname_recovered_area = "recovered_region",
+        colname_id = "tag_id",
+        area_list = area_list_region,
+        group_list = list(pooled = 400:800),
+        released_date_start = released_date_start,
+        released_date_end = released_date_end,
+        # Data list arguments
+        movement_time_max = 1,
+        harvest_time_max = 40,
+        reporting_time_max = 1,
+        tag_loss_rate_initial = tag_loss_rate_initial,
+        tag_loss_rate_ongoing = tag_loss_rate_ongoing,
+        natural_mortality_rate = natural_mortality_rate,
+        reporting_rates = array(c(rep(.4, 6), .5, .3 * 1.5), c(1, 8)),
+        movement_rate_fudge = movement_rate_fudge,
+        predicted_tags_fudge = predicted_tags_fudge,
+        h_prior_sd_pct = h_prior_sd_pct,
+        phi_prior_mean = phi_prior_mean,
+        phi_prior_sd = phi_prior_sd,
+        sigma_prior_mean = numeric(0),
+        sigma_prior_sd = numeric(0)
+      )$summaries
+    ),
+    tar_target(
+      write_region_average_pooled_w_incr_cc_50_pct,
+      write_data(region_average_pooled_w_incr_cc_50_pct, path = "fits")
+    )
+  ),
+  # Plot -----------------------------------------------------------------------
+  list(
+    tar_target(
+      map_regions,
+      plot_map(
+        regions = sf_regions,
+        plot_name = "map-regions",
+        size_short = 1.75,
+        size_line = 0.25,
+        size_text = 5,
+        color_land = "white",
+        color_ocean = "grey96",
+        color_region = "grey30",
+        fill_land = "white",
+        fill_ocean = "grey95",
+        fill_region = "grey85",
+        xmin = 169,
+        ymin = 31,
+        xmax = 240.5,
+        ymax = 65.5,
+        width = 90,
+        height = 65,
+        file_type = ".png"
+      ),
+      format = "file"
+    ),
+    tar_target(
+      heat_region_average_pooled,
+      plot_heat(
+        data = region_average_pooled$p,
+        plot_name = "heat-region-average-pooled",
+        movement_time = 1,
+        released_group = 1,
+        size_text = 8,
+        xlab = NULL,
+        ylab = NULL,
+        xtext = TRUE,
+        ytext = TRUE,
+        margin_x = -1,
+        margin_y = -2,
+        font_size_mean = 3,
+        font_nudge_mean = 0.15,
+        font_size_sd = 2,
+        font_nudge_sd = 0.15,
+        legend_name = "Annual transition rates",
+        width = 90,
+        height = 98,
+        file_type = ".png"
+      ),
+      format = "file"
+    ),
+    tar_target(
+      heat_region_average_length,
+      plot_heat_length(
+        data = region_average_length$p,
+        plot_name = "heat-region-average-length",
+        movement_time = 1,
+        released_group = c(1, 2),
+        size_text = 8,
+        xlab = NULL,
+        ylab = NULL,
+        xtext = TRUE,
+        ytext = TRUE,
+        margin_x = -1,
+        margin_y = -2,
+        font_size_mean = 3,
+        font_nudge_mean = 0.15,
+        font_size_sd = 2,
+        font_nudge_sd = 0.15,
+        legend_name = "Annual transition rates",
+        width = 190,
+        height = 105,
+        file_type = ".png"
+      ),
+      format = "file"
+    ),
+    tar_target(
+      bar_sensitivity_reporting,
+      plot_bar_sensitivity_reporting(
+        study = region_average_pooled$p,
+        increase_ak = region_average_pooled_w_incr_ak_50_pct$p,
+        increase_bc = region_average_pooled_w_incr_bc_50_pct$p,
+        increase_cc = region_average_pooled_w_incr_cc_50_pct$p,
+        decrease_ak = region_average_pooled_w_decr_ak_33_pct$p,
+        decrease_bc = region_average_pooled_w_decr_bc_33_pct$p,
+        decrease_cc = region_average_pooled_w_decr_cc_33_pct$p,
+        plot_name = "bar-sensitivity-reporting",
+        size_text = 8,
+        legend_name = "Reporting rate",
+        width = 190,
+        height = 150,
+        file_type = ".png"
+      ),
+      format = "file"
+    ),
+    tar_target(
+      bar_sensitivity_harvest_prior,
+      plot_bar_sensitivity_harvest_prior(
+        study = region_average_pooled$p,
+        sd_001 = region_average_pooled_h_prior_sd_001_pct$p,
+        sd_005 = region_average_pooled_h_prior_sd_005_pct$p,
+        sd_010 = region_average_pooled_h_prior_sd_010_pct$p,
+        sd_015 = region_average_pooled_h_prior_sd_015_pct$p,
+        sd_020 = region_average_pooled_h_prior_sd_020_pct$p,
+        plot_name = "bar-sensitivity-harvest-prior",
+        size_text = 8,
+        legend_name = "SD percent",
+        width = 190,
+        height = 80,
+        file_type = ".png"
+      ),
+      format = "file"
+    )
+  ),
 
 
 

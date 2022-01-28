@@ -57,17 +57,17 @@ plot_bar_sensitivity_harvest_prior <- function(study,
       position = ggplot2::position_dodge(0.9)
     ) +
     ggplot2::scale_fill_brewer(
-      type = "div"
+      palette = "Blues",
+      type = "seq"
     ) +
     ggplot2::xlab("Region") +
     ggplot2::ylab("Annual retention rate") +
     ggplot2::labs(fill = legend_name) +
     ggsidekick::theme_sleek() +
     ggplot2::theme(
-      axis.title.x = ggplot2::element_blank(),
-      axis.text.x = ggplot2::element_blank(),
-      axis.ticks.x = ggplot2::element_blank(),
-      axis.title.y = ggplot2::element_blank(),
+      axis.title.x = ggplot2::element_text(size = size_text),
+      axis.text.x = ggplot2::element_text(size = size_text),
+      axis.title.y = ggplot2::element_text(size = size_text),
       axis.text.y = ggplot2::element_text(size = size_text),
       legend.position = "right",
       legend.title = ggplot2::element_text(size = size_text),
@@ -756,7 +756,7 @@ plot_map <- function (regions,
 
   # Define plot ----------------------------------------------------------------
 
-  ggplot2::ggplot() +
+  p1 <- ggplot2::ggplot() +
     ggplot2::geom_sf(
       data = land,
       color = color_land,
