@@ -1169,6 +1169,10 @@ plot_point_region_year_pooled <- function (data,
       width = 0.2
     ) +
     ggplot2::coord_cartesian(xlim = c(1979, 2020)) +
+    ggplot2::scale_x_continuous(
+      breaks = c(1985, 2015),
+      position = "top"
+    ) +
     ggplot2::scale_y_continuous(
       breaks = c(0, 1),
       position = "right"
@@ -1182,9 +1186,8 @@ plot_point_region_year_pooled <- function (data,
     ggplot2::ylab("Annual retention rate") +
     ggsidekick::theme_sleek() +
     ggplot2::theme(
-      axis.title.x = ggplot2::element_blank(),
-      axis.text.x = ggplot2::element_blank(),
-      axis.ticks.x = ggplot2::element_blank(),
+      axis.title.x = ggplot2::element_text(size = size_text),
+      axis.text.x = ggplot2::element_text(size = size_text),
       axis.title.y = ggplot2::element_text(size = size_text),
       axis.text.y = ggplot2::element_text(size = size_text),
       legend.position = "right",
@@ -1258,10 +1261,14 @@ plot_point_retention_region_year_length <- function (data,
       width = 0.2
     ) +
     ggplot2::coord_cartesian(xlim = c(1979, 2020)) +
-    ggplot2::scale_y_continuous(breaks = c(0, 1)) +
+    ggplot2::scale_y_continuous(
+      breaks = c(0, 1),
+      position = "right"
+    ) +
     ggplot2::facet_grid(
       rows = dplyr::vars(region_short),
-      cols = dplyr::vars(released_length)
+      cols = dplyr::vars(released_length),
+      switch = "y"
     ) +
     ggplot2::xlab("Year") +
     ggplot2::ylab("Annual retention rate") +
@@ -1276,7 +1283,7 @@ plot_point_retention_region_year_length <- function (data,
       legend.text = ggplot2::element_text(size = size_text),
       panel.grid.major = ggplot2::element_blank(),
       panel.grid.minor = ggplot2::element_blank(),
-      strip.text.y.right = ggplot2::element_text(angle = 0)
+      strip.text.y.left = ggplot2::element_text(angle = 0)
     )
 
   # Save ggplot ----------------------------------------------------------------
@@ -1328,8 +1335,14 @@ plot_point_retention_region_year_pooled <- function (data,
       width = 0.2
     ) +
     ggplot2::coord_cartesian(xlim = c(1979, 2020)) +
-    ggplot2::scale_y_continuous(breaks = c(0, 1)) +
-    ggplot2::facet_grid(rows = dplyr::vars(region_short)) +
+    ggplot2::scale_y_continuous(
+      breaks = c(0, 1),
+      position = "right"
+    ) +
+    ggplot2::facet_grid(
+      rows = dplyr::vars(region_short),
+      switch = "y"
+    ) +
     ggplot2::xlab("Year") +
     ggplot2::ylab("Annual retention rate") +
     ggsidekick::theme_sleek() +
@@ -1343,7 +1356,7 @@ plot_point_retention_region_year_pooled <- function (data,
       legend.text = ggplot2::element_text(size = size_text),
       panel.grid.major = ggplot2::element_blank(),
       panel.grid.minor = ggplot2::element_blank(),
-      strip.text.y.right = ggplot2::element_text(angle = 0)
+      strip.text.y.left = ggplot2::element_text(angle = 0)
     )
 
   # Save ggplot ----------------------------------------------------------------
