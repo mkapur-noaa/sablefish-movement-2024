@@ -113,25 +113,25 @@ The movement model predicted annual tagged sablefish abundance in each region, a
     \item How much do sablefish transition rates vary by season?
         \begin{itemize}
             \item Model: \texttt{region-season-pooled}
-            \item Visual: TODO scatterplot matrix; transition rate (and CI) vs season  
+            \item Visual: \autoref{fig:bar-retention-region-season-pooled} and \autoref{fig:bar-region-season-pooled} 
             \item Notes: standard data and priors
         \end{itemize}    
     \item How much do sablefish transition rates vary by year?
         \begin{itemize}
             \item Model: \texttt{region-year-pooled}
-            \item Visual: TODO scatterplot matrix; transition rate (and CI) vs year  
+            \item Visual: \autoref{fig:point-retention-region-year-pooled} and \autoref{fig:point-region-year-pooled} 
             \item Notes: standard data and priors
         \end{itemize}    
     \item How much do sablefish transition rates by length class vary by season?
         \begin{itemize}
             \item Model: \texttt{region-season-length}
-            \item Visual: TODO scatterplot matrix; transition rate (and CI) vs season (SI)
+            \item Visual: TODO
             \item Notes: standard data and priors
         \end{itemize}
     \item How much do sablefish transition rates by length class vary by year?
         \begin{itemize}
             \item Model: \texttt{region-year-length}
-            \item Visual: TODO scatterplot matrix; transition rate (and CI) vs year (SI) 
+            \item Visual: \autoref{fig:point-retention-region-year-length} 
             \item Notes: standard data and priors
         \end{itemize} 
     \item How many sablefish moved between regions each year?
@@ -187,6 +187,50 @@ The movement model predicted annual tagged sablefish abundance in each region, a
     \caption{Sablefish transition rates per year between geographic regions in the northeast Pacific Ocean. Left: small released length class (400--549 mm); Right: large released length class (550--800 mm). The main diagonal shows retention rates while the off-diagonals show emigration rates. Rows correspond to region of origin while columns represent destination. Transition rates are shown with (standard error). Regions are Regions are Bering Sea (BS), Aleutian Islands (AI), Western (WG), Central (CG), and Eastern Gulf of Alaska (EG), Southeast Alaska (SE), British Columbia (BC), and California Current (CC).}
     \label{fig:heat-region-average-length}
 \end{figure}
+
+% bar-retention-region-season-pooled
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = 0.7\textwidth]{bar-retention-region-season-pooled.png}
+    \caption{}
+    \label{fig:bar-retention-region-season-pooled}
+\end{figure}
+
+% bar-region-season-pooled
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = \textwidth]{bar-region-season-pooled.png}
+    \caption{}
+    \label{fig:bar-region-season-pooled}
+\end{figure}
+
+% point-retention-region-year-pooled
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = 0.7\textwidth]{point-retention-region-year-pooled.png}
+    \caption{}
+    \label{fig:point-retention-region-year-pooled}
+\end{figure}
+
+% point-region-year-pooled
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = \textwidth]{point-region-year-pooled.png}
+    \caption{}
+    \label{fig:point-region-year-pooled}
+\end{figure}
+
+% point-retention-region-year-length
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = \textwidth]{point-retention-region-year-length.png}
+    \caption{}
+    \label{fig:point-retention-region-year-length}
+\end{figure}
+
+
+
+
 
 \section{Tables}
 % Symbol definitions
