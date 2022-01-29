@@ -1,3 +1,301 @@
+plot_bar_retention_region_season_length <- function (data,
+                                                     plot_name,
+                                                     size_text,
+                                                     legend_name,
+                                                     width = 190,
+                                                     height = 150,
+                                                     file_type = ".png") {
+
+  # Prepare data ---------------------------------------------------------------
+
+  data <- data %>%
+    dplyr::ungroup() %>%
+    dplyr::filter(.data$previous_area == .data$current_area) %>%
+    dplyr::mutate(region_short = number_to_short(.data$previous_area)) %>%
+    dplyr::mutate(movement_time = factor(movement_time, levels = 1:4))
+
+
+  # Assemble increase panel ----------------------------------------------------
+
+  small_panel <- ggplot2::ggplot(
+    data = data %>% dplyr::filter(released_group == 1),
+    mapping = ggplot2::aes(
+      x = .data$region_short,
+      y = .data$mean,
+      fill = .data$movement_time
+    )
+  ) +
+    ggplot2::geom_bar(
+      stat = "identity",
+      position = "dodge",
+      color = "white"
+    ) +
+    ggplot2::geom_errorbar(
+      mapping = ggplot2::aes(
+        ymin = .data$mean - .data$sd,
+        ymax = .data$mean + .data$sd
+      ),
+      width = 0.2,
+      position = ggplot2::position_dodge(0.9)
+    ) +
+    ggplot2::scale_fill_brewer(
+      palette = "Blues",
+      type = "seq"
+    ) +
+    ggplot2::labs(fill = legend_name) +
+    ggsidekick::theme_sleek() +
+    ggplot2::theme(
+      axis.title.x = ggplot2::element_blank(),
+      axis.text.x = ggplot2::element_blank(),
+      axis.ticks.x = ggplot2::element_blank(),
+      axis.title.y = ggplot2::element_blank(),
+      axis.text.y = ggplot2::element_text(size = size_text),
+      legend.title = ggplot2::element_text(size = size_text),
+      legend.text = ggplot2::element_text(size = size_text),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank()
+    )
+
+  # Assemble decrease panel ----------------------------------------------------
+
+  large_panel <- ggplot2::ggplot(
+    data = data %>% dplyr::filter(released_group == 2),
+    mapping = ggplot2::aes(
+      x = .data$region_short,
+      y = .data$mean,
+      fill = .data$movement_time
+    )
+  ) +
+    ggplot2::geom_bar(
+      stat = "identity",
+      position = "dodge",
+      color = "white"
+    ) +
+    ggplot2::geom_errorbar(
+      mapping = ggplot2::aes(
+        ymin = .data$mean - .data$sd,
+        ymax = .data$mean + .data$sd
+      ),
+      width = 0.2,
+      position = ggplot2::position_dodge(0.9)
+    ) +
+    ggplot2::scale_fill_brewer(
+      palette = "Blues",
+      type = "seq"
+    ) +
+    ggplot2::xlab("Region") +
+    ggplot2::labs(fill = legend_name) +
+    ggsidekick::theme_sleek() +
+    ggplot2::theme(
+      axis.title.x = ggplot2::element_text(size = size_text),
+      axis.text.x = ggplot2::element_text(size = size_text),
+      axis.title.y = ggplot2::element_blank(),
+      axis.text.y = ggplot2::element_text(size = size_text),
+      legend.title = ggplot2::element_text(size = size_text),
+      legend.text = ggplot2::element_text(size = size_text),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank()
+    )
+
+  # Assemble panel figure ------------------------------------------------------
+
+  p0 <- ggpubr::ggarrange(
+    small_panel,
+    large_panel,
+    nrow = 2,
+    labels = c("Small (400-549 mm)", "Large (550-800 mm)"),
+    label.x = 0,
+    label.y = 1,
+    hjust = -0.7,
+    vjust = 3,
+    font.label = list(size = 8, color = "black", face = "plain"),
+    legend = "right",
+    common.legend = TRUE
+  )
+
+  ggpubr::annotate_figure(
+    p0,
+    left = ggpubr::text_grob(
+      "Annual retention rate",
+      size = size_text,
+      rot = 90
+    )
+  ) +
+    ggplot2::theme(
+      plot.background = ggplot2::element_rect(fill = "white", color = NA)
+    )
+
+  # Save ggplot ----------------------------------------------------------------
+
+  ggplot2::ggsave(
+    here::here("ms", "figs", paste0(plot_name, file_type)),
+    width = width,
+    height = height,
+    units = "mm"
+  )
+
+  # Return path
+  return(paste0("ms/", "figs/", plot_name, file_type))
+}
+
+plot_bar_region_season_pooled <- function (data,
+                                           plot_name,
+                                           size_text,
+                                           legend_name,
+                                           width = 190,
+                                           height = 160,
+                                           file_type = ".png") {
+
+  # Prepare data ---------------------------------------------------------------
+
+  data <- data %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(
+      previous_region_short = number_to_short(.data$previous_area),
+      current_region_short = number_to_short(.data$current_area)
+    ) %>%
+    dplyr::mutate(movement_time = factor(movement_time, levels = 1:4))
+
+  # Assemble figure ------------------------------------------------------------
+
+  p1 <- ggplot2::ggplot(
+    data = data,
+    mapping = ggplot2::aes(
+      # x = .data$current_region_short,
+      x = .data$movement_time,
+      y = .data$mean,
+      fill = .data$movement_time
+    )
+  ) +
+    ggplot2::geom_bar(
+      stat = "identity",
+      # position = "dodge",
+      color = "white"
+    ) +
+    ggplot2::geom_errorbar(
+      mapping = ggplot2::aes(
+        ymin = .data$mean - .data$sd,
+        ymax = .data$mean + .data$sd
+      ),
+      width = 0.2 #,
+      # position = ggplot2::position_dodge(0.9)
+    ) +
+    ggplot2::scale_fill_brewer(
+      palette = "Blues",
+      type = "seq"
+    ) +
+    ggplot2::facet_grid(
+      rows = dplyr::vars(previous_region_short),
+      cols = dplyr::vars(current_region_short),
+      switch = "both"
+    ) +
+    # ggplot2::xlab("Quarter") +
+    ggplot2::ylab("Annual retention rate") +
+    ggplot2::scale_y_continuous(
+      breaks = c(0, 1),
+      position = "right"
+    ) +
+    ggplot2::labs(fill = legend_name) +
+    ggsidekick::theme_sleek() +
+    ggplot2::theme(
+      axis.title.x = ggplot2::element_blank(),
+      axis.text.x = ggplot2::element_blank(),
+      axis.ticks.x = ggplot2::element_blank(),
+      axis.title.y = ggplot2::element_text(size = size_text),
+      axis.text.y = ggplot2::element_text(size = size_text),
+      legend.position = "right",
+      legend.title = ggplot2::element_text(size = size_text),
+      legend.text = ggplot2::element_text(size = size_text),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank(),
+      strip.text.y.left = ggplot2::element_text(angle = 0)
+    )
+
+  # Save ggplot ----------------------------------------------------------------
+
+  ggplot2::ggsave(
+    here::here("ms", "figs", paste0(plot_name, file_type)),
+    width = width,
+    height = height,
+    units = "mm"
+  )
+
+  # Return path
+  return(paste0("ms/", "figs/", plot_name, file_type))
+}
+
+plot_bar_retention_region_season_pooled <- function (data,
+                                                     plot_name,
+                                                     size_text,
+                                                     legend_name,
+                                                     width = 190,
+                                                     height = 80,
+                                                     file_type = ".png") {
+
+  # Prepare data ---------------------------------------------------------------
+
+  data <- data %>%
+    dplyr::ungroup() %>%
+    dplyr::filter(.data$previous_area == .data$current_area) %>%
+    dplyr::mutate(region_short = number_to_short(.data$previous_area)) %>%
+    dplyr::mutate(movement_time = factor(movement_time, levels = 1:4))
+
+  # Assemble figure ------------------------------------------------------------
+
+  p1 <- ggplot2::ggplot(
+    data = data,
+    mapping = ggplot2::aes(
+      x = .data$region_short,
+      y = .data$mean,
+      fill = .data$movement_time
+    )
+  ) +
+    ggplot2::geom_bar(
+      stat = "identity",
+      position = "dodge",
+      color = "white"
+    ) +
+    ggplot2::geom_errorbar(
+      mapping = ggplot2::aes(
+        ymin = .data$mean - .data$sd,
+        ymax = .data$mean + .data$sd
+      ),
+      width = 0.2,
+      position = ggplot2::position_dodge(0.9)
+    ) +
+    ggplot2::scale_fill_brewer(
+      palette = "Blues",
+      type = "seq"
+    ) +
+    ggplot2::xlab("Region") +
+    ggplot2::ylab("Annual retention rate") +
+    ggplot2::labs(fill = legend_name) +
+    ggsidekick::theme_sleek() +
+    ggplot2::theme(
+      axis.title.x = ggplot2::element_text(size = size_text),
+      axis.text.x = ggplot2::element_text(size = size_text),
+      axis.title.y = ggplot2::element_text(size = size_text),
+      axis.text.y = ggplot2::element_text(size = size_text),
+      legend.position = "right",
+      legend.title = ggplot2::element_text(size = size_text),
+      legend.text = ggplot2::element_text(size = size_text),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank()
+    )
+
+  # Save ggplot ----------------------------------------------------------------
+
+  ggplot2::ggsave(
+    here::here("ms", "figs", paste0(plot_name, file_type)),
+    width = width,
+    height = height,
+    units = "mm"
+  )
+
+  # Return path
+  return(paste0("ms/", "figs/", plot_name, file_type))
+}
+
 plot_bar_sensitivity_harvest_priors <- function(study,
                                                 sd_001,
                                                 sd_005,
@@ -818,6 +1116,235 @@ plot_map <- function (regions,
       ymax = 45
     )
 
+
+  # Save ggplot ----------------------------------------------------------------
+
+  ggplot2::ggsave(
+    here::here("ms", "figs", paste0(plot_name, file_type)),
+    width = width,
+    height = height,
+    units = "mm"
+  )
+
+  # Return path
+  return(paste0("ms/", "figs/", plot_name, file_type))
+}
+
+plot_point_region_year_pooled <- function (data,
+                                           plot_name,
+                                           size_line,
+                                           size_point,
+                                           size_text,
+                                           year_offset,
+                                           width = 190,
+                                           height = 160,
+                                           file_type = ".png") {
+
+  # Prepare data ---------------------------------------------------------------
+
+  data <- data %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(
+      previous_region_short = number_to_short(.data$previous_area),
+      current_region_short = number_to_short(.data$current_area)
+    ) %>%
+    dplyr::mutate(year = movement_time + year_offset)
+
+  # Assemble figure ------------------------------------------------------------
+
+  p1 <- ggplot2::ggplot(
+    data = data,
+    mapping = ggplot2::aes(
+      x = .data$year,
+      y = .data$mean
+    )
+  ) +
+    ggplot2::geom_line(size = size_line) +
+    ggplot2::geom_point(size = size_point) +
+    ggplot2::geom_errorbar(
+      mapping = ggplot2::aes(
+        ymin = .data$mean - .data$sd,
+        ymax = .data$mean + .data$sd
+      ),
+      width = 0.2
+    ) +
+    ggplot2::coord_cartesian(xlim = c(1979, 2020)) +
+    ggplot2::scale_y_continuous(
+      breaks = c(0, 1),
+      position = "right"
+    ) +
+    ggplot2::facet_grid(
+      rows = dplyr::vars(previous_region_short),
+      cols = dplyr::vars(current_region_short),
+      switch = "both"
+    ) +
+    ggplot2::xlab("Year") +
+    ggplot2::ylab("Annual retention rate") +
+    ggsidekick::theme_sleek() +
+    ggplot2::theme(
+      axis.title.x = ggplot2::element_blank(),
+      axis.text.x = ggplot2::element_blank(),
+      axis.ticks.x = ggplot2::element_blank(),
+      axis.title.y = ggplot2::element_text(size = size_text),
+      axis.text.y = ggplot2::element_text(size = size_text),
+      legend.position = "right",
+      legend.title = ggplot2::element_text(size = size_text),
+      legend.text = ggplot2::element_text(size = size_text),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank(),
+      strip.text.y.left = ggplot2::element_text(angle = 0)
+    )
+
+  # Save ggplot ----------------------------------------------------------------
+
+  ggplot2::ggsave(
+    here::here("ms", "figs", paste0(plot_name, file_type)),
+    width = width,
+    height = height,
+    units = "mm"
+  )
+
+  # Return path
+  return(paste0("ms/", "figs/", plot_name, file_type))
+}
+
+plot_point_retention_region_year_length <- function (data,
+                                                     plot_name,
+                                                     size_line,
+                                                     size_point,
+                                                     size_text,
+                                                     year_offset,
+                                                     width = 190,
+                                                     height = 150,
+                                                     file_type = ".png") {
+
+  # Prepare data ---------------------------------------------------------------
+
+  data <- data %>%
+    dplyr::ungroup() %>%
+    dplyr::filter(.data$previous_area == .data$current_area) %>%
+    dplyr::mutate(region_short = number_to_short(.data$previous_area)) %>%
+    dplyr::mutate(year = movement_time + year_offset) %>%
+    dplyr::mutate(
+      released_length = ifelse(
+        released_group == 1,
+        "Small (400-549 mm)",
+        "Large (550-800 mm)"
+      )
+    ) %>%
+    dplyr::mutate(
+      released_length = factor(
+        released_length,
+        levels = c("Small (400-549 mm)", "Large (550-800 mm)")
+      )
+    )
+
+  # Assemble figure ------------------------------------------------------------
+
+  p1 <- ggplot2::ggplot(
+    data = data,
+    mapping = ggplot2::aes(
+      x = .data$year,
+      y = .data$mean
+    )
+  ) +
+    ggplot2::geom_line(size = size_line) +
+    ggplot2::geom_point(size = size_point) +
+    ggplot2::geom_errorbar(
+      mapping = ggplot2::aes(
+        ymin = .data$mean - .data$sd,
+        ymax = .data$mean + .data$sd
+      ),
+      width = 0.2
+    ) +
+    ggplot2::coord_cartesian(xlim = c(1979, 2020)) +
+    ggplot2::scale_y_continuous(breaks = c(0, 1)) +
+    ggplot2::facet_grid(
+      rows = dplyr::vars(region_short),
+      cols = dplyr::vars(released_length)
+    ) +
+    ggplot2::xlab("Year") +
+    ggplot2::ylab("Annual retention rate") +
+    ggsidekick::theme_sleek() +
+    ggplot2::theme(
+      axis.title.x = ggplot2::element_text(size = size_text),
+      axis.text.x = ggplot2::element_text(size = size_text),
+      axis.title.y = ggplot2::element_text(size = size_text),
+      axis.text.y = ggplot2::element_text(size = size_text),
+      legend.position = "right",
+      legend.title = ggplot2::element_text(size = size_text),
+      legend.text = ggplot2::element_text(size = size_text),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank(),
+      strip.text.y.right = ggplot2::element_text(angle = 0)
+    )
+
+  # Save ggplot ----------------------------------------------------------------
+
+  ggplot2::ggsave(
+    here::here("ms", "figs", paste0(plot_name, file_type)),
+    width = width,
+    height = height,
+    units = "mm"
+  )
+
+  # Return path
+  return(paste0("ms/", "figs/", plot_name, file_type))
+}
+
+plot_point_retention_region_year_pooled <- function (data,
+                                                     plot_name,
+                                                     size_line,
+                                                     size_point,
+                                                     size_text,
+                                                     year_offset,
+                                                     width = 90,
+                                                     height = 150,
+                                                     file_type = ".png") {
+  # Prepare data ---------------------------------------------------------------
+
+  data <- data %>%
+    dplyr::ungroup() %>%
+    dplyr::filter(.data$previous_area == .data$current_area) %>%
+    dplyr::mutate(region_short = number_to_short(.data$previous_area)) %>%
+    dplyr::mutate(year = movement_time + year_offset)
+
+  # Assemble figure ------------------------------------------------------------
+
+  p1 <- ggplot2::ggplot(
+    data = data,
+    mapping = ggplot2::aes(
+      x = .data$year,
+      y = .data$mean
+    )
+  ) +
+    ggplot2::geom_line(size = size_line) +
+    ggplot2::geom_point(size = size_point) +
+    ggplot2::geom_errorbar(
+      mapping = ggplot2::aes(
+        ymin = .data$mean - .data$sd,
+        ymax = .data$mean + .data$sd
+      ),
+      width = 0.2
+    ) +
+    ggplot2::coord_cartesian(xlim = c(1979, 2020)) +
+    ggplot2::scale_y_continuous(breaks = c(0, 1)) +
+    ggplot2::facet_grid(rows = dplyr::vars(region_short)) +
+    ggplot2::xlab("Year") +
+    ggplot2::ylab("Annual retention rate") +
+    ggsidekick::theme_sleek() +
+    ggplot2::theme(
+      axis.title.x = ggplot2::element_text(size = size_text),
+      axis.text.x = ggplot2::element_text(size = size_text),
+      axis.title.y = ggplot2::element_text(size = size_text),
+      axis.text.y = ggplot2::element_text(size = size_text),
+      legend.position = "right",
+      legend.title = ggplot2::element_text(size = size_text),
+      legend.text = ggplot2::element_text(size = size_text),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank(),
+      strip.text.y.right = ggplot2::element_text(angle = 0)
+    )
 
   # Save ggplot ----------------------------------------------------------------
 

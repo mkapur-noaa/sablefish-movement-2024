@@ -1286,6 +1286,90 @@ list(
         file_type = ".png"
       ),
       format = "file"
+    ),
+    tar_target(
+      bar_retention_region_season_pooled,
+      plot_bar_retention_region_season_pooled(
+        data = region_season_pooled$p,
+        plot_name = "bar-retention-region-season-pooled",
+        size_text = 8,
+        legend_name = "Quarter",
+        width = 190,
+        height = 80,
+        file_type = ".png"
+      ),
+      format = "file"
+    ),
+    tar_target(
+      bar_region_season_pooled,
+      plot_bar_region_season_pooled(
+        data = region_season_pooled$p,
+        plot_name = "bar-region-season-pooled",
+        size_text = 8,
+        legend_name = "Quarter",
+        width = 190,
+        height = 160,
+        file_type = ".png"
+      ),
+      format = "file"
+    ),
+    tar_target(
+      point_retention_region_year_pooled,
+      plot_point_retention_region_year_pooled(
+        data = region_year_pooled$p,
+        plot_name = "point-retention-region-year-pooled",
+        size_line = 0.2,
+        size_point = 0.75,
+        size_text = 8,
+        year_offset = 1978,
+        width = 90,
+        height = 150,
+        file_type = ".png"
+      ),
+      format = "file"
+    ),
+    tar_target(
+      point_region_year_pooled,
+      plot_point_region_year_pooled(
+        data = region_year_pooled$p,
+        plot_name = "point-region-year-pooled",
+        size_line = 0.2,
+        size_point = 0.25,
+        size_text = 8,
+        year_offset = 1978,
+        width = 190,
+        height = 160,
+        file_type = ".png"
+      ),
+      format = "file"
+    ),
+    tar_target(
+      bar_retention_region_season_length,
+      plot_bar_retention_region_season_length(
+        data = region_season_length$p,
+        plot_name = "bar-retention-region-season-length",
+        size_text = 8,
+        legend_name = "Quarter",
+        width = 190,
+        height = 150,
+        file_type = ".png"
+      ),
+      format = "file"
+    ),
+    tar_target(
+      point_retention_region_year_length,
+      plot_point_retention_region_year_length(
+        data = region_year_length$p,
+        plot_name = "point-retention-region-year-length",
+        size_line = 0.2,
+        size_point = 0.75,
+        size_text = 8,
+        year_offset = 1978,
+        width = 190,
+        height = 150,
+        file_type = ".png"
+      ),
+      format = "file"
     )
   ),
 
