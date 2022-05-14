@@ -1,3 +1,57 @@
+#' Number To Region
+#'
+#' @param x [numeric()]
+#' @param regions [character()]
+#'
+#' @return [character()]
+#' @export
+#'
+#' @examples
+#'
+#' number_to_region(c(1,1,2,3), LETTERS)
+#'
+number_to_region <- function (x, regions) {
+  regions[x]
+}
+
+#' Read File From Path
+#'
+#' @param path [character()] file path
+#'
+#' @return the object at the file path
+#' @export
+#'
+read_from_path <- function (path) {
+  envir <- environment()
+  data_name <- load(path, envir = envir)
+  get(data_name)
+}
+
+#' Write An Object And Return The Path
+#'
+#' @param path [character()] folder path
+#' @param ... Unquoted name of an existing object to write to \code{data/}.
+#'
+#' @return [character()] file path
+#' @export
+#'
+write_data <- function (..., path = "data") {
+  if (...length() != 1) stop("write_data() takes exactly 1 argument")
+  args <- list(...)
+  if (is.null(names(args))) {
+    name <- as.character(substitute(...))
+  } else {
+    name <- names(args)[1]
+  }
+  assign(x = name, value = ..1)
+  save(..., file = paste0(path, "/", name, ".rda"))
+  file.path(path, fs::path_ext_set(name, ".rda"))
+}
+
+# Current above here -----------------------------------------------------------
+
+
+
 #' Convert Region Number Vector to Short Name Factor
 #'
 #' @param n [numeric()]
@@ -54,19 +108,6 @@ mod <- function (a, b, zeros = TRUE) {
     ans[which(ans == 0)] <- b
   }
   return(ans)
-}
-
-#' Read File From Path
-#'
-#' @param path [character()] file path
-#'
-#' @return the object at the file path
-#' @export
-#'
-read_from_path <- function (path) {
-  envir <- environment()
-  data_name <- load(path, envir = envir)
-  get(data_name)
 }
 
 #' Round to Character
@@ -131,24 +172,4 @@ unit_to_time <- function (unit) {
   c(1L, 4L, 12L)[which(c("year", "quarter", "month") == unit)]
 }
 
-#' Write An Object And Return The Path
-#'
-#' @param path [character()] folder path
-#' @param ... Unquoted name of an existing object to write to \code{data/}.
-#'
-#' @return [character()] file path
-#' @export
-#'
-write_data <- function (..., path = "data") {
-  if (...length() != 1) stop("write_data() takes exactly 1 argument")
-  args <- list(...)
-  if (is.null(names(args))) {
-    name <- as.character(substitute(...))
-  } else {
-    name <- names(args)[1]
-  }
-  assign(x = name, value = ..1)
-  save(..., file = paste0(path, "/", name, ".rda"))
-  file.path(path, fs::path_ext_set(name, ".rda"))
-}
 

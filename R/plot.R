@@ -1,3 +1,289 @@
+plot_map <- function (regions,
+                      plot_name,
+                      size_short = 2,
+                      size_line = 0.25,
+                      size_text = 2,
+                      color_land = "white",
+                      color_ocean = "grey98",
+                      color_region = "grey30",
+                      fill_land = "white",
+                      fill_ocean = "grey95",
+                      fill_region = "grey85",
+                      xmin = 169,
+                      ymin = 31,
+                      xmax = 241,
+                      ymax = 65.5,
+                      width = 90,
+                      height = 60,
+                      file_type = ".png") {
+
+  # Define centroid ------------------------------------------------------------
+
+  sf::sf_use_s2(FALSE)
+  regions <- regions %>%
+    cbind(sf::st_coordinates(suppressWarnings(sf::st_centroid(.$geometry))))
+
+  # Define coastline -----------------------------------------------------------
+
+  coastline <- rnaturalearth::ne_coastline(scale = 50, returnclass = "sf") %>%
+    sf::st_transform(crs = "+proj=longlat +datum=WGS84 +no_defs") %>%
+    st_recenter(clon = 180) %>%
+    sf::st_make_valid()
+
+  # Define land ----------------------------------------------------------------
+
+  land <- rnaturalearth::ne_countries(scale = 50, returnclass = "sf") %>%
+    sf::st_transform(crs = "+proj=longlat +datum=WGS84 +no_defs") %>%
+    st_recenter(clon = 180) %>%
+    sf::st_make_valid()
+
+  # Define outline -------------------------------------------------------------
+
+  xbuf <- 3
+  ybuf <- 2.5
+
+  outline <- tibble::tibble(
+    x = c(xmin - xbuf, xmin - xbuf, xmax + xbuf, xmax + xbuf, xmin - xbuf),
+    y = c(ymin - ybuf, ymax + ybuf, ymax + ybuf, ymin - ybuf, ymin - ybuf)
+  )
+
+  # Define inset ---------------------------------------------------------------
+
+  inset <- ggplot2::ggplot() +
+    ggplot2::geom_sf(
+      data = land,
+      color = color_land,
+      fill = fill_land,
+      lwd = 0.1
+    ) +
+    ggplot2::geom_sf(
+      data = coastline,
+      color = color_region,
+      fill = NA,
+      lwd = 0.25
+    ) +
+    ggplot2::coord_sf(
+      xlim = c(130, 300),
+      ylim = c(8, 80)
+    ) +
+    ggplot2::geom_polygon(
+      data = outline,
+      mapping = ggplot2::aes(x = x, y = y),
+      fill = NA,
+      color = "grey60",
+      size = 0.5
+    ) +
+    ggsidekick::theme_sleek() +
+    ggplot2::theme(
+      axis.title.x = ggplot2::element_blank(),
+      axis.title.y = ggplot2::element_blank(),
+      axis.text.x = ggplot2::element_blank(),
+      axis.text.y = ggplot2::element_blank(),
+      axis.ticks.x = ggplot2::element_blank(),
+      axis.ticks.y = ggplot2::element_blank(),
+      panel.background = ggplot2::element_rect(fill = fill_ocean, color = NA),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank(),
+      plot.background = ggplot2::element_rect(fill = "transparent", color = NA)
+    )
+
+  # Define plot ----------------------------------------------------------------
+
+  p1 <- ggplot2::ggplot() +
+    ggplot2::geom_sf(
+      data = land,
+      color = color_land,
+      fill = fill_land,
+      lwd = 0.1
+    ) +
+    ggplot2::geom_sf(
+      data = coastline,
+      color = color_region,
+      fill = NA,
+      lwd = 0.25
+    ) +
+    ggplot2::geom_sf(
+      data = regions,
+      col = color_region,
+      fill = fill_region,
+      size = size_line
+    ) +
+    ggplot2::geom_label(
+      data = regions,
+      mapping = ggplot2::aes(X, Y, label = region_short),
+      size = size_short,
+      label.r = grid::unit(0.05, "lines"),
+      label.size = 0.125,
+      label.padding = grid::unit(0.15, "lines"),
+      nudge_x = c(0, 0, 0, 0, 0, 0, 0, -1),
+      nudge_y = c(0, 0, 0, -1, 0.5, 0.25, 0, 0.25)
+    ) +
+    ggplot2::coord_sf(
+      xlim = c(xmin, xmax),
+      ylim = c(ymin, ymax)
+    ) +
+    ggspatial::annotation_north_arrow(
+      height = grid::unit(0.25, "npc"),
+      width = grid::unit(0.2, "npc"),
+      pad_x = grid::unit(0.8, "npc"),
+      pad_y = grid::unit(0.72, "npc"),
+      style = ggspatial::north_arrow_fancy_orienteering(
+        text_col = "grey60",
+        line_col = "grey60",
+        fill = c("white", "grey60")
+      )
+    ) +
+    ggsidekick::theme_sleek() +
+    ggplot2::theme(
+      axis.title = ggplot2::element_blank(),
+      axis.text = ggplot2::element_text(size = size_text),
+      panel.background = ggplot2::element_rect(fill = fill_ocean, color = NA),
+      panel.grid.major = ggplot2::element_line(color = color_ocean),
+      panel.grid.minor = ggplot2::element_blank(),
+      plot.background = ggplot2::element_rect(fill = "white", color = NA),
+      plot.margin = ggplot2::margin(t = 2, r = 2, b = 2, l = 2)
+    ) +
+    ggplot2::annotation_custom(
+      ggplot2::ggplotGrob(inset),
+      xmin = xmin - 5.6,
+      ymin = ymin - 4.5,
+      xmax = 200,
+      ymax = 45
+    )
+
+
+  # Save ggplot ----------------------------------------------------------------
+
+  ggplot2::ggsave(
+    here::here("ms", "figs", paste0(plot_name, file_type)),
+    width = width,
+    height = height,
+    units = "mm"
+  )
+
+  # Return path
+  return(paste0("ms/", "figs/", plot_name, file_type))
+}
+
+plot_cols <- function (data,
+                       plot_name,
+                       regions,
+                       xvar,
+                       xlab,
+                       ylab,
+                       x_text,
+                       x_breaks,
+                       y_text,
+                       y_breaks,
+                       x_angle = 0,
+                       hjust = 0.5,
+                       vjust = 0.5,
+                       size_title = 8,
+                       size_strip = 8,
+                       size_text = 8,
+                       size_error = 0.2,
+                       panel_spacing = 1,
+                       xmin = 1,
+                       xmax = 20,
+                       ymin = 0.0,
+                       ymax = 1.0,
+                       width = 90,
+                       height = 90,
+                       dpi = 300,
+                       file_type = ".png") {
+
+  # Augment data ---------------------------------------------------------------
+
+  data <- data %>%
+    dplyr::mutate(
+      region_previous = factor(number_to_region(.data$x, regions), regions),
+      region_current = factor(number_to_region(.data$y, regions), regions)
+    )
+
+  # Define plot ----------------------------------------------------------------
+
+  p1 <- ggplot2::ggplot(
+      data = data,
+      mapping = ggplot2::aes(
+        x = .data[[xvar]],
+        y = .data$mean
+      )
+    ) +
+    ggplot2::geom_col(
+      color = "white",
+      size = 0.1
+    ) +
+    ggplot2::geom_errorbar(
+      mapping = ggplot2::aes(
+        ymin = .data$q5,
+        ymax = .data$q95
+      ),
+      size = size_error,
+      width = 0
+    ) +
+    ggplot2::facet_grid(
+      rows = ggplot2::vars(.data$region_previous),
+      cols = ggplot2::vars(.data$region_current),
+      switch = "y"
+    ) +
+    ggplot2::scale_x_continuous(
+      labels = x_text,
+      breaks = x_breaks,
+      limits = c(xmin, xmax)
+    ) +
+    ggplot2::scale_y_continuous(
+      labels = y_text,
+      breaks = y_breaks,
+      position = "right"
+    ) +
+    ggplot2::xlab(xlab) +
+    ggplot2::ylab(ylab) +
+    ggsidekick::theme_sleek() +
+    ggplot2::theme(
+      panel.spacing = ggplot2::unit(panel_spacing, "mm"),
+      strip.text.x = ggplot2::element_text(
+        size = size_strip
+      ),
+      strip.text.y.left = ggplot2::element_text(
+        size = size_strip,
+        angle = 0
+      ),
+      axis.title = ggplot2::element_text(
+        size = size_title
+      ),
+      axis.text.x = ggplot2::element_text(
+        size = size_text,
+        angle = x_angle,
+        hjust = hjust,
+        vjust = vjust
+      ),
+      axis.text.y = ggplot2::element_text(
+        size = size_text
+      )
+    )
+
+
+  # Save ggplot ----------------------------------------------------------------
+
+  ggplot2::ggsave(
+    here::here("ms", "figs", paste0(plot_name, file_type)),
+    width = width,
+    height = height,
+    units = "mm",
+    dpi = dpi
+  )
+
+  # Return path
+  return(paste0("ms/", "figs/", plot_name, file_type))
+}
+
+
+
+# Current above here -----------------------------------------------------------
+
+
+
+
 plot_bar_retention_region_season_length <- function (data,
                                                      plot_name,
                                                      size_text,
@@ -949,173 +1235,6 @@ plot_heat_length <- function (data,
     ggplot2::theme(
       plot.background = ggplot2::element_rect(fill = "white", color = NA)
     )
-
-  # Save ggplot ----------------------------------------------------------------
-
-  ggplot2::ggsave(
-    here::here("ms", "figs", paste0(plot_name, file_type)),
-    width = width,
-    height = height,
-    units = "mm"
-  )
-
-  # Return path
-  return(paste0("ms/", "figs/", plot_name, file_type))
-}
-
-plot_map <- function (regions,
-                      plot_name,
-                      size_short = 2,
-                      size_line = 0.25,
-                      size_text = 2,
-                      color_land = "white",
-                      color_ocean = "grey98",
-                      color_region = "grey30",
-                      fill_land = "white",
-                      fill_ocean = "grey95",
-                      fill_region = "grey85",
-                      xmin = 169,
-                      ymin = 31,
-                      xmax = 241,
-                      ymax = 65.5,
-                      width = 90,
-                      height = 60,
-                      file_type = ".png") {
-
-  # Define centroid ------------------------------------------------------------
-
-  sf::sf_use_s2(FALSE)
-  regions <- regions %>%
-    cbind(sf::st_coordinates(sf::st_centroid(.$geometry)))
-
-  # Define coastline -----------------------------------------------------------
-
-  coastline <- rnaturalearth::ne_coastline(scale = 50, returnclass = "sf") %>%
-    sf::st_transform(crs = "+proj=longlat +datum=WGS84 +no_defs") %>%
-    st_recenter(clon = 180) %>%
-    sf::st_make_valid()
-
-  # Define land ----------------------------------------------------------------
-
-  land <- rnaturalearth::ne_countries(scale = 50, returnclass = "sf") %>%
-    sf::st_transform(crs = "+proj=longlat +datum=WGS84 +no_defs") %>%
-    st_recenter(clon = 180) %>%
-    sf::st_make_valid()
-
-  # Define outline -------------------------------------------------------------
-
-  xbuf <- 3
-  ybuf <- 2.5
-
-  outline <- tibble::tibble(
-    x = c(xmin - xbuf, xmin - xbuf, xmax + xbuf, xmax + xbuf, xmin - xbuf),
-    y = c(ymin - ybuf, ymax + ybuf, ymax + ybuf, ymin - ybuf, ymin - ybuf)
-  )
-
-  # Define inset ---------------------------------------------------------------
-
-  inset <- ggplot2::ggplot() +
-    ggplot2::geom_sf(
-      data = land,
-      color = color_land,
-      fill = fill_land,
-      lwd = 0.1
-    ) +
-    ggplot2::geom_sf(
-      data = coastline,
-      color = color_region,
-      fill = NA,
-      lwd = 0.25
-    ) +
-    ggplot2::coord_sf(
-      xlim = c(130, 300),
-      ylim = c(8, 80)
-    ) +
-    ggplot2::geom_polygon(
-      data = outline,
-      mapping = ggplot2::aes(x = x, y = y),
-      fill = NA,
-      color = "grey60",
-      size = 0.5
-    ) +
-    ggsidekick::theme_sleek() +
-    ggplot2::theme(
-      axis.title.x = ggplot2::element_blank(),
-      axis.title.y = ggplot2::element_blank(),
-      axis.text.x = ggplot2::element_blank(),
-      axis.text.y = ggplot2::element_blank(),
-      axis.ticks.x = ggplot2::element_blank(),
-      axis.ticks.y = ggplot2::element_blank(),
-      panel.background = ggplot2::element_rect(fill = fill_ocean, color = NA),
-      panel.grid.major = ggplot2::element_blank(),
-      panel.grid.minor = ggplot2::element_blank(),
-      plot.background = ggplot2::element_rect(fill = "transparent", color = NA)
-    )
-
-  # Define plot ----------------------------------------------------------------
-
-  p1 <- ggplot2::ggplot() +
-    ggplot2::geom_sf(
-      data = land,
-      color = color_land,
-      fill = fill_land,
-      lwd = 0.1
-    ) +
-    ggplot2::geom_sf(
-      data = coastline,
-      color = color_region,
-      fill = NA,
-      lwd = 0.25
-    ) +
-    ggplot2::geom_sf(
-      data = regions,
-      col = color_region,
-      fill = fill_region,
-      size = size_line
-    ) +
-    ggplot2::geom_label(
-      data = regions,
-      mapping = ggplot2::aes(X, Y, label = region_short),
-      size = size_short,
-      label.r = grid::unit(0.05, "lines"),
-      label.size = 0.125,
-      label.padding = grid::unit(0.15, "lines"),
-      nudge_x = c(0, 0, 0, 0, 0, 0, 0, -1),
-      nudge_y = c(0, 0, 0, -1, 0.5, 0.25, 0, 0.25)
-    ) +
-    ggplot2::coord_sf(
-      xlim = c(xmin, xmax),
-      ylim = c(ymin, ymax)
-    ) +
-    ggspatial::annotation_north_arrow(
-      height = grid::unit(0.25, "npc"),
-      width = grid::unit(0.2, "npc"),
-      pad_x = grid::unit(0.8, "npc"),
-      pad_y = grid::unit(0.72, "npc"),
-      style = ggspatial::north_arrow_fancy_orienteering(
-        text_col = "grey60",
-        line_col = "grey60",
-        fill = c("white", "grey60")
-      )
-    ) +
-    ggsidekick::theme_sleek() +
-    ggplot2::theme(
-      axis.title = ggplot2::element_blank(),
-      axis.text = ggplot2::element_text(size = size_text),
-      panel.background = ggplot2::element_rect(fill = fill_ocean, color = NA),
-      panel.grid.major = ggplot2::element_line(color = color_ocean),
-      panel.grid.minor = ggplot2::element_blank(),
-      plot.background = ggplot2::element_rect(fill = "white", color = NA),
-      plot.margin = ggplot2::margin(t = 2, r = 2, b = 2, l = 2)
-    ) +
-    ggplot2::annotation_custom(
-      ggplot2::ggplotGrob(inset),
-      xmin = xmin - 5.6,
-      ymin = ymin - 4.5,
-      xmax = 200,
-      ymax = 45
-    )
-
 
   # Save ggplot ----------------------------------------------------------------
 
