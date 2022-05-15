@@ -402,7 +402,7 @@ list(
         regions = toupper(names(list_regions)),
         xvar = "i",
         xlab = "Year",
-        ylab = "Annual movement rate",
+        ylab = "Quarterly movement rate",
         x_text = paste0("Q", 1:4),
         x_breaks = 1:4,
         y_text = as.character(seq(0, 1, 0.25)),
