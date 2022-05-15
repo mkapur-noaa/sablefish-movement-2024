@@ -165,6 +165,145 @@ plot_map <- function (regions,
   return(paste0("ms/", "figs/", plot_name, file_type))
 }
 
+plot_heat <- function (data,
+                       plot_name,
+                       regions,
+                       size_text = 5,
+                       size_mean = 3,
+                       nudge_mean = 0.15,
+                       size_sd = 2,
+                       nudge_sd = 0.15,
+                       legend_name = "Movement rate",
+                       xlab = NULL,
+                       ylab = NULL,
+                       xtext = TRUE,
+                       ytext = TRUE,
+                       margin_x = -15,
+                       margin_y = -15,
+                       width = 90,
+                       height = 110,
+                       file_type = ".png") {
+
+  # Augment data ---------------------------------------------------------------
+
+  data <- data %>%
+    dplyr::mutate(
+      region_previous = factor(
+        number_to_region(.data$x, regions),
+        rev(regions)
+      ),
+      region_current = factor(
+        number_to_region(.data$y, regions),
+        regions
+      )
+    )
+
+  # Construct geom object ------------------------------------------------------
+
+  ggplot2::ggplot(
+    data = data,
+    mapping = ggplot2::aes(
+      x = .data$region_current,
+      y = .data$region_previous,
+      fill = .data$mean
+    )
+  ) +
+    ggplot2::geom_tile(
+      color = "white",
+      width = 0.975,
+      height = 0.975
+    ) +
+    # Use viridis
+    ggplot2::scale_fill_viridis_c(
+      begin = 0,
+      end = 1,
+      direction = 1,
+      option = "plasma",
+      limits = c(0, 1),
+      breaks = seq(0, 1, 0.25)
+    ) +
+    # Add mean
+    ggplot2::geom_text(
+      mapping = ggplot2::aes(
+        label = round_to_character(.data$mean, 2),
+        col = as.factor(ifelse(.data$mean >= 0.55, 0, 1))
+      ),
+      fontface = "plain",
+      nudge_y = nudge_mean,
+      size = size_mean
+    ) +
+    # Add ci
+    ggplot2::geom_text(
+      mapping = ggplot2::aes(
+        # label = paste0("(", round_to_character(.data$sd, 3), ")"),
+        label = paste0(
+          "(",
+          round_to_character(.data$q5, 3),
+          "-",
+          round_to_character(.data$q95, 3),
+          ")"
+        ),
+        col = as.factor(ifelse(.data$mean >= 0.55, 0, 1))
+      ),
+      fontface = "plain",
+      nudge_y = -nudge_sd,
+      size = size_sd
+    ) +
+    # Text to black and white
+    ggplot2::scale_color_grey(start = 0, end = 1) +
+    ggplot2::guides(
+      col = "none",
+      fill = if (is.null(legend_name)) {
+        "none"
+      } else {
+        ggplot2::guide_colorbar(
+          title.position = "top",
+          title.hjust = 0.5
+        )
+      }
+    ) +
+    ggplot2::xlab(xlab) +
+    ggplot2::ylab(ylab) +
+    ggplot2::labs(fill = legend_name) +
+    # Theme
+    ggplot2::theme_void() +
+    ggplot2::theme(
+      axis.text = ggplot2::element_text(size = size_text),
+      legend.position = ifelse(is.null(legend_name), "none", "bottom"),
+      legend.title = ggplot2::element_text(size = size_text),
+      legend.text = ggplot2::element_text(size = size_text),
+      legend.key.width = grid::unit(0.1, "npc"),
+      legend.key.height = grid::unit(0.03, "npc"),
+      legend.spacing.y = grid::unit(0.01, "npc"),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank(),
+      plot.background = ggplot2::element_rect(fill = "white", color = NA),
+      plot.margin = ggplot2::margin(t = 1, r = 1, b = 1, l = 2),
+      axis.text.x = if (xtext) {
+        ggplot2::element_text(margin = ggplot2::margin(t = margin_x))
+      } else {
+        NULL
+      },
+      axis.text.y = if (ytext) {
+        ggplot2::element_text(margin = ggplot2::margin(r = margin_y))
+      } else {
+        NULL
+      }
+    )
+
+  # Save ggplot ----------------------------------------------------------------
+
+  ggplot2::ggsave(
+    here::here("ms", "figs", paste0(plot_name, file_type)),
+    width = width,
+    height = height,
+    units = "mm"
+  )
+
+  # Return path
+  return(paste0("ms/", "figs/", plot_name, file_type))
+}
+
 plot_cols <- function (data,
                        plot_name,
                        regions,
@@ -846,159 +985,6 @@ plot_bar_sensitivity_reporting <- function (study,
   return(paste0("ms/", "figs/", plot_name, file_type))
 }
 
-#' Heat Map Matrix
-#'
-#' @param data [data.frame()]
-#' @param movement_time [numeric()]
-#' @param released_group [numeric()]
-#' @param xlab [character()] or \code{NULL}
-#' @param ylab [character()] or \code{NULL}
-#' @param font_size_p [numeric()]
-#' @param font_nudge_p [numeric()]
-#' @param font_size_ci [numeric()]
-#' @param font_nudge_ci [numeric()]
-#' @param legend_name [character()] or \code{NULL}
-#'
-#' @importFrom rlang .data
-#' @importFrom rlang .env
-#'
-#' @return [ggplot2::ggplot()]
-#' @export
-#'
-plot_heat <- function (data,
-                       plot_name,
-                       movement_time = 1,
-                       released_group = 1,
-                       size_text = 5,
-                       xlab = NULL,
-                       ylab = NULL,
-                       xtext = TRUE,
-                       ytext = TRUE,
-                       margin_x = -15,
-                       margin_y = -15,
-                       font_size_mean = 3,
-                       font_nudge_mean = 0.15,
-                       font_size_sd = 2,
-                       font_nudge_sd = 0.15,
-                       legend_name = "Movement rate",
-                       width = 90,
-                       height = 110,
-                       file_type = ".png") {
-
-  # Prepare data ---------------------------------------------------------------
-
-  data <- data %>%
-    dplyr::ungroup() %>%
-    dplyr::filter(
-      .data$movement_time == .env$movement_time,
-      .data$released_group == .env$released_group,
-    ) %>%
-    dplyr::mutate(
-      previous_short = number_to_short(.data$previous_area),
-      current_short = number_to_short(.data$current_area)
-    )
-
-  # Construct geom object ------------------------------------------------------
-
-  ggplot2::ggplot(
-    data = data,
-    mapping = ggplot2::aes(
-      x = .data$current_short,
-      y = factor(
-        .data$previous_short,
-        levels = rev(levels(.data$previous_short))
-      ),
-      fill = .data$mean
-    )
-  ) +
-    ggplot2::geom_tile(
-      color = "white",
-      width = 0.975,
-      height = 0.975
-    ) +
-    # Use viridis
-    ggplot2::scale_fill_viridis_c(
-      begin = 0,
-      end = 1,
-      direction = 1,
-      option = "plasma",
-      limits = c(0, 1),
-      breaks = seq(0, 1, 0.25)
-    ) +
-    # Add mean
-    ggplot2::geom_text(
-      mapping = ggplot2::aes(
-        label = round_to_character(.data$mean, 2),
-        col = as.factor(ifelse(.data$mean >= 0.5, 0, 1))
-      ),
-      fontface = "plain",
-      nudge_y = font_nudge_mean,
-      size = font_size_mean
-    ) +
-    # Add ci
-    ggplot2::geom_text(
-      mapping = ggplot2::aes(
-        label = paste0("(", round_to_character(.data$sd, 3), ")"),
-        col = as.factor(ifelse(.data$mean >= 0.5, 0, 1))
-      ),
-      fontface = "plain",
-      nudge_y = -font_nudge_sd,
-      size = font_size_sd
-    ) +
-    # Text to black and white
-    ggplot2::scale_color_grey(start = 0, end = 1) +
-    ggplot2::guides(
-      col = "none",
-      fill = if (is.null(legend_name)) {
-        "none"
-      } else {
-        ggplot2::guide_colorbar(
-          title.position = "top",
-          title.hjust = 0.5
-        )
-      }
-    ) +
-    ggplot2::xlab(xlab) +
-    ggplot2::ylab(ylab) +
-    ggplot2::labs(fill = legend_name) +
-    # Theme
-    ggplot2::theme_void() +
-    ggplot2::theme(
-      axis.text = ggplot2::element_text(size = size_text),
-      legend.position = ifelse(is.null(legend_name), "none", "bottom"),
-      legend.title = ggplot2::element_text(size = size_text),
-      legend.text = ggplot2::element_text(size = size_text),
-      legend.key.width = grid::unit(0.1, "npc"),
-      legend.key.height = grid::unit(0.03, "npc"),
-      legend.spacing.y = grid::unit(0.01, "npc"),
-      panel.grid.major = ggplot2::element_blank(),
-      panel.grid.minor = ggplot2::element_blank(),
-      plot.background = ggplot2::element_rect(fill = "white", color = NA),
-      plot.margin = ggplot2::margin(t = 1, r = 1, b = 1, l = 2),
-      axis.text.x = if (xtext) {
-        ggplot2::element_text(margin = ggplot2::margin(t = margin_x))
-      } else {
-        NULL
-      },
-      axis.text.y = if (ytext) {
-        ggplot2::element_text(margin = ggplot2::margin(r = margin_y))
-      } else {
-        NULL
-      }
-    )
-
-  # Save ggplot ----------------------------------------------------------------
-
-  ggplot2::ggsave(
-    here::here("ms", "figs", paste0(plot_name, file_type)),
-    width = width,
-    height = height,
-    units = "mm"
-  )
-
-  # Return path
-  return(paste0("ms/", "figs/", plot_name, file_type))
-}
 
 plot_heat_length <- function (data,
                               plot_name,

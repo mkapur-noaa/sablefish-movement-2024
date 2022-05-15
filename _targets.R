@@ -331,7 +331,32 @@ list(
     )
   ),
   # Plot heat mean -------------------------------------------------------------
-  list(),
+  list(
+    tar_target(
+      heat_mean,
+      plot_heat(
+        data = fit_mean$movement_mean,
+        plot_name = "heat-mean",
+        regions = toupper(names(list_regions)),
+        size_text = 6,
+        size_mean = 3,
+        nudge_mean = 0.1,
+        size_sd = 1.35,
+        nudge_sd = 0.15,
+        legend_name = "Movement rate",
+        xlab = NULL,
+        ylab = NULL,
+        xtext = TRUE,
+        ytext = TRUE,
+        margin_x = 0,
+        margin_y = 0,
+        width = 90,
+        height = 100,
+        file_type = figure_type
+      ),
+      format = "file"
+    )
+  ),
   # Plot bar time --------------------------------------------------------------
   list(
     tar_target(
@@ -363,7 +388,8 @@ list(
         height = 170,
         dpi = 600,
         file_type = figure_type
-      )
+      ),
+      format = "file"
     )
   ),
   # Plot bar term --------------------------------------------------------------
@@ -396,7 +422,8 @@ list(
         width = 190,
         height = 170,
         file_type = figure_type
-      )
+      ),
+      format = "file"
     )
   ),
   # Plot bar size --------------------------------------------------------------
@@ -430,7 +457,8 @@ list(
         height = 170,
         file_type = figure_type
       )
-    )
+    ),
+    format = "file"
   ),
   list()
 )
