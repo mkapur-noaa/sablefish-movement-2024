@@ -48,6 +48,10 @@ list(
       list(ai = 1, bs = 2, wg = 3, cg = 4, eg = 5, se = 6, bc = 7, cc = 8)
     ),
     tar_target(
+      list_regions_3,
+      list(aK = 1:6, bc = 7, cc = 8)
+    ),
+    tar_target(
       list_omregions,
       list(wak = 1, eak = 2, nbc = 3, sbc = 4, ncc = 5, scc = 6)
     ),
@@ -135,6 +139,22 @@ list(
           values_from = .data$fishing_rate
         ) %>%
         dplyr::select(-1L) %>%
+        as.matrix()
+    ),
+    tar_target(
+      mu_fishing_rate_3,
+      read_from_path(watch_fishing_rate) %>%
+        dplyr::filter(.data$spatial == "omregion") %>%
+        dplyr::filter(.data$year %in% c(year_start:year_end)) %>%
+        dplyr::select(.data$year, .data$short, .data$fishing_rate) %>%
+        dplyr::mutate(short = tolower(.data$short)) %>%
+        dplyr::filter(.data$short %in% c("wak", "nbc", "ncc")) %>%
+        tidyr::pivot_wider(
+          names_from = .data$short,
+          values_from = .data$fishing_rate
+        ) %>%
+        dplyr::rename(ak = .data$wak, bc = .data$nbc, cc = .data$ncc) %>%
+        dplyr::select(.data$ak, .data$bc, .data$cc) %>%
         as.matrix()
     ),
     tar_target(
@@ -330,6 +350,57 @@ list(
       )$summary
     )
   ),
+  # Fit mean 3 -----------------------------------------------------------------
+  list(
+    tar_target(
+      fit_mean_3,
+      mmmstan::mmmstan(
+        tag_data = tag_data,
+        model_form = "mean",
+        # Tag arguments
+        list_regions = list_regions_3,
+        list_sizes = list_sizes,
+        year_start = year_start,
+        year_end = year_end,
+        step_interval = step_interval,
+        step_liberty_max = step_liberty_max,
+        # Movement index
+        movement_pattern = movement_pattern,
+        movement_allow = NULL,
+        movement_disallow = NULL,
+        # Fishing rate priors
+        mu_fishing_rate = mu_fishing_rate_3,
+        cv_fishing_rate = 0.1,
+        # Reporting rate priors
+        mu_reporting_rate = c(0.4, 0.5, 0.3),
+        sd_reporting_rate = c(0.4, 0.5, 0.3) * 0.1,
+        # Use reduce sum
+        use_reduce_sum = use_reduce_sum,
+        refresh = refresh
+      )$summary
+    ),
+    # Movement step mean priors
+    tar_target(
+      mu_movement_step_mean_3,
+      fit_mean_3$movement_step  %>%
+        dplyr::pull(.data$mean) %>%
+        matrix(
+          byrow = TRUE,
+          nrow = length(list_regions_3),
+          ncol = length(list_regions_3)
+        )
+    ),
+    tar_target(
+      sd_movement_step_mean_3,
+      fit_mean_3$movement_step %>%
+        dplyr::pull(.data$sd) %>%
+        matrix(
+          byrow = TRUE,
+          nrow = length(list_regions_3),
+          ncol = length(list_regions_3)
+        )
+    )
+  ),
   # Plot heat mean -------------------------------------------------------------
   list(
     tar_target(
@@ -459,6 +530,33 @@ list(
       )
     ),
     format = "file"
+  ),
+  # Plot heat mean 3 -----------------------------------------------------------
+  list(
+    tar_target(
+      heat_mean_3,
+      plot_heat(
+        data = fit_mean_3$movement_mean,
+        plot_name = "heat-mean-3",
+        regions = toupper(names(list_regions_3)),
+        size_text = 6,
+        size_mean = 3,
+        nudge_mean = 0.1,
+        size_sd = 1.35,
+        nudge_sd = 0.15,
+        legend_name = "Movement rate",
+        xlab = NULL,
+        ylab = NULL,
+        xtext = TRUE,
+        ytext = TRUE,
+        margin_x = 0,
+        margin_y = 0,
+        width = 90,
+        height = 100,
+        file_type = figure_type
+      ),
+      format = "file"
+    )
   ),
   list()
 )
