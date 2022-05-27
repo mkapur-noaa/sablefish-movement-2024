@@ -100,11 +100,11 @@ list(
       "data/fishing_rate.rda",
       format = "file"
     ),
-    # tar_target(
-    #   watch_abundance,
-    #   "data/abundance.rda",
-    #   format = "file"
-    # ),
+    tar_target(
+      watch_abundance,
+      "data/abundance.rda",
+      format = "file"
+    ),
     tar_target(
       watch_sf_regions,
       "data/sf_regions.rda",
@@ -120,7 +120,7 @@ list(
   # Read data ------------------------------------------------------------------
   list(
     tar_target(tag_data, read_from_path(watch_tag_data)),
-    # tar_target(abundance, read_from_path(watch_abundance)),
+    tar_target(abundance, read_from_path(watch_abundance)),
     tar_target(sf_regions, read_from_path(watch_sf_regions)),
     tar_target(sf_omregions, read_from_path(watch_sf_omregions)),
     list()
@@ -399,7 +399,15 @@ list(
           nrow = length(list_regions_3),
           ncol = length(list_regions_3)
         )
-    )
+    ),
+    tar_target(
+      abundance_exchange,
+      create_abundance_exchange(
+        abundance,
+        fit_mean_3$movement_mean
+      )
+    ),
+    list()
   ),
   # Plot heat mean -------------------------------------------------------------
   list(
@@ -553,6 +561,23 @@ list(
         margin_y = 0,
         width = 90,
         height = 100,
+        file_type = figure_type
+      ),
+      format = "file"
+    )
+  ),
+  # Plot abundance exchange ----------------------------------------------------
+  list(
+    tar_target(
+      bar_exchange,
+      plot_exchange(
+        data = abundance_exchange,
+        plot_name = "bar-exchange",
+        size_hline = 0.5,
+        size_error = 0.5,
+        width = 190,
+        height = 140,
+        dpi = 300,
         file_type = figure_type
       ),
       format = "file"

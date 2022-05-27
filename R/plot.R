@@ -416,6 +416,244 @@ plot_cols <- function (data,
   return(paste0("ms/", "figs/", plot_name, file_type))
 }
 
+plot_exchange <- function (data,
+                           plot_name,
+                           size_hline = 0.5,
+                           size_error = 0.5,
+                           width = 90,
+                           height = 100,
+                           dpi = 300,
+                           file_type = figure_type) {
+
+  # Check arguments ------------------------------------------------------------
+
+  # Annotations ----------------------------------------------------------------
+
+  north_to_ak <- tibble::tibble(
+    x = 2010,
+    y = 45e5,
+    label = "North to Alaska"
+  )
+  south_to_bc <- tibble::tibble(
+    x = 2010,
+    y = -21e6,
+    label = "South to British Columbia"
+  )
+  north_to_bc <- tibble::tibble(
+    x = 2010,
+    y = 14e6,
+    label = "North to British Columbia"
+  )
+  south_to_cc <- tibble::tibble(
+    x = 2010,
+    y = -3e6,
+    label = "South to California Current"
+  )
+
+  # Split data -----------------------------------------------------------------
+
+  ak_s <- dplyr::filter(data, .data$direction == "ak s", .data$year %in% 1979:2017)
+  bc_n <- dplyr::filter(data, .data$direction == "bc n", .data$year %in% 1979:2017)
+  bc_s <- dplyr::filter(data, .data$direction == "bc s", .data$year %in% 1979:2017)
+  cc_n <- dplyr::filter(data, .data$direction == "cc n", .data$year %in% 1979:2017)
+  # Line data
+  line_1 <- tibble::tibble(
+    year = ak_s$year,
+    net_mean = bc_n$mean - ak_s$mean,
+    net_q5 = bc_n$q5 - ak_s$q5,
+    net_q95 = bc_n$q95 - ak_s$q95
+  )
+  line_2 <- tibble::tibble(
+    year = bc_s$year,
+    net_mean = cc_n$mean - bc_s$mean,
+    net_q5 = cc_n$q5 - bc_s$q5,
+    net_q95 = cc_n$q95 - bc_s$q95
+  )
+
+  # Define plots ---------------------------------------------------------------
+
+  # Ak and BC
+  p1 <- ggplot2::ggplot() +
+    ggplot2::geom_col(
+      data = bc_n,
+      ggplot2::aes(x = .data$year, y = .data$mean)
+    ) +
+    ggplot2::geom_col(
+      data = ak_s,
+      ggplot2::aes(x = .data$year, y = -.data$mean)
+    ) +
+    ggplot2::geom_hline(
+      yintercept = 0,
+      size = size_hline,
+      col = "white"
+    ) +
+    ggplot2::geom_line(
+      data = line_1,
+      ggplot2::aes(x = .data$year, y = .data$net_mean)
+    ) +
+    ggplot2::geom_errorbar(
+      data = bc_n,
+      ggplot2::aes(
+        x = .data$year,
+        ymin = .data$q5,
+        ymax = .data$q95
+      ),
+      size = size_error,
+      width = 0
+    ) +
+    ggplot2::geom_errorbar(
+      data = ak_s,
+      ggplot2::aes(
+        x = .data$year,
+        ymin = -.data$q5,
+        ymax = -.data$q95
+      ),
+      size = size_error,
+      width = 0
+    ) +
+    ggplot2::geom_errorbar(
+      data = line_1,
+      ggplot2::aes(
+        x = .data$year,
+        ymin = .data$net_q5,
+        ymax = .data$net_q95
+      ),
+      size = size_error,
+      width = 0
+    ) +
+    ggplot2::scale_y_continuous(
+      limits = c(-22e6, 5e6),
+      breaks = seq(-2e7, 5e6, 5e6),
+      labels = c(20, 15, 10, 5, 0, 5)
+    ) +
+    ggplot2::geom_text(
+      data = north_to_ak,
+      ggplot2::aes(x = x, y = y, label = label),
+      na.rm = TRUE
+    ) +
+    ggplot2::geom_text(
+      data = south_to_bc,
+      ggplot2::aes(x = x, y = y, label = label),
+      na.rm = TRUE
+    ) +
+    ggsidekick::theme_sleek() +
+    ggplot2::theme(
+      axis.title.x = ggplot2::element_blank(),
+      axis.text.x = ggplot2::element_blank(),
+      axis.ticks.x = ggplot2::element_blank(),
+      axis.title.y = ggplot2::element_blank(),
+      plot.margin = ggplot2::margin(t = 1, r = 1, b = 1, l = 1, "mm")
+    )
+  # BC and CC
+  p2 <- ggplot2::ggplot() +
+    ggplot2::geom_col(
+      data = cc_n,
+      ggplot2::aes(x = .data$year, y = .data$mean)
+    ) +
+    ggplot2::geom_col(
+      data = bc_s,
+      ggplot2::aes(x = .data$year, y = -.data$mean)
+    ) +
+    ggplot2::geom_hline(
+      yintercept = 0,
+      size = size_hline,
+      col = "white"
+    ) +
+    ggplot2::geom_line(
+      data = line_2,
+      ggplot2::aes(x = .data$year, y = .data$net_mean)
+    ) +
+    ggplot2::geom_errorbar(
+      data = cc_n,
+      ggplot2::aes(
+        x = .data$year,
+        ymin = .data$q5,
+        ymax = .data$q95
+      ),
+      size = size_error,
+      width = 0
+    ) +
+    ggplot2::geom_errorbar(
+      data = bc_s,
+      ggplot2::aes(
+        x = .data$year,
+        ymin = -.data$q5,
+        ymax = -.data$q95
+      ),
+      size = size_error,
+      width = 0
+    ) +
+    ggplot2::geom_errorbar(
+      data = line_2,
+      ggplot2::aes(
+        x = .data$year,
+        ymin = .data$net_q5,
+        ymax = .data$net_q95
+      ),
+      size = size_error,
+      width = 0
+    ) +
+    ggplot2::scale_y_continuous(
+      limits = c(-4e6, 15e6),
+      breaks = seq(-5e6, 15e6, 5e6),
+      labels = c(5, 0, 5, 10, 15)
+    ) +
+    ggplot2::geom_text(
+      data = north_to_bc,
+      ggplot2::aes(x = x, y = y, label = label),
+      na.rm = TRUE
+    ) +
+    ggplot2::geom_text(
+      data = south_to_cc,
+      ggplot2::aes(x = x, y = y, label = label),
+      na.rm = TRUE
+    ) +
+    ggsidekick::theme_sleek() +
+    ggplot2::theme(
+      axis.title.y = ggplot2::element_blank(),
+      axis.title.x = ggplot2::element_blank(),
+      plot.margin = ggplot2::margin(t = 1, r = 1, b = 1, l = 1, "mm")
+    )
+
+  # Assemble panel figure ------------------------------------------------------
+
+  p0 <- ggpubr::ggarrange(
+    p1, p2,
+    heights = c(27, 19),
+    nrow = 2
+  ) %>%
+    ggpubr::annotate_figure(
+      left = ggpubr::text_grob(
+        "Abundance exchange (millions)",
+        size = 10,
+        rot = 90
+      ),
+      bottom = ggpubr::text_grob(
+        "Year",
+        size = 10
+      )
+    ) +
+    ggplot2::theme(
+      plot.background = ggplot2::element_rect(fill = "white", color = NA)
+    )
+
+
+  # Save ggplot ----------------------------------------------------------------
+
+  ggplot2::ggsave(
+    here::here("ms", "figs", paste0(plot_name, file_type)),
+    width = width,
+    height = height,
+    units = "mm",
+    dpi = dpi
+  )
+
+  # Return path
+  return(paste0("ms/", "figs/", plot_name, file_type))
+}
+
+
+
 
 
 # Current above here -----------------------------------------------------------
