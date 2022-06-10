@@ -28,5 +28,19 @@ _targets/
 *.pdf
 Rplots.pdf
 
+# Tex
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.odt
+*.out
+
+# Org
+*org#
+.#*
+
 # Vignettes
 inst/doc

@@ -1,0 +1,67 @@
+#+title: Sablefish movement
+#+options: author:nil
+#+options: toc:nil
+#+options: num:nil
+#+latex_header: \author[1]{Luke Rogers}
+#+latex_header: \author[2]{...}
+#+latex_header: \affil[1]{Pacific Biological Station, Fisheries and Oceans Canada, Nanaimo, British Columbia, V9T 6N7, Canada}
+#+latex_header: \affil[2]{...}
+#+latex_class: manuscript
+\linenumbers
+
+\noindent Keywords: keywords
+
+* Notes
+** TODO Synthesize repos [0/4]
+   - [ ] github/sablefishMovement
+   - [ ] Overleaf/sablefish-movement
+   - [ ] Evernote/Current/Sablefish Movement
+   - [ ] Evernote/Projects/Sablefish - (several)
+* Abstract
+* Introduction
+  - Hook in intro around squeezing insights out of big datasets
+  - Ecological Applications: hinge on how well frame novel insights for management and conservation (intro and discussion)
+  - JAE or ICES secondary options
+  - Challenges paragraph--punch close to foreshadow novelty of what we do (overcome fishing rate/movement confounding)
+  - Highlight challenge: movement rates not the same as abundance exchange
+* Methods
+** Data
+   - Terminology: 8 management regions--be explicit about what they are (CC whole because paucity of data even though two)
+   - Link three international jurisdictions back to transboundary movement
+   - 6 demographic stocks?
+** Movement model
+   - Notation: lean toward all the details
+   - Spell out priors in methods (maybe under model fitting for each of the three?)
+** Model fitting
+   - How to fit all facets in one model?
+   - Possibly leave seasonal fits for future work.
+   - Why size so much slower to fit?
+   - Rank pieces of analysis: sine quo non, increases generalizability, or nice future direction
+   - Matrix mean: relationship between factors and mean/root. Something like approximate nth root from the n factors?
+   - Need fishing weights by season for movement by season
+   - Non-centred AR1 helps reduce divergent transitions
+   - One paragraph for each of: management regions, international jurisdictions, demographic stocks
+** Model validation (simulation model)
+** Model sensitivity
+** Abundance exchange
+* Results
+** TODO Values to generate [0/8]
+   - [ ] Model fitting values: priors, chains, iterations, burn-in, convergece diagnostics, number of divergent transitions
+   - [ ] Data summaries: number of tags, ranges of distances, tags by region
+   - [ ] Movement rate summaries
+   - [ ] Abundance exchange summaries
+   - [ ] Simulation testing data
+   - [ ] Release each region and jurisdiction and stock and total
+   - [ ] Recovery each release region and recovery region and jurisdiction and stock and total
+   - [ ] Year start and end; model step and season term
+* Discussion
+  - Challenge: fishing and movement confounded; show how our approach helps for estimating both
+  - AK adults move more except BC and Eastern Gulf (juvenile habitat limited) so show depth contours on map
+  - Paragraph: method flexible enough to answer diversity of questions (e.g. condition Maia's operating model)
+  - Generalizable to other species (in contrast to system and scale-specific previous analyses (but Hilborn?))
+  - Lean in to reality of different spatial scales: flexibility of tool, enhances interpretation; robust (or not) to different spatial scales
+* Acknowledgements
+
+  bibliographystyle:plainnat
+  bibliography:refs.bib
+* Supplementary Information
