@@ -1,5 +1,4 @@
 library(targets)
-source("R/functions.R")
 source("R/plot.R")
 source("R/recenter.R")
 source("R/utils.R")
@@ -63,17 +62,27 @@ list(
     tar_target(list_sizes_small_large, list(s = 400:549, l = 550:800)),
     list()
   ),
+  # Define model step and term -------------------------------------------------
+  list(
+    tar_target(step_interval, "quarter"),
+    tar_target(step_duration_max, 12L),
+    tar_target(term_interval, "quarter"),
+    list()
+  ),
+  # Column name arguments ------------------------------------------------------
+  list(
+    tar_target(colname_date_released, "date_released"),
+    tar_target(colname_date_recovered, "date_recovered"),
+    tar_target(colname_region_released, "region_released"),
+    tar_target(colname_region_recovered, "region_recovered"),
+    tar_target(colname_size_released, "size_released"),
+    list()
+  ),
   # Define movement ------------------------------------------------------------
   list(
     tar_target(movement_pattern, 2L),
     tar_target(movement_allow, matrix(c(5, 7, 7, 5), nrow = 2, byrow = TRUE)),
     tar_target(movement_disallow, NULL),
-    list()
-  ),
-  # Define model step ----------------------------------------------------------
-  list(
-    tar_target(step_interval, "quarter"),
-    tar_target(step_liberty_max, 12L),
     list()
   ),
   # Define priors --------------------------------------------------------------
@@ -85,7 +94,7 @@ list(
   # Define CmdStanR arguments --------------------------------------------------
   list(
     tar_target(chains, 1L),
-    tar_target(use_reduce_sum, TRUE),
+    tar_target(use_reduce_sum, FALSE), # TODO: Update to TRUE when implemented
     tar_target(refresh, 10)
   ),
   # Watch data -----------------------------------------------------------------
@@ -171,6 +180,7 @@ list(
         dplyr::select(-1L) %>%
         as.matrix()
     ),
+    tar_target(cv_fishing_rate, 0.1),
     list()
   ),
   # Plot map -------------------------------------------------------------------
@@ -206,21 +216,30 @@ list(
       fit_mean,
       mmmstan::mmmstan(
         tag_data = tag_data,
-        model_form = "mean",
         # Tag arguments
         list_regions = list_regions,
         list_sizes = list_sizes,
         year_start = year_start,
         year_end = year_end,
         step_interval = step_interval,
-        step_liberty_max = step_liberty_max,
+        step_duration_max = step_duration_max,
+        term_interval = term_interval,
+        colname_date_released = colname_date_released,
+        colname_date_recovered = colname_date_recovered,
+        colname_region_released = colname_region_released,
+        colname_region_recovered = colname_region_recovered,
+        colname_size_released = colname_size_released,
+        # Model structure
+        model_time = FALSE,
+        model_term = FALSE,
+        model_size = FALSE,
         # Movement index
         movement_pattern = movement_pattern,
         movement_allow = movement_allow,
         movement_disallow = movement_disallow,
         # Fishing rate priors
         mu_fishing_rate = mu_fishing_rate,
-        cv_fishing_rate = 0.1,
+        cv_fishing_rate = cv_fishing_rate,
         # Reporting rate priors
         mu_reporting_rate = mu_reporting_rate,
         sd_reporting_rate = sd_reporting_rate,
@@ -229,93 +248,7 @@ list(
         refresh = refresh
       )$summary
     ),
-    # Movement step mean priors
-    tar_target(
-      mu_movement_step_mean,
-      fit_mean$movement_step  %>%
-        dplyr::pull(.data$mean) %>%
-        matrix(
-          byrow = TRUE,
-          nrow = length(list_regions),
-          ncol = length(list_regions)
-        )
-    ),
-    tar_target(
-      sd_movement_step_mean,
-      fit_mean$movement_step %>%
-        dplyr::pull(.data$sd) %>%
-        matrix(
-          byrow = TRUE,
-          nrow = length(list_regions),
-          ncol = length(list_regions)
-        )
-    )
-  ),
-  # Fit time -------------------------------------------------------------------
-  list(
-    tar_target(
-      fit_time,
-      mmmstan::mmmstan(
-        tag_data = tag_data,
-        model_form = "time",
-        # Tag arguments
-        list_regions = list_regions,
-        list_sizes = list_sizes,
-        year_start = year_start,
-        year_end = year_end,
-        step_interval = step_interval,
-        step_liberty_max = step_liberty_max,
-        # Movement index
-        movement_pattern = movement_pattern,
-        movement_allow = movement_allow,
-        movement_disallow = movement_disallow,
-        # Movement step mean priors (from fit mean)
-        mu_movement_step_mean = mu_movement_step_mean,
-        sd_movement_step_mean = sd_movement_step_mean,
-        # Fishing rate priors
-        mu_fishing_rate = mu_fishing_rate,
-        cv_fishing_rate = 0.1,
-        # Reporting rate priors
-        mu_reporting_rate = mu_reporting_rate,
-        sd_reporting_rate = sd_reporting_rate,
-        # Use reduce sum
-        use_reduce_sum = use_reduce_sum,
-        refresh = refresh
-      )$summary
-    )
-  ),
-  # Fit term -------------------------------------------------------------------
-  list(
-    tar_target(
-      fit_term,
-      mmmstan::mmmstan(
-        tag_data = tag_data,
-        model_form = "term",
-        # Tag arguments
-        list_regions = list_regions,
-        list_sizes = list_sizes,
-        year_start = year_start,
-        year_end = year_end,
-        step_interval = step_interval,
-        step_liberty_max = step_liberty_max,
-        # Movement index
-        movement_pattern = movement_pattern,
-        movement_allow = movement_allow,
-        movement_disallow = movement_disallow,
-        # Movement step mean priors (from fit mean)
-        mu_movement_step_mean = mu_movement_step_mean,
-        sd_movement_step_mean = sd_movement_step_mean,
-        # Fishing rate priors
-        mu_fishing_rate = mu_fishing_rate,
-        cv_fishing_rate = 0.1,
-        # Reporting rate priors
-        mu_reporting_rate = mu_reporting_rate,
-        sd_reporting_rate = sd_reporting_rate,
-        # Use reduce sum
-        use_reduce_sum = use_reduce_sum,
-        refresh = refresh
-      )$summary
-    )
+    list()
   ),
   # Fit size -------------------------------------------------------------------
   list(
@@ -323,24 +256,30 @@ list(
       fit_size,
       mmmstan::mmmstan(
         tag_data = tag_data,
-        model_form = "size",
         # Tag arguments
         list_regions = list_regions,
         list_sizes = list_sizes_small_large,
         year_start = year_start,
         year_end = year_end,
         step_interval = step_interval,
-        step_liberty_max = step_liberty_max,
+        step_duration_max = step_duration_max,
+        term_interval = term_interval,
+        colname_date_released = colname_date_released,
+        colname_date_recovered = colname_date_recovered,
+        colname_region_released = colname_region_released,
+        colname_region_recovered = colname_region_recovered,
+        colname_size_released = colname_size_released,
+        # Model structure
+        model_time = FALSE,
+        model_term = FALSE,
+        model_size = TRUE,
         # Movement index
         movement_pattern = movement_pattern,
         movement_allow = movement_allow,
         movement_disallow = movement_disallow,
-        # Movement step mean priors (from fit mean)
-        mu_movement_step_mean = mu_movement_step_mean,
-        sd_movement_step_mean = sd_movement_step_mean,
         # Fishing rate priors
         mu_fishing_rate = mu_fishing_rate,
-        cv_fishing_rate = 0.1,
+        cv_fishing_rate = cv_fishing_rate,
         # Reporting rate priors
         mu_reporting_rate = mu_reporting_rate,
         sd_reporting_rate = sd_reporting_rate,
@@ -356,21 +295,30 @@ list(
       fit_mean_3,
       mmmstan::mmmstan(
         tag_data = tag_data,
-        model_form = "mean",
         # Tag arguments
         list_regions = list_regions_3,
         list_sizes = list_sizes,
         year_start = year_start,
         year_end = year_end,
         step_interval = step_interval,
-        step_liberty_max = step_liberty_max,
+        step_duration_max = step_duration_max,
+        term_interval = term_interval,
+        colname_date_released = colname_date_released,
+        colname_date_recovered = colname_date_recovered,
+        colname_region_released = colname_region_released,
+        colname_region_recovered = colname_region_recovered,
+        colname_size_released = colname_size_released,
+        # Model structure
+        model_time = FALSE,
+        model_term = FALSE,
+        model_size = FALSE,
         # Movement index
         movement_pattern = movement_pattern,
         movement_allow = NULL,
         movement_disallow = NULL,
         # Fishing rate priors
         mu_fishing_rate = mu_fishing_rate_3,
-        cv_fishing_rate = 0.1,
+        cv_fishing_rate = cv_fishing_rate,
         # Reporting rate priors
         mu_reporting_rate = c(0.4, 0.5, 0.3),
         sd_reporting_rate = c(0.4, 0.5, 0.3) * 0.1,
@@ -379,27 +327,8 @@ list(
         refresh = refresh
       )$summary
     ),
-    # Movement step mean priors
-    tar_target(
-      mu_movement_step_mean_3,
-      fit_mean_3$movement_step  %>%
-        dplyr::pull(.data$mean) %>%
-        matrix(
-          byrow = TRUE,
-          nrow = length(list_regions_3),
-          ncol = length(list_regions_3)
-        )
-    ),
-    tar_target(
-      sd_movement_step_mean_3,
-      fit_mean_3$movement_step %>%
-        dplyr::pull(.data$sd) %>%
-        matrix(
-          byrow = TRUE,
-          nrow = length(list_regions_3),
-          ncol = length(list_regions_3)
-        )
-    ),
+    # Compute abundance exchange
+    # TODO: incorporate abundance uncertainty from Sam Johnson
     tar_target(
       abundance_exchange,
       create_abundance_exchange(
@@ -436,109 +365,40 @@ list(
       format = "file"
     )
   ),
-  # Plot bar time --------------------------------------------------------------
-  list(
-    tar_target(
-      bar_time,
-      plot_cols(
-        data = fit_time$movement_time,
-        plot_name = "bar-time",
-        regions = toupper(names(list_regions)),
-        xvar = "i",
-        xlab = "Year",
-        ylab = "Annual movement rate",
-        x_text = as.character(seq(1980, 2020, 10)),
-        x_breaks = seq(2, 42, 10),
-        y_text = as.character(seq(0, 1, 0.25)),
-        y_breaks = seq(0, 1, 0.25),
-        x_angle = 30,
-        hjust = 0.8,
-        vjust = 1,
-        size_title = 8,
-        size_strip = 8,
-        size_text = 6,
-        size_error = 0.1,
-        panel_spacing = 1,
-        xmin = 0,
-        xmax = 43,
-        ymin = 0.0,
-        ymax = 1.0,
-        width = 190,
-        height = 170,
-        dpi = 600,
-        file_type = figure_type
-      ),
-      format = "file"
-    )
-  ),
-  # Plot bar term --------------------------------------------------------------
-  list(
-    tar_target(
-      bar_term,
-      plot_cols(
-        data = fit_term$movement_term,
-        plot_name = "bar-term",
-        regions = toupper(names(list_regions)),
-        xvar = "i",
-        xlab = "Year",
-        ylab = "Quarterly movement rate",
-        x_text = paste0("Q", 1:4),
-        x_breaks = 1:4,
-        y_text = as.character(seq(0, 1, 0.25)),
-        y_breaks = seq(0, 1, 0.25),
-        x_angle = 0,
-        hjust = 0.5,
-        vjust = 0.5,
-        size_title = 8,
-        size_strip = 8,
-        size_text = 6,
-        size_error = 0.3,
-        panel_spacing = 1,
-        xmin = NA,
-        xmax = NA,
-        ymin = 0.0,
-        ymax = 1.0,
-        width = 190,
-        height = 170,
-        file_type = figure_type
-      ),
-      format = "file"
-    )
-  ),
-  # Plot bar size --------------------------------------------------------------
-  list(
-    tar_target(
-      bar_size,
-      plot_cols(
-        data = fit_size$movement_size,
-        plot_name = "bar-size",
-        regions = toupper(names(list_regions)),
-        xvar = "d",
-        xlab = "Year",
-        ylab = "Annual movement rate",
-        x_text = c("Small", "Large"),
-        x_breaks = 1:2,
-        y_text = as.character(seq(0, 1, 0.25)),
-        y_breaks = seq(0, 1, 0.25),
-        x_angle = 0,
-        hjust = 0.5,
-        vjust = 0.5,
-        size_title = 8,
-        size_strip = 8,
-        size_text = 6,
-        size_error = 0.3,
-        panel_spacing = 1,
-        xmin = NA,
-        xmax = NA,
-        ymin = 0.0,
-        ymax = 1.0,
-        width = 190,
-        height = 170,
-        file_type = figure_type
-      )
-    ),
-    format = "file"
-  ),
+  # # Plot bar size --------------------------------------------------------------
+  # list(
+  #   tar_target(
+  #     bar_size,
+  #     plot_cols(
+  #       data = fit_size$movement_size,
+  #       plot_name = "bar-size",
+  #       regions = toupper(names(list_regions)),
+  #       xvar = "d",
+  #       xlab = "Year",
+  #       ylab = "Annual movement rate",
+  #       x_text = c("Small", "Large"),
+  #       x_breaks = 1:2,
+  #       y_text = as.character(seq(0, 1, 0.25)),
+  #       y_breaks = seq(0, 1, 0.25),
+  #       x_angle = 0,
+  #       hjust = 0.5,
+  #       vjust = 0.5,
+  #       size_title = 8,
+  #       size_strip = 8,
+  #       size_text = 6,
+  #       size_error = 0.3,
+  #       panel_spacing = 1,
+  #       xmin = NA,
+  #       xmax = NA,
+  #       ymin = 0.0,
+  #       ymax = 1.0,
+  #       width = 190,
+  #       height = 170,
+  #       file_type = figure_type
+  #     )
+  #   ),
+  #   format = "file"
+  # ),
   # Plot heat mean 3 -----------------------------------------------------------
   list(
     tar_target(
@@ -586,6 +446,195 @@ list(
   list()
 )
 
+# Outdated below here ----------------------------------------------------------
+
+# # Movement step mean priors
+# tar_target(
+#   mu_movement_step_mean,
+#   fit_mean$movement_step  %>%
+#     dplyr::pull(.data$mean) %>%
+#     matrix(
+#       byrow = TRUE,
+#       nrow = length(list_regions),
+#       ncol = length(list_regions)
+#     )
+# ),
+# tar_target(
+#   sd_movement_step_mean,
+#   fit_mean$movement_step %>%
+#     dplyr::pull(.data$sd) %>%
+#     matrix(
+#       byrow = TRUE,
+#       nrow = length(list_regions),
+#       ncol = length(list_regions)
+#     )
+# ),
+
+# # Movement step mean priors
+# tar_target(
+#   mu_movement_step_mean_3,
+#   fit_mean_3$movement_step  %>%
+#     dplyr::pull(.data$mean) %>%
+#     matrix(
+#       byrow = TRUE,
+#       nrow = length(list_regions_3),
+#       ncol = length(list_regions_3)
+#     )
+# ),
+# tar_target(
+#   sd_movement_step_mean_3,
+#   fit_mean_3$movement_step %>%
+#     dplyr::pull(.data$sd) %>%
+#     matrix(
+#       byrow = TRUE,
+#       nrow = length(list_regions_3),
+#       ncol = length(list_regions_3)
+#     )
+# ),
+
+
+
+
+
+
+# # Fit time -------------------------------------------------------------------
+# list(
+#   tar_target(
+#     fit_time,
+#     mmmstan::mmmstan(
+#       tag_data = tag_data,
+#       model_form = "time",
+#       # Tag arguments
+#       list_regions = list_regions,
+#       list_sizes = list_sizes,
+#       year_start = year_start,
+#       year_end = year_end,
+#       step_interval = step_interval,
+#       step_liberty_max = step_liberty_max,
+#       # Movement index
+#       movement_pattern = movement_pattern,
+#       movement_allow = movement_allow,
+#       movement_disallow = movement_disallow,
+#       # Movement step mean priors (from fit mean)
+#       mu_movement_step_mean = mu_movement_step_mean,
+#       sd_movement_step_mean = sd_movement_step_mean,
+#       # Fishing rate priors
+#       mu_fishing_rate = mu_fishing_rate,
+#       cv_fishing_rate = 0.1,
+#       # Reporting rate priors
+#       mu_reporting_rate = mu_reporting_rate,
+#       sd_reporting_rate = sd_reporting_rate,
+#       # Use reduce sum
+#       use_reduce_sum = use_reduce_sum,
+#       refresh = refresh
+#     )$summary
+#   )
+# ),
+# # Fit term -------------------------------------------------------------------
+# list(
+#   tar_target(
+#     fit_term,
+#     mmmstan::mmmstan(
+#       tag_data = tag_data,
+#       model_form = "term",
+#       # Tag arguments
+#       list_regions = list_regions,
+#       list_sizes = list_sizes,
+#       year_start = year_start,
+#       year_end = year_end,
+#       step_interval = step_interval,
+#       step_liberty_max = step_liberty_max,
+#       # Movement index
+#       movement_pattern = movement_pattern,
+#       movement_allow = movement_allow,
+#       movement_disallow = movement_disallow,
+#       # Movement step mean priors (from fit mean)
+#       mu_movement_step_mean = mu_movement_step_mean,
+#       sd_movement_step_mean = sd_movement_step_mean,
+#       # Fishing rate priors
+#       mu_fishing_rate = mu_fishing_rate,
+#       cv_fishing_rate = 0.1,
+#       # Reporting rate priors
+#       mu_reporting_rate = mu_reporting_rate,
+#       sd_reporting_rate = sd_reporting_rate,
+#       # Use reduce sum
+#       use_reduce_sum = use_reduce_sum,
+#       refresh = refresh
+#     )$summary
+#   )
+# ),
+
+# # Plot bar time --------------------------------------------------------------
+# list(
+#   tar_target(
+#     bar_time,
+#     plot_cols(
+#       data = fit_time$movement_time,
+#       plot_name = "bar-time",
+#       regions = toupper(names(list_regions)),
+#       xvar = "i",
+#       xlab = "Year",
+#       ylab = "Annual movement rate",
+#       x_text = as.character(seq(1980, 2020, 10)),
+#       x_breaks = seq(2, 42, 10),
+#       y_text = as.character(seq(0, 1, 0.25)),
+#       y_breaks = seq(0, 1, 0.25),
+#       x_angle = 30,
+#       hjust = 0.8,
+#       vjust = 1,
+#       size_title = 8,
+#       size_strip = 8,
+#       size_text = 6,
+#       size_error = 0.1,
+#       panel_spacing = 1,
+#       xmin = 0,
+#       xmax = 43,
+#       ymin = 0.0,
+#       ymax = 1.0,
+#       width = 190,
+#       height = 170,
+#       dpi = 600,
+#       file_type = figure_type
+#     ),
+#     format = "file"
+#   )
+# ),
+# # Plot bar term --------------------------------------------------------------
+# list(
+#   tar_target(
+#     bar_term,
+#     plot_cols(
+#       data = fit_term$movement_term,
+#       plot_name = "bar-term",
+#       regions = toupper(names(list_regions)),
+#       xvar = "i",
+#       xlab = "Year",
+#       ylab = "Quarterly movement rate",
+#       x_text = paste0("Q", 1:4),
+#       x_breaks = 1:4,
+#       y_text = as.character(seq(0, 1, 0.25)),
+#       y_breaks = seq(0, 1, 0.25),
+#       x_angle = 0,
+#       hjust = 0.5,
+#       vjust = 0.5,
+#       size_title = 8,
+#       size_strip = 8,
+#       size_text = 6,
+#       size_error = 0.3,
+#       panel_spacing = 1,
+#       xmin = NA,
+#       xmax = NA,
+#       ymin = 0.0,
+#       ymax = 1.0,
+#       width = 190,
+#       height = 170,
+#       file_type = figure_type
+#     ),
+#     format = "file"
+#   )
+# ),
+
+# Older ------------------------------------------------------------------------
 
 #   # Fit region-average-pooled --------------------------------------------------
 #   list(
