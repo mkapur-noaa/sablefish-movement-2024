@@ -26,7 +26,6 @@ _targets/
 
 # Visuals
 *.html
-*.pdf
 Rplots.pdf
 
 # Tex
