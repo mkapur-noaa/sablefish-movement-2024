@@ -24,8 +24,8 @@ _targets/
 *.o
 *.so
 
-# PDFs
-*.pdf
+# Visuals
+*.html
 Rplots.pdf
 
 # Tex
