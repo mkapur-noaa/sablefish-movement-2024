@@ -6,29 +6,51 @@ This research compendium uses an R [targets](https://github.com/ropensci/targets
 workflow to quantify sablefish movement rates among geographic regions in the northeast Pacific.
 
 ## Dependencies
-Most package dependencies can be installed from CRAN, but some need special installation:
+The mmmstan package currently depends on the cmdstanr package to take advantage
+of within-chain parallel threading provided by the `reduce_sum()` function in
+CmdStan >= 2.23.
 
-```{r}
-devtools::install_github("seananderson/ggsidekick")
+1. Install the R package cmdstanr (see <https://mc-stan.org/cmdstanr/index.html>).
+
+``` r
+install.packages("cmdstanr", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
+```
+
+2. Install CmdStan from the R console (see <https://mc-stan.org/cmdstanr/articles/cmdstanr.html>).
+
+``` r
+cmdstanr::check_cmdstan_toolchain()
+cmdstanr::install_cmdstan(cores = parallel::detectCores())
+```
+
+3. Install mmmstan (see <https://github.com/luke-a-rogers/mmmstan>)
+
+``` r
 devtools::install_github("luke-a-rogers/mmmstan")
+```
+
+4. Install ggsidekick (see <https://github.com/seananderson/ggsidekick>)
+
+``` r
+devtools::install_github("seananderson/ggsidekick")
 ```
 
 ## Use
 The R targets workflow is found in the _targets.R file. To run the workflow, first load the targets library via
 
-```{r}
+``` r
 library(targets)
 ```
 
 then optionally inspect the node statuses and dependencies via
 
-```{r}
+``` r
 tar_visnetwork()
 ```
 
 and finally, update the outdated or errored nodes in the workflow via
 
-```{r}
+``` r
 tar_make()
 ```
 
@@ -37,7 +59,7 @@ The targets workflow exports figures to the figs/ folder. All other nodes are
 stored as R objects outside the working environment and can be accessed from the R console by calling the `tar_read()` function.
 For example, 
 
-```{r}
+``` r
 tar_read(year_start)
 ```
 
