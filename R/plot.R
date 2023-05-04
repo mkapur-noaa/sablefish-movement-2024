@@ -15,6 +15,7 @@ plot_map <- function (regions,
                       ymax = 65.5,
                       width = 90,
                       height = 60,
+                      dpi = 300,
                       file_type = ".png") {
 
   # Define centroid ------------------------------------------------------------
@@ -71,7 +72,7 @@ plot_map <- function (regions,
       mapping = ggplot2::aes(x = x, y = y),
       fill = NA,
       color = "grey60",
-      size = 0.5
+      linewidth = 0.5
     ) +
     ggsidekick::theme_sleek() +
     ggplot2::theme(
@@ -106,7 +107,7 @@ plot_map <- function (regions,
       data = regions,
       col = color_region,
       fill = fill_region,
-      size = size_line
+      linewidth = size_line
     ) +
     ggplot2::geom_label(
       data = regions,
@@ -158,7 +159,8 @@ plot_map <- function (regions,
     here::here("ms", "figs", paste0(plot_name, file_type)),
     width = width,
     height = height,
-    units = "mm"
+    units = "mm",
+    dpi = dpi
   )
 
   # Return path
@@ -182,6 +184,7 @@ plot_heat <- function (data,
                        margin_y = -15,
                        width = 90,
                        height = 110,
+                       dpi = 300,
                        file_type = ".png") {
 
   # Augment data ---------------------------------------------------------------
@@ -297,7 +300,8 @@ plot_heat <- function (data,
     here::here("ms", "figs", paste0(plot_name, file_type)),
     width = width,
     height = height,
-    units = "mm"
+    units = "mm",
+    dpi = dpi,
   )
 
   # Return path
