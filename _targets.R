@@ -52,7 +52,7 @@ list(
     ),
     tar_target(
       list_regions_3,
-      list(aK = 1:6, bc = 7, cc = 8)
+      list(ak = 1:6, bc = 7, cc = 8)
     ),
     tar_target(
       list_omregions_6,
@@ -87,7 +87,7 @@ list(
   # Define CmdStanR arguments --------------------------------------------------
   list(
     tar_target(chains, 1L),
-    tar_target(use_reduce_sum, FALSE), # TODO: Update to TRUE when implemented
+    tar_target(use_reduce_sum, TRUE), # TODO: Update to TRUE when implemented
     tar_target(refresh, 10)
   ),
   # Watch data -----------------------------------------------------------------
@@ -275,40 +275,40 @@ list(
       )
     )
   ),
-  # # Fit omregions 6 mean -------------------------------------------------------
-  # list(
-  #   tar_target(
-  #     mmmstan_omregions_6_mean,
-  #     mmmstan::mmmstan(
-  #       tag_data = tag_data,
-  #       # Tag arguments
-  #       list_regions = list_omregions_6,
-  #       list_sizes = list_one_size,
-  #       year_start = year_start,
-  #       year_end = year_end,
-  #       step_interval = step_interval,
-  #       step_duration_max = step_duration_max,
-  #       colname_date_released = colname_date_released,
-  #       colname_date_recovered = colname_date_recovered,
-  #       colname_region_released = colname_omregion_released,
-  #       colname_region_recovered = colname_omregion_recovered,
-  #       colname_size_released = colname_size_released,
-  #       # Movement index
-  #       movement_pattern = 2L, # See: ?mmmstan::create_movement_index()
-  #       movement_allow = NULL,
-  #       movement_disallow = NULL,
-  #       # Fishing rate priors
-  #       mu_fishing_rate = mu_fishing_rate_6,
-  #       cv_fishing_rate = cv_fishing_rate,
-  #       # Reporting rate priors
-  #       mu_reporting_rate = c(0.4, 0.4, 0.5, 0.5, 0.3, 0.3),
-  #       sd_reporting_rate = c(0.4, 0.4, 0.5, 0.5, 0.3, 0.3) * 0.1,
-  #       # Use reduce sum
-  #       use_reduce_sum = use_reduce_sum,
-  #       refresh = refresh
-  #     )
-  #   )
-  # ),
+  # Fit omregions 6 mean -------------------------------------------------------
+  list(
+    tar_target(
+      mmmstan_omregions_6_mean,
+      mmmstan::mmmstan(
+        tag_data = tag_data,
+        # Tag arguments
+        list_regions = list_omregions_6,
+        list_sizes = list_one_size,
+        year_start = year_start,
+        year_end = year_end,
+        step_interval = step_interval,
+        step_duration_max = step_duration_max,
+        colname_date_released = colname_date_released,
+        colname_date_recovered = colname_date_recovered,
+        colname_region_released = colname_omregion_released,
+        colname_region_recovered = colname_omregion_recovered,
+        colname_size_released = colname_size_released,
+        # Movement index
+        movement_pattern = 2L, # See: ?mmmstan::create_movement_index()
+        movement_allow = NULL,
+        movement_disallow = NULL,
+        # Fishing rate priors
+        mu_fishing_rate = mu_fishing_rate_6,
+        cv_fishing_rate = cv_fishing_rate,
+        # Reporting rate priors
+        mu_reporting_rate = c(0.4, 0.4, 0.5, 0.5, 0.3, 0.3),
+        sd_reporting_rate = c(0.4, 0.4, 0.5, 0.5, 0.3, 0.3) * 0.1,
+        # Use reduce sum
+        use_reduce_sum = use_reduce_sum,
+        refresh = refresh
+      )
+    )
+  ),
   # Fit regions 8 mean ---------------------------------------------------------
   list(
     tar_target(
@@ -417,34 +417,34 @@ list(
     ),
     format = "file"
   ),
-  # # Plot heat omregions 6 mean -------------------------------------------------
-  # list(
-  #   tar_target(
-  #     heat_omregions_6_mean,
-  #     plot_heat(
-  #       data = mmmstan_omregions_6_mean$summary$movement_rate,
-  #       plot_name = "heat-omregions-6-mean",
-  #       regions = toupper(names(list_omregions_6)),
-  #       size_text = 6,
-  #       size_mean = 3,
-  #       nudge_mean = 0.1,
-  #       size_sd = 1.35,
-  #       nudge_sd = 0.15,
-  #       legend_name = "Movement rate",
-  #       xlab = NULL,
-  #       ylab = NULL,
-  #       xtext = TRUE,
-  #       ytext = TRUE,
-  #       margin_x = 0,
-  #       margin_y = 0,
-  #       width = 90,
-  #       height = 100,
-  #       dpi = figure_dpi,
-  #       file_type = figure_ext
-  #     ),
-  #     format = "file"
-  #   )
-  # ),
+  # Plot heat omregions 6 mean -------------------------------------------------
+  list(
+    tar_target(
+      heat_omregions_6_mean,
+      plot_heat(
+        data = mmmstan_omregions_6_mean$summary$movement_rate,
+        plot_name = "heat-omregions-6-mean",
+        regions = toupper(names(list_omregions_6)),
+        size_text = 6,
+        size_mean = 3,
+        nudge_mean = 0.1,
+        size_sd = 1.35,
+        nudge_sd = 0.15,
+        legend_name = "Movement rate",
+        xlab = NULL,
+        ylab = NULL,
+        xtext = TRUE,
+        ytext = TRUE,
+        margin_x = 0,
+        margin_y = 0,
+        width = 90,
+        height = 100,
+        dpi = figure_dpi,
+        file_type = figure_ext
+      ),
+      format = "file"
+    )
+  ),
   # Plot heat regions 8 mean ---------------------------------------------------
   list(
     tar_target(
