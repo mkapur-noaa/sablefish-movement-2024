@@ -588,12 +588,337 @@ list(
       )
     )
   ),
-  # Fit regions 3 mean block 1979--1995 ----------------------------------------
-  # Fit regions 3 mean block 1995--2010 ----------------------------------------
-  # Fit regions 3 mean block 2007--2018 ----------------------------------------
+  # Fit regions 3 mean block 1979-1995 -----------------------------------------
+  list(
+    tar_target(
+      mmmstan_regions_3_mean_block_1979_1995, #
+      mmmstan::mmmstan(
+        tag_data = tag_data,
+        # Tag arguments
+        list_regions = list_regions_3, #
+        list_sizes = list_sizes_1, #
+        year_start = 1979,
+        year_end = 1995,
+        step_interval = step_interval,
+        step_duration_max = step_duration_max,
+        colname_date_released = colname_date_released,
+        colname_date_recovered = colname_date_recovered,
+        colname_region_released = colname_region_released, #
+        colname_region_recovered = colname_region_recovered, #
+        colname_size_released = colname_size_released,
+        # Movement index
+        movement_pattern = 2L, # See: ?mmmstan::create_movement_index()
+        movement_allow = NULL, #
+        movement_disallow = NULL, #
+        # Movement step mean priors
+        mu_movement_step_diag = mu_movement_step_diag_3, #
+        sd_movement_step_diag = sd_movement_step_diag_3, #
+        # Fishing rate priors
+        mu_fishing_rate = mu_fishing_rate_3[1:17,], #
+        cv_fishing_rate = cv_fishing_rate,
+        # Selectivity priors
+        mu_selectivity = NULL, #
+        cv_selectivity = NULL, #
+        # Fishing weight priors
+        mu_fishing_weight = NULL, # Not implemented
+        sd_fishing_weight = NULL, # Not implemented
+        # Natural mortality rate priors
+        mu_natural_mortality_rate = mu_natural_mortality_rate_3, #
+        sd_natural_mortality_rate = sd_natural_mortality_rate_3, #
+        # Fractional (per tag) reporting rate priors
+        mu_reporting_rate = mu_reporting_rate_3, #
+        sd_reporting_rate = sd_reporting_rate_3, #
+        # Fractional (per tag) initial loss rate priors
+        mu_initial_loss_rate = mu_initial_loss_rate,
+        sd_initial_loss_rate = sd_initial_loss_rate,
+        # Instantaneous ongoing loss rate priors
+        mu_ongoing_loss_rate = mu_ongoing_loss_rate,
+        sd_ongoing_loss_rate = sd_ongoing_loss_rate,
+        # Dispersion priors
+        mu_dispersion = mu_dispersion,
+        sd_dispersion = sd_dispersion,
+        # Tolerance values
+        tolerance_expected = tolerance_expected,
+        tolerance_fishing = tolerance_fishing,
+        # CmdStanR
+        data = NULL,
+        chains = chains,
+        step_size = step_size,
+        adapt_delta = adapt_delta,
+        iter_warmup = iter_warmup,
+        iter_sampling = iter_sampling,
+        max_treedepth = max_treedepth,
+        use_reduce_sum = use_reduce_sum,
+        threads_per_chain = threads_per_chain,
+        refresh = refresh
+      )
+    )
+  ),
+  # Fit regions 3 mean block 1995-2010 -----------------------------------------
+  list(
+    tar_target(
+      mmmstan_regions_3_mean_block_1995_2010, #
+      mmmstan::mmmstan(
+        tag_data = tag_data,
+        # Tag arguments
+        list_regions = list_regions_3, #
+        list_sizes = list_sizes_1, #
+        year_start = 1995,
+        year_end = 2010,
+        step_interval = step_interval,
+        step_duration_max = step_duration_max,
+        colname_date_released = colname_date_released,
+        colname_date_recovered = colname_date_recovered,
+        colname_region_released = colname_region_released, #
+        colname_region_recovered = colname_region_recovered, #
+        colname_size_released = colname_size_released,
+        # Movement index
+        movement_pattern = 2L, # See: ?mmmstan::create_movement_index()
+        movement_allow = NULL, #
+        movement_disallow = NULL, #
+        # Movement step mean priors
+        mu_movement_step_diag = mu_movement_step_diag_3, #
+        sd_movement_step_diag = sd_movement_step_diag_3, #
+        # Fishing rate priors
+        mu_fishing_rate = mu_fishing_rate_3[17:32,], #
+        cv_fishing_rate = cv_fishing_rate,
+        # Selectivity priors
+        mu_selectivity = NULL, #
+        cv_selectivity = NULL, #
+        # Fishing weight priors
+        mu_fishing_weight = NULL, # Not implemented
+        sd_fishing_weight = NULL, # Not implemented
+        # Natural mortality rate priors
+        mu_natural_mortality_rate = mu_natural_mortality_rate_3, #
+        sd_natural_mortality_rate = sd_natural_mortality_rate_3, #
+        # Fractional (per tag) reporting rate priors
+        mu_reporting_rate = mu_reporting_rate_3, #
+        sd_reporting_rate = sd_reporting_rate_3, #
+        # Fractional (per tag) initial loss rate priors
+        mu_initial_loss_rate = mu_initial_loss_rate,
+        sd_initial_loss_rate = sd_initial_loss_rate,
+        # Instantaneous ongoing loss rate priors
+        mu_ongoing_loss_rate = mu_ongoing_loss_rate,
+        sd_ongoing_loss_rate = sd_ongoing_loss_rate,
+        # Dispersion priors
+        mu_dispersion = mu_dispersion,
+        sd_dispersion = sd_dispersion,
+        # Tolerance values
+        tolerance_expected = tolerance_expected,
+        tolerance_fishing = tolerance_fishing,
+        # CmdStanR
+        data = NULL,
+        chains = chains,
+        step_size = step_size,
+        adapt_delta = adapt_delta,
+        iter_warmup = iter_warmup,
+        iter_sampling = iter_sampling,
+        max_treedepth = max_treedepth,
+        use_reduce_sum = use_reduce_sum,
+        threads_per_chain = threads_per_chain,
+        refresh = refresh
+      )
+    )
+  ),
+  # Fit regions 3 mean block 2007-2017 -----------------------------------------
+  list(
+    tar_target(
+      mmmstan_regions_3_mean_block_2007_2017, #
+      mmmstan::mmmstan(
+        tag_data = tag_data,
+        # Tag arguments
+        list_regions = list_regions_3, #
+        list_sizes = list_sizes_1, #
+        year_start = 2007,
+        year_end = 2017,
+        step_interval = step_interval,
+        step_duration_max = step_duration_max,
+        colname_date_released = colname_date_released,
+        colname_date_recovered = colname_date_recovered,
+        colname_region_released = colname_region_released, #
+        colname_region_recovered = colname_region_recovered, #
+        colname_size_released = colname_size_released,
+        # Movement index
+        movement_pattern = 2L, # See: ?mmmstan::create_movement_index()
+        movement_allow = NULL, #
+        movement_disallow = NULL, #
+        # Movement step mean priors
+        mu_movement_step_diag = mu_movement_step_diag_3, #
+        sd_movement_step_diag = sd_movement_step_diag_3, #
+        # Fishing rate priors
+        mu_fishing_rate = mu_fishing_rate_3[29:39,], #
+        cv_fishing_rate = cv_fishing_rate,
+        # Selectivity priors
+        mu_selectivity = NULL, #
+        cv_selectivity = NULL, #
+        # Fishing weight priors
+        mu_fishing_weight = NULL, # Not implemented
+        sd_fishing_weight = NULL, # Not implemented
+        # Natural mortality rate priors
+        mu_natural_mortality_rate = mu_natural_mortality_rate_3, #
+        sd_natural_mortality_rate = sd_natural_mortality_rate_3, #
+        # Fractional (per tag) reporting rate priors
+        mu_reporting_rate = mu_reporting_rate_3, #
+        sd_reporting_rate = sd_reporting_rate_3, #
+        # Fractional (per tag) initial loss rate priors
+        mu_initial_loss_rate = mu_initial_loss_rate,
+        sd_initial_loss_rate = sd_initial_loss_rate,
+        # Instantaneous ongoing loss rate priors
+        mu_ongoing_loss_rate = mu_ongoing_loss_rate,
+        sd_ongoing_loss_rate = sd_ongoing_loss_rate,
+        # Dispersion priors
+        mu_dispersion = mu_dispersion,
+        sd_dispersion = sd_dispersion,
+        # Tolerance values
+        tolerance_expected = tolerance_expected,
+        tolerance_fishing = tolerance_fishing,
+        # CmdStanR
+        data = NULL,
+        chains = chains,
+        step_size = step_size,
+        adapt_delta = adapt_delta,
+        iter_warmup = iter_warmup,
+        iter_sampling = iter_sampling,
+        max_treedepth = max_treedepth,
+        use_reduce_sum = use_reduce_sum,
+        threads_per_chain = threads_per_chain,
+        refresh = refresh
+      )
+    )
+  ),
 
-  # Fit region 3 mean triple cv_fishing_rate -----------------------------------
-  # Fit region 3 mean triple sd_reporting_rate ---------------------------------
+  # Fit region 3 mean 3x cv_fishing_rate ---------------------------------------
+  list(
+    tar_target(
+      mmmstan_regions_3_mean_3x_cv_fishing_rate, #
+      mmmstan::mmmstan(
+        tag_data = tag_data,
+        # Tag arguments
+        list_regions = list_regions_3, #
+        list_sizes = list_sizes_1, #
+        year_start = year_start,
+        year_end = year_end,
+        step_interval = step_interval,
+        step_duration_max = step_duration_max,
+        colname_date_released = colname_date_released,
+        colname_date_recovered = colname_date_recovered,
+        colname_region_released = colname_region_released, #
+        colname_region_recovered = colname_region_recovered, #
+        colname_size_released = colname_size_released,
+        # Movement index
+        movement_pattern = 2L, # See: ?mmmstan::create_movement_index()
+        movement_allow = NULL, #
+        movement_disallow = NULL, #
+        # Movement step mean priors
+        mu_movement_step_diag = mu_movement_step_diag_3, #
+        sd_movement_step_diag = sd_movement_step_diag_3, #
+        # Fishing rate priors
+        mu_fishing_rate = mu_fishing_rate_3, #
+        cv_fishing_rate = cv_fishing_rate * 3, #
+        # Selectivity priors
+        mu_selectivity = NULL, #
+        cv_selectivity = NULL, #
+        # Fishing weight priors
+        mu_fishing_weight = NULL, # Not implemented
+        sd_fishing_weight = NULL, # Not implemented
+        # Natural mortality rate priors
+        mu_natural_mortality_rate = mu_natural_mortality_rate_3, #
+        sd_natural_mortality_rate = sd_natural_mortality_rate_3, #
+        # Fractional (per tag) reporting rate priors
+        mu_reporting_rate = mu_reporting_rate_3, #
+        sd_reporting_rate = sd_reporting_rate_3, #
+        # Fractional (per tag) initial loss rate priors
+        mu_initial_loss_rate = mu_initial_loss_rate,
+        sd_initial_loss_rate = sd_initial_loss_rate,
+        # Instantaneous ongoing loss rate priors
+        mu_ongoing_loss_rate = mu_ongoing_loss_rate,
+        sd_ongoing_loss_rate = sd_ongoing_loss_rate,
+        # Dispersion priors
+        mu_dispersion = mu_dispersion,
+        sd_dispersion = sd_dispersion,
+        # Tolerance values
+        tolerance_expected = tolerance_expected,
+        tolerance_fishing = tolerance_fishing,
+        # CmdStanR
+        data = NULL,
+        chains = chains,
+        step_size = step_size,
+        adapt_delta = adapt_delta,
+        iter_warmup = iter_warmup,
+        iter_sampling = iter_sampling,
+        max_treedepth = max_treedepth,
+        use_reduce_sum = use_reduce_sum,
+        threads_per_chain = threads_per_chain,
+        refresh = refresh
+      )
+    )
+  ),
+  # Fit region 3 mean 3x sd_reporting_rate -------------------------------------
+  list(
+    tar_target(
+      mmmstan_regions_3_mean_3x_sd_reporting_rate, #
+      mmmstan::mmmstan(
+        tag_data = tag_data,
+        # Tag arguments
+        list_regions = list_regions_3, #
+        list_sizes = list_sizes_1, #
+        year_start = year_start,
+        year_end = year_end,
+        step_interval = step_interval,
+        step_duration_max = step_duration_max,
+        colname_date_released = colname_date_released,
+        colname_date_recovered = colname_date_recovered,
+        colname_region_released = colname_region_released, #
+        colname_region_recovered = colname_region_recovered, #
+        colname_size_released = colname_size_released,
+        # Movement index
+        movement_pattern = 2L, # See: ?mmmstan::create_movement_index()
+        movement_allow = NULL, #
+        movement_disallow = NULL, #
+        # Movement step mean priors
+        mu_movement_step_diag = mu_movement_step_diag_3, #
+        sd_movement_step_diag = sd_movement_step_diag_3, #
+        # Fishing rate priors
+        mu_fishing_rate = mu_fishing_rate_3, #
+        cv_fishing_rate = cv_fishing_rate,
+        # Selectivity priors
+        mu_selectivity = NULL, #
+        cv_selectivity = NULL, #
+        # Fishing weight priors
+        mu_fishing_weight = NULL, # Not implemented
+        sd_fishing_weight = NULL, # Not implemented
+        # Natural mortality rate priors
+        mu_natural_mortality_rate = mu_natural_mortality_rate_3, #
+        sd_natural_mortality_rate = sd_natural_mortality_rate_3, #
+        # Fractional (per tag) reporting rate priors
+        mu_reporting_rate = mu_reporting_rate_3, #
+        sd_reporting_rate = sd_reporting_rate_3 * 3, #
+        # Fractional (per tag) initial loss rate priors
+        mu_initial_loss_rate = mu_initial_loss_rate,
+        sd_initial_loss_rate = sd_initial_loss_rate,
+        # Instantaneous ongoing loss rate priors
+        mu_ongoing_loss_rate = mu_ongoing_loss_rate,
+        sd_ongoing_loss_rate = sd_ongoing_loss_rate,
+        # Dispersion priors
+        mu_dispersion = mu_dispersion,
+        sd_dispersion = sd_dispersion,
+        # Tolerance values
+        tolerance_expected = tolerance_expected,
+        tolerance_fishing = tolerance_fishing,
+        # CmdStanR
+        data = NULL,
+        chains = chains,
+        step_size = step_size,
+        adapt_delta = adapt_delta,
+        iter_warmup = iter_warmup,
+        iter_sampling = iter_sampling,
+        max_treedepth = max_treedepth,
+        use_reduce_sum = use_reduce_sum,
+        threads_per_chain = threads_per_chain,
+        refresh = refresh
+      )
+    )
+  ),
 
   # Fit regions 3 size no duration constraint ----------------------------------
   # Fit regions 3 size only recoveries that don't transition -------------------
@@ -764,6 +1089,147 @@ list(
     ),
     format = "file"
   ),
+  # Plot heat regions 3 mean block 1979-1995 -----------------------------------
+  list(
+    tar_target(
+      heat_regions_3_mean_block_1979_1995,
+      plot_heat(
+        data = mmmstan_regions_3_mean_block_1979_1995$summary$movement_rate,
+        plot_name = "heat-regions-3-mean-block-1979-1995",
+        regions = toupper(names(list_regions_3)),
+        size_text = 6,
+        size_mean = 3,
+        nudge_mean = 0.1,
+        size_sd = 1.35,
+        nudge_sd = 0.15,
+        legend_name = "Movement rate",
+        xlab = NULL,
+        ylab = NULL,
+        xtext = TRUE,
+        ytext = TRUE,
+        margin_x = 0,
+        margin_y = 0,
+        width = 90,
+        height = 100,
+        dpi = figure_dpi,
+        file_type = figure_ext
+      ),
+      format = "file"
+    )
+  ),
+  # Plot heat regions 3 mean block 1995-2010 -----------------------------------
+  list(
+    tar_target(
+      heat_regions_3_mean_block_1995_2010,
+      plot_heat(
+        data = mmmstan_regions_3_mean_block_1995_2010$summary$movement_rate,
+        plot_name = "heat-regions-3-mean-block-1995-2010",
+        regions = toupper(names(list_regions_3)),
+        size_text = 6,
+        size_mean = 3,
+        nudge_mean = 0.1,
+        size_sd = 1.35,
+        nudge_sd = 0.15,
+        legend_name = "Movement rate",
+        xlab = NULL,
+        ylab = NULL,
+        xtext = TRUE,
+        ytext = TRUE,
+        margin_x = 0,
+        margin_y = 0,
+        width = 90,
+        height = 100,
+        dpi = figure_dpi,
+        file_type = figure_ext
+      ),
+      format = "file"
+    )
+  ),
+  # Plot heat regions 3 mean block 2007-2017 -----------------------------------
+  list(
+    tar_target(
+      heat_regions_3_mean_block_2007_2017,
+      plot_heat(
+        data = mmmstan_regions_3_mean_block_2007_2017$summary$movement_rate,
+        plot_name = "heat-regions-3-mean-block-2007-2017",
+        regions = toupper(names(list_regions_3)),
+        size_text = 6,
+        size_mean = 3,
+        nudge_mean = 0.1,
+        size_sd = 1.35,
+        nudge_sd = 0.15,
+        legend_name = "Movement rate",
+        xlab = NULL,
+        ylab = NULL,
+        xtext = TRUE,
+        ytext = TRUE,
+        margin_x = 0,
+        margin_y = 0,
+        width = 90,
+        height = 100,
+        dpi = figure_dpi,
+        file_type = figure_ext
+      ),
+      format = "file"
+    )
+  ),
+  # Plot heat regions 3 mean 3x cv_fishing_rate --------------------------------
+  list(
+    tar_target(
+      heat_regions_3_mean_3x_cv_fishing_rate,
+      plot_heat(
+        data = mmmstan_regions_3_mean_3x_cv_fishing_rate$summary$movement_rate,
+        plot_name = "heat-regions-3-mean-3x-cv-fishing-rate",
+        regions = toupper(names(list_regions_3)),
+        size_text = 6,
+        size_mean = 3,
+        nudge_mean = 0.1,
+        size_sd = 1.35,
+        nudge_sd = 0.15,
+        legend_name = "Movement rate",
+        xlab = NULL,
+        ylab = NULL,
+        xtext = TRUE,
+        ytext = TRUE,
+        margin_x = 0,
+        margin_y = 0,
+        width = 90,
+        height = 100,
+        dpi = figure_dpi,
+        file_type = figure_ext
+      ),
+      format = "file"
+    )
+  ),
+  # Plot heat regions 3 mean 3x sd_reporting_rate ------------------------------
+  list(
+    tar_target(
+      heat_regions_3_mean_3x_sd_reporting_rate,
+      plot_heat(
+        data = mmmstan_regions_3_mean_3x_sd_reporting_rate$summary$movement_rate,
+        plot_name = "heat-regions-3-mean-3x-sd-reporting-rate",
+        regions = toupper(names(list_regions_3)),
+        size_text = 6,
+        size_mean = 3,
+        nudge_mean = 0.1,
+        size_sd = 1.35,
+        nudge_sd = 0.15,
+        legend_name = "Movement rate",
+        xlab = NULL,
+        ylab = NULL,
+        xtext = TRUE,
+        ytext = TRUE,
+        margin_x = 0,
+        margin_y = 0,
+        width = 90,
+        height = 100,
+        dpi = figure_dpi,
+        file_type = figure_ext
+      ),
+      format = "file"
+    )
+  ),
+
   # # Plot abundance exchange ----------------------------------------------------
   # list(
   #   tar_target(
