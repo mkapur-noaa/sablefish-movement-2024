@@ -103,7 +103,8 @@ list(
   ),
   # Define selectivity priors --------------------------------------------------
   list(
-    tar_target(mu_selectivity, c(0.9, 1.0)),
+    tar_target(mu_selectivity_3, array(rep(c(0.9, 1), 3), dim = c(2, 3))),
+    tar_target(mu_selectivity_6, array(rep(c(0.9, 1), 6), dim = c(2, 6))),
     tar_target(cv_selectivity, 0.1)
   ),
   # Define natural mortality rate priors ---------------------------------------
@@ -485,7 +486,7 @@ list(
         mu_fishing_rate = mu_fishing_rate_3, #
         cv_fishing_rate = cv_fishing_rate,
         # Selectivity priors
-        mu_selectivity = mu_selectivity, #
+        mu_selectivity = mu_selectivity_3, #
         cv_selectivity = cv_selectivity, #
         # Fishing weight priors
         mu_fishing_weight = NULL, # Not implemented
@@ -551,7 +552,7 @@ list(
         mu_fishing_rate = mu_fishing_rate_6, #
         cv_fishing_rate = cv_fishing_rate,
         # Selectivity priors
-        mu_selectivity = mu_selectivity, #
+        mu_selectivity = mu_selectivity_6, #
         cv_selectivity = cv_selectivity, #
         # Fishing weight priors
         mu_fishing_weight = NULL, # Not implemented
