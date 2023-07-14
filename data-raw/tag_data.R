@@ -31,7 +31,8 @@ tag_data <- tags_released %>%
     region_recovered = .data$recovered_region,
     omregion_released = .data$released_omregion,
     omregion_recovered = .data$recovered_omregion,
-    size_released = .data$released_length
+    size_released = .data$released_length,
+    size_recovered = .data$recovered_length
   )
 
 # Write to data/
