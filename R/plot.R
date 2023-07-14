@@ -9,6 +9,8 @@ plot_map <- function (regions,
                       fill_land = "white",
                       fill_ocean = "grey95",
                       fill_region = "grey85",
+                      nudge_x = NULL,
+                      nudge_y = NULL,
                       xmin = 169,
                       ymin = 31,
                       xmax = 241,
@@ -116,8 +118,8 @@ plot_map <- function (regions,
       label.r = grid::unit(0.05, "lines"),
       label.size = 0.125,
       label.padding = grid::unit(0.15, "lines"),
-      nudge_x = c(0, 0, 0, 0, 0, 0, 0, -1),
-      nudge_y = c(0, 0, 0, -1, 0.5, 0.25, 0, 0.25)
+      nudge_x = nudge_x,
+      nudge_y = nudge_y
     ) +
     ggplot2::coord_sf(
       xlim = c(xmin, xmax),
