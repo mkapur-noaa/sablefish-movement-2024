@@ -138,7 +138,7 @@ list(
     tar_target(iter_warmup, 250),
     tar_target(iter_sampling, 1000),
     tar_target(max_treedepth, 10),
-    tar_target(use_reduce_sum, TRUE), # TODO: Update to TRUE when implemented
+    tar_target(use_reduce_sum, TRUE),
     tar_target(threads_per_chain, parallel::detectCores() / (2 * chains)),
     tar_target(refresh, 10)
   ),
@@ -178,6 +178,19 @@ list(
     tar_target(sf_regions, read_from_path(watch_sf_regions)),
     tar_target(sf_omregions, read_from_path(watch_sf_omregions)),
     list()
+  ),
+  # Assemble tag data no recovery transition -----------------------------------
+  list(
+    tar_target(
+      tag_data_no_recovery_transition, # Caution: filtering tags recovered only
+      tag_data %>%                     # Lose about 16 % of recovered
+        dplyr::filter(                 # And no corresponding loss of released
+          ((size_released %in% c(400:549, NA)) &
+             (size_recovered %in% c(400:549, NA))) |
+            ((size_released %in% c(550:800, NA)) &
+               (size_recovered %in% c(550:800, NA)))
+        )
+    )
   ),
   # Assemble fishing rate priors -----------------------------------------------
   list(
@@ -231,6 +244,34 @@ list(
     # CV
     tar_target(cv_fishing_rate, 0.1)
   ),
+  # Plot map regions 6 ---------------------------------------------------------
+  list(
+    tar_target(
+      map_regions_6,
+      plot_map(
+        regions = sf_omregions,
+        plot_name = "map-regions-6",
+        size_short = 1.75,
+        size_line = 0.25,
+        size_text = 5,
+        color_land = "white",
+        color_ocean = "grey96",
+        color_region = "grey30",
+        fill_land = "white",
+        fill_ocean = "grey95",
+        fill_region = "grey85",
+        xmin = 169,
+        ymin = 31,
+        xmax = 240.5,
+        ymax = 65.5,
+        width = 90,
+        height = 65,
+        dpi = figure_dpi,
+        file_type = figure_ext
+      ),
+      format = "file"
+    )
+  ),
   # Plot map regions 8 ---------------------------------------------------------
   list(
     tar_target(
@@ -247,6 +288,8 @@ list(
         fill_land = "white",
         fill_ocean = "grey95",
         fill_region = "grey85",
+        nudge_x = c(0, 0, 0, 0, 0, 0, 0, -1),
+        nudge_y = c(0, 0, 0, -1, 0.5, 0.25, 0, 0.25),
         xmin = 169,
         ymin = 31,
         xmax = 240.5,
@@ -787,7 +830,6 @@ list(
       )
     )
   ),
-
   # Fit region 3 mean 3x cv_fishing_rate ---------------------------------------
   list(
     tar_target(
@@ -920,9 +962,138 @@ list(
       )
     )
   ),
-
   # Fit regions 3 size no duration constraint ----------------------------------
-  # Fit regions 3 size only recoveries that don't transition -------------------
+  list(
+    tar_target(
+      mmmstan_regions_3_size_no_duration_constraint, #
+      mmmstan::mmmstan(
+        tag_data = tag_data,
+        # Tag arguments
+        list_regions = list_regions_3, #
+        list_sizes = list_sizes_2, #
+        year_start = year_start,
+        year_end = year_end,
+        step_interval = step_interval,
+        step_duration_max = 42, # (2017 - 1979 + 1) x 4
+        colname_date_released = colname_date_released,
+        colname_date_recovered = colname_date_recovered,
+        colname_region_released = colname_region_released, #
+        colname_region_recovered = colname_region_recovered, #
+        colname_size_released = colname_size_released,
+        # Movement index
+        movement_pattern = 2L, # See: ?mmmstan::create_movement_index()
+        movement_allow = NULL, #
+        movement_disallow = NULL, #
+        # Movement step mean priors
+        mu_movement_step_diag = mu_movement_step_diag_3, #
+        sd_movement_step_diag = sd_movement_step_diag_3, #
+        # Fishing rate priors
+        mu_fishing_rate = mu_fishing_rate_3, #
+        cv_fishing_rate = cv_fishing_rate,
+        # Selectivity priors
+        mu_selectivity = mu_selectivity_3, #
+        cv_selectivity = cv_selectivity, #
+        # Fishing weight priors
+        mu_fishing_weight = NULL, # Not implemented
+        sd_fishing_weight = NULL, # Not implemented
+        # Natural mortality rate priors
+        mu_natural_mortality_rate = mu_natural_mortality_rate_3, #
+        sd_natural_mortality_rate = sd_natural_mortality_rate_3, #
+        # Fractional (per tag) reporting rate priors
+        mu_reporting_rate = mu_reporting_rate_3, #
+        sd_reporting_rate = sd_reporting_rate_3, #
+        # Fractional (per tag) initial loss rate priors
+        mu_initial_loss_rate = mu_initial_loss_rate,
+        sd_initial_loss_rate = sd_initial_loss_rate,
+        # Instantaneous ongoing loss rate priors
+        mu_ongoing_loss_rate = mu_ongoing_loss_rate,
+        sd_ongoing_loss_rate = sd_ongoing_loss_rate,
+        # Dispersion priors
+        mu_dispersion = mu_dispersion,
+        sd_dispersion = sd_dispersion,
+        # Tolerance values
+        tolerance_expected = tolerance_expected,
+        tolerance_fishing = tolerance_fishing,
+        # CmdStanR
+        data = NULL,
+        chains = chains,
+        step_size = step_size,
+        adapt_delta = adapt_delta,
+        iter_warmup = iter_warmup,
+        iter_sampling = iter_sampling,
+        max_treedepth = max_treedepth,
+        use_reduce_sum = use_reduce_sum,
+        threads_per_chain = threads_per_chain,
+        refresh = refresh
+      )
+    )
+  ),
+  # Fit regions 3 size no recovery transition ----------------------------------
+  list(
+    tar_target(
+      mmmstan_regions_3_size_no_recovery_transition, #
+      mmmstan::mmmstan(
+        tag_data = tag_data_no_recovery_transition,
+        # Tag arguments
+        list_regions = list_regions_3, #
+        list_sizes = list_sizes_2, #
+        year_start = year_start,
+        year_end = year_end,
+        step_interval = step_interval,
+        step_duration_max = step_duration_max,
+        colname_date_released = colname_date_released,
+        colname_date_recovered = colname_date_recovered,
+        colname_region_released = colname_region_released, #
+        colname_region_recovered = colname_region_recovered, #
+        colname_size_released = colname_size_released,
+        # Movement index
+        movement_pattern = 2L, # See: ?mmmstan::create_movement_index()
+        movement_allow = NULL, #
+        movement_disallow = NULL, #
+        # Movement step mean priors
+        mu_movement_step_diag = mu_movement_step_diag_3, #
+        sd_movement_step_diag = sd_movement_step_diag_3, #
+        # Fishing rate priors
+        mu_fishing_rate = mu_fishing_rate_3, #
+        cv_fishing_rate = cv_fishing_rate,
+        # Selectivity priors
+        mu_selectivity = mu_selectivity_3, #
+        cv_selectivity = cv_selectivity, #
+        # Fishing weight priors
+        mu_fishing_weight = NULL, # Not implemented
+        sd_fishing_weight = NULL, # Not implemented
+        # Natural mortality rate priors
+        mu_natural_mortality_rate = mu_natural_mortality_rate_3, #
+        sd_natural_mortality_rate = sd_natural_mortality_rate_3, #
+        # Fractional (per tag) reporting rate priors
+        mu_reporting_rate = mu_reporting_rate_3, #
+        sd_reporting_rate = sd_reporting_rate_3, #
+        # Fractional (per tag) initial loss rate priors
+        mu_initial_loss_rate = mu_initial_loss_rate,
+        sd_initial_loss_rate = sd_initial_loss_rate,
+        # Instantaneous ongoing loss rate priors
+        mu_ongoing_loss_rate = mu_ongoing_loss_rate,
+        sd_ongoing_loss_rate = sd_ongoing_loss_rate,
+        # Dispersion priors
+        mu_dispersion = mu_dispersion,
+        sd_dispersion = sd_dispersion,
+        # Tolerance values
+        tolerance_expected = tolerance_expected,
+        tolerance_fishing = tolerance_fishing,
+        # CmdStanR
+        data = NULL,
+        chains = chains,
+        step_size = step_size,
+        adapt_delta = adapt_delta,
+        iter_warmup = iter_warmup,
+        iter_sampling = iter_sampling,
+        max_treedepth = max_treedepth,
+        use_reduce_sum = use_reduce_sum,
+        threads_per_chain = threads_per_chain,
+        refresh = refresh
+      )
+    )
+  ),
 
   # # Compute abundance exchange -------------------------------------------------
   # list(
@@ -1230,6 +1401,77 @@ list(
       format = "file"
     )
   ),
+  # Plot bar regions 3 size no duration constraint -----------------------------
+  list(
+    tar_target(
+      bar_regions_3_size_no_duration_constraint,
+      plot_cols(
+        data = mmmstan_regions_3_size_no_duration_constraint$summary$movement_rate,
+        plot_name = "bar-regions-3-size-no-duration-constraint",
+        regions = toupper(names(list_regions_3)),
+        xvar = "l",
+        xlab = "Length class",
+        ylab = "Annual movement rate",
+        x_text = c("Small", "Large"),
+        x_breaks = 1:2,
+        y_text = as.character(seq(0, 1, 0.25)),
+        y_breaks = seq(0, 1, 0.25),
+        x_angle = 0,
+        hjust = 0.5,
+        vjust = 0.5,
+        size_title = 8,
+        size_strip = 8,
+        size_text = 6,
+        size_error = 0.3,
+        panel_spacing = 1,
+        xmin = NA,
+        xmax = NA,
+        ymin = 0.0,
+        ymax = 1.0,
+        width = 190,
+        height = 170,
+        dpi = figure_dpi,
+        file_type = figure_ext
+      )
+    ),
+    format = "file"
+  ),
+  # Plot bar regions 3 size no recovery transition -----------------------------
+  list(
+    tar_target(
+      bar_regions_3_size_no_recovery_transition,
+      plot_cols(
+        data = mmmstan_regions_3_size_no_recovery_transition$summary$movement_rate,
+        plot_name = "bar-regions-3-size-no-recovery-transition",
+        regions = toupper(names(list_regions_3)),
+        xvar = "l",
+        xlab = "Length class",
+        ylab = "Annual movement rate",
+        x_text = c("Small", "Large"),
+        x_breaks = 1:2,
+        y_text = as.character(seq(0, 1, 0.25)),
+        y_breaks = seq(0, 1, 0.25),
+        x_angle = 0,
+        hjust = 0.5,
+        vjust = 0.5,
+        size_title = 8,
+        size_strip = 8,
+        size_text = 6,
+        size_error = 0.3,
+        panel_spacing = 1,
+        xmin = NA,
+        xmax = NA,
+        ymin = 0.0,
+        ymax = 1.0,
+        width = 190,
+        height = 170,
+        dpi = figure_dpi,
+        file_type = figure_ext
+      )
+    ),
+    format = "file"
+  ),
+
 
   # # Plot abundance exchange ----------------------------------------------------
   # list(
