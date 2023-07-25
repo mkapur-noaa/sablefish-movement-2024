@@ -1471,6 +1471,54 @@ list(
     ),
     format = "file"
   ),
+  # Plot bar regions 3 fishing priors posteriors -------------------------------
+  list(
+    tar_target(
+      bar_regions_3_fishing_priors_posteriors,
+      plot_fishing_priors_posteriors(
+        plot_name = "bar-regions-3-fishing-priors-posteriors",
+        data_prior_means = mu_fishing_rate_3,
+        data_prior_cv = cv_fishing_rate,
+        data_posteriors = mmmstan_regions_3_mean$summary$fishing_rate,
+        year_start = year_start,
+        year_xmin = year_start,
+        year_xmax = 2020,
+        regions = toupper(names(list_regions_3)),
+        position_dodge = 0.8,
+        width = 190,
+        height = 100,
+        dpi = 300,
+        file_type = ".png"
+      ),
+      format = "file"
+    )
+  ),
+
+  # Plot bar regions 3 mortality priors posteriors -----------------------------
+
+
+
+  # Plot bar regions 3 reporting priors posteriors -----------------------------
+
+
+
+  # Plot bar regions 3 released by year ----------------------------------------
+
+
+
+  # Plot bar regions 3 released by size ----------------------------------------
+
+
+
+  # Plot bar regions 3 recovered by year ---------------------------------------
+
+
+
+  # Plot bar regions 3 duration at liberty -------------------------------------
+
+
+
+
 
 
   # # Plot abundance exchange ----------------------------------------------------
