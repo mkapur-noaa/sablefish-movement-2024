@@ -666,6 +666,7 @@ plot_fishing_priors_posteriors <- function (plot_name,
                                             year_xmin,
                                             year_xmax,
                                             regions,
+                                            bar_width = 0.75,
                                             position_dodge = 0.8,
                                             width = 190,
                                             height = 100,
@@ -706,7 +707,7 @@ plot_fishing_priors_posteriors <- function (plot_name,
 
   posteriors <- data_posteriors %>%
     dplyr::mutate(year = t + year_start - 1) %>%
-    dplyr::mutate(region = number_to_region(x, regions)) %>%
+    dplyr::mutate(region = toupper(number_to_region(x, regions))) %>%
     dplyr::mutate(type = "posterior") %>%
     dplyr::select(year, type, region, mean, median, q5, q95)
 
@@ -723,7 +724,8 @@ plot_fishing_priors_posteriors <- function (plot_name,
   ) +
     ggplot2::geom_col(
       mapping = ggplot2::aes(fill = type),
-      position = ggplot2::position_dodge(position_dodge)
+      position = ggplot2::position_dodge(position_dodge),
+      width = bar_width
     ) +
     ggplot2::geom_errorbar(
       mapping = ggplot2::aes(
@@ -766,8 +768,194 @@ plot_fishing_priors_posteriors <- function (plot_name,
   return(paste0("ms/", "figs/", plot_name, file_type))
 }
 
+plot_mortality_priors_posteriors <- function (plot_name,
+                                              data_prior_means,
+                                              data_prior_sd,
+                                              data_posteriors,
+                                              regions,
+                                              bar_width = 0.75,
+                                              position_dodge = 0.8,
+                                              width = 190,
+                                              height = 100,
+                                              dpi = 300,
+                                              file_type = ".png") {
+
+  # Assemble prior data --------------------------------------------------------
+
+  priors <- data_prior_means %>%
+    tibble::as_tibble() %>%
+    dplyr::mutate(mean = value) %>%
+    dplyr::mutate(region = toupper(regions)) %>%
+    dplyr::mutate(type = "prior") %>%
+    dplyr::mutate(median = mean) %>%
+    dplyr::mutate(sd = data_prior_sd) %>%
+    dplyr::mutate(
+      q5 = purrr::map2_dbl(
+        .x = mean,
+        .y = sd,
+        .f = qnorm,
+        p = 0.05
+      ),
+      q95 = purrr::map2_dbl(
+        .x = mean,
+        .y = sd,
+        .f = qnorm,
+        p = 0.95
+      )
+    ) %>%
+    dplyr::select(type, region, mean, median, q5, q95)
+
+  # Assemble posterior data ----------------------------------------------------
+
+  posteriors <- data_posteriors %>%
+    dplyr::mutate(region = toupper(number_to_region(x, regions))) %>%
+    dplyr::mutate(type = "posterior") %>%
+    dplyr::select(type, region, mean, median, q5, q95)
+
+  # Assemble data --------------------------------------------------------------
+
+  data_plot <- dplyr::bind_rows(priors, posteriors) %>%
+    dplyr::mutate(type = factor(type, levels = c("prior", "posterior")))
+
+  # Assemble plot --------------------------------------------------------------
+
+  p1 <- ggplot2::ggplot(
+    data = data_plot,
+    mapping = ggplot2::aes(x = region, y = mean)
+  ) +
+    ggplot2::geom_col(
+      mapping = ggplot2::aes(fill = type),
+      position = ggplot2::position_dodge(position_dodge),
+      width = bar_width
+    ) +
+    ggplot2::geom_errorbar(
+      mapping = ggplot2::aes(
+        ymin = q5,
+        ymax = q95,
+        group = type
+      ),
+      width = 0,
+      position = ggplot2::position_dodge(position_dodge)
+    ) +
+    ggplot2::scale_x_discrete(
+      name = ""
+    ) +
+    ggplot2::scale_y_continuous(
+      name = "Annual natural mortality rate"
+    ) +
+    ggsidekick::theme_sleek() +
+    ggplot2::theme(
+      legend.title = ggplot2::element_blank()
+    )
+
+  # Save ggplot ----------------------------------------------------------------
+
+  ggplot2::ggsave(
+    here::here("ms", "figs", paste0(plot_name, file_type)),
+    width = width,
+    height = height,
+    units = "mm",
+    dpi = dpi
+  )
+
+  # Return path
+  return(paste0("ms/", "figs/", plot_name, file_type))
+}
 
 
+plot_reporting_priors_posteriors <- function (plot_name,
+                                              data_prior_means,
+                                              data_prior_sd,
+                                              data_posteriors,
+                                              regions,
+                                              bar_width = 0.75,
+                                              position_dodge = 0.8,
+                                              width = 190,
+                                              height = 100,
+                                              dpi = 300,
+                                              file_type = ".png") {
+
+  # Assemble prior data --------------------------------------------------------
+
+  priors <- data_prior_means %>%
+    tibble::as_tibble() %>%
+    dplyr::mutate(mean = value) %>%
+    dplyr::mutate(region = toupper(regions)) %>%
+    dplyr::mutate(type = "prior") %>%
+    dplyr::mutate(median = mean) %>%
+    dplyr::mutate(sd = data_prior_sd) %>%
+    dplyr::mutate(
+      q5 = purrr::map2_dbl(
+        .x = mean,
+        .y = sd,
+        .f = qnorm,
+        p = 0.05
+      ),
+      q95 = purrr::map2_dbl(
+        .x = mean,
+        .y = sd,
+        .f = qnorm,
+        p = 0.95
+      )
+    ) %>%
+    dplyr::select(type, region, mean, median, q5, q95)
+
+  # Assemble posterior data ----------------------------------------------------
+
+  posteriors <- data_posteriors %>%
+    dplyr::mutate(region = toupper(number_to_region(x, regions))) %>%
+    dplyr::mutate(type = "posterior") %>%
+    dplyr::select(type, region, mean, median, q5, q95)
+
+  # Assemble data --------------------------------------------------------------
+
+  data_plot <- dplyr::bind_rows(priors, posteriors) %>%
+    dplyr::mutate(type = factor(type, levels = c("prior", "posterior")))
+
+  # Assemble plot --------------------------------------------------------------
+
+  p1 <- ggplot2::ggplot(
+    data = data_plot,
+    mapping = ggplot2::aes(x = region, y = mean)
+  ) +
+    ggplot2::geom_col(
+      mapping = ggplot2::aes(fill = type),
+      position = ggplot2::position_dodge(position_dodge),
+      width = bar_width
+    ) +
+    ggplot2::geom_errorbar(
+      mapping = ggplot2::aes(
+        ymin = q5,
+        ymax = q95,
+        group = type
+      ),
+      width = 0,
+      position = ggplot2::position_dodge(position_dodge)
+    ) +
+    ggplot2::scale_x_discrete(
+      name = ""
+    ) +
+    ggplot2::scale_y_continuous(
+      name = "Annual reporting rate"
+    ) +
+    ggsidekick::theme_sleek() +
+    ggplot2::theme(
+      legend.title = ggplot2::element_blank()
+    )
+
+  # Save ggplot ----------------------------------------------------------------
+
+  ggplot2::ggsave(
+    here::here("ms", "figs", paste0(plot_name, file_type)),
+    width = width,
+    height = height,
+    units = "mm",
+    dpi = dpi
+  )
+
+  # Return path
+  return(paste0("ms/", "figs/", plot_name, file_type))
+}
 
 
 

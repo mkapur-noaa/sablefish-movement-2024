@@ -1484,6 +1484,7 @@ list(
         year_xmin = year_start,
         year_xmax = 2020,
         regions = toupper(names(list_regions_3)),
+        bar_width = 0.75,
         position_dodge = 0.8,
         width = 190,
         height = 100,
@@ -1493,14 +1494,46 @@ list(
       format = "file"
     )
   ),
-
   # Plot bar regions 3 mortality priors posteriors -----------------------------
-
-
-
+  list(
+    tar_target(
+      bar_regions_3_mortality_priors_posteriors,
+      plot_mortality_priors_posteriors(
+        plot_name = "bar-regions-3-mortality-priors-posteriors",
+        data_prior_means = mu_natural_mortality_rate_3,
+        data_prior_sd = sd_natural_mortality_rate_3,
+        data_posteriors = mmmstan_regions_3_mean$summary$natural_mortality_rate,
+        regions = toupper(names(list_regions_3)),
+        bar_width = 0.75,
+        position_dodge = 0.8,
+        width = 190,
+        height = 100,
+        dpi = 300,
+        file_type = ".png"
+      ),
+      format = "file"
+    )
+  ),
   # Plot bar regions 3 reporting priors posteriors -----------------------------
-
-
+  list(
+    tar_target(
+      bar_regions_3_reporting_priors_posteriors,
+      plot_reporting_priors_posteriors(
+        plot_name = "bar-regions-3-reporting-priors-posteriors",
+        data_prior_means = mu_reporting_rate_3,
+        data_prior_sd = sd_reporting_rate_3,
+        data_posteriors = mmmstan_regions_3_mean$summary$reporting_rate,
+        regions = toupper(names(list_regions_3)),
+        bar_width = 0.75,
+        position_dodge = 0.8,
+        width = 190,
+        height = 100,
+        dpi = 300,
+        file_type = ".png"
+      ),
+      format = "file"
+    )
+  ),
 
   # Plot bar regions 3 released by year ----------------------------------------
 
