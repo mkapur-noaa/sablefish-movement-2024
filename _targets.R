@@ -192,6 +192,29 @@ list(
         )
     )
   ),
+  # Assemble tag data 3 regions ------------------------------------------------
+  list(
+    tar_target(
+      tag_data_3,
+      tag_data %>%
+        dplyr::mutate(year_released = lubridate::year(date_released)) %>%
+        dplyr::mutate(year_recovered = lubridate::year(date_recovered)) %>%
+        dplyr::mutate(region_released = regions_8_to_3(region_released)) %>%
+        dplyr::mutate(region_recovered = regions_8_to_3(region_recovered)) %>%
+        dplyr::select(
+          tag_id,
+          year_released,
+          size_released,
+          region_released,
+          source,
+          year_recovered,
+          size_recovered,
+          region_recovered,
+          days_liberty,
+          tag_distance
+        )
+    )
+  ),
   # Assemble fishing rate priors -----------------------------------------------
   list(
     # Regions 3
@@ -1534,22 +1557,86 @@ list(
       format = "file"
     )
   ),
-
   # Plot bar regions 3 released by year ----------------------------------------
-
-
-
+  list(
+    tar_target(
+      bar_regions_3_released_by_year,
+      plot_released_by_year(
+        plot_name = "bar-regions-3-released-by-year",
+        data = tag_data_3,
+        size_range = 400:800,
+        year_start = year_start,
+        year_xmin = year_start,
+        year_xmax = 2020,
+        regions = toupper(names(list_regions_3)),
+        bar_width = 0.75,
+        width = 190,
+        height = 100,
+        dpi = 300,
+        file_type = ".png"
+      ),
+      format = "file"
+    )
+  ),
   # Plot bar regions 3 released by size ----------------------------------------
-
-
-
+  list(
+    tar_target(
+      bar_regions_3_released_by_size,
+      plot_released_by_size(
+        plot_name = "bar-regions-3-released-by-size",
+        data = tag_data_3,
+        regions = toupper(names(list_regions_3)),
+        size_range = 200:1000,
+        year_range = 1979:2017,
+        binwidth = 10,
+        width = 190,
+        height = 100,
+        dpi = 300,
+        file_type = ".png"
+      ),
+      format = "file"
+    )
+  ),
   # Plot bar regions 3 recovered by year ---------------------------------------
-
-
-
+  list(
+    tar_target(
+      bar_regions_3_recovered_by_year,
+      plot_recovered_by_year(
+        plot_name = "bar-regions-3-recovered-by-year",
+        data = tag_data_3,
+        size_range = 400:800, # Released size
+        year_range = 1979:2017,
+        year_xmin = 1979,
+        year_xmax = 2020,
+        regions = toupper(names(list_regions_3)),
+        bar_width = 0.75,
+        width = 190,
+        height = 100,
+        dpi = 300,
+        file_type = ".png"
+      ),
+      format = "file"
+    )
+  ),
   # Plot bar regions 3 duration at liberty -------------------------------------
-
-
+  list(
+    tar_target(
+      bar_regions_3_duration_at_liberty, # Based on days_liberty
+      plot_duration_at_liberty(          # Model uses duration in steps
+        plot_name = "bar-regions-3-duration-at-liberty",
+        data = tag_data_3,
+        size_range = 400:800, # Released size
+        year_range = 1979:2017,
+        regions = toupper(names(list_regions_3)),
+        binwidth = 30,
+        width = 190,
+        height = 100,
+        dpi = 300,
+        file_type = ".png"
+      ),
+      format = "file"
+    )
+  ),
 
 
 

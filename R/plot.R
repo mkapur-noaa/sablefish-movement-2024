@@ -957,8 +957,280 @@ plot_reporting_priors_posteriors <- function (plot_name,
   return(paste0("ms/", "figs/", plot_name, file_type))
 }
 
+plot_released_by_year <- function (plot_name,
+                                   data,
+                                   size_range = 400:800,
+                                   year_start,
+                                   year_xmin,
+                                   year_xmax,
+                                   regions,
+                                   bar_width = 0.75,
+                                   width = 190,
+                                   height = 100,
+                                   dpi = 300,
+                                   file_type = ".png") {
+
+  # Assemble data --------------------------------------------------------------
+
+  data <- data %>%
+    dplyr::filter(size_released %in% size_range) %>%
+    dplyr::filter(year_released %in% year_start:year_xmax) %>%
+    dplyr::mutate(
+      region_released = number_to_region(region_released, toupper(regions))
+    )
+
+  # Assemble plot --------------------------------------------------------------
+
+  p1 <- ggplot2::ggplot(
+    data = data,
+    mapping = ggplot2::aes(x = year_released)
+  ) +
+    ggplot2::geom_bar(
+      width = bar_width
+    ) +
+    ggplot2::facet_grid(
+      rows = ggplot2::vars(region_released),
+      switch = "y"
+    ) +
+    ggplot2::coord_cartesian(xlim = c(year_xmin, year_xmax)) +
+    ggplot2::scale_x_continuous(
+      name = "Year"
+    ) +
+    ggplot2::scale_y_continuous(
+      name = "Tags released",
+      position = "right"
+    ) +
+    ggsidekick::theme_sleek() +
+    ggplot2::theme(
+      legend.title = ggplot2::element_blank(),
+      strip.text.y.left = ggplot2::element_text(angle = 0)
+    )
+
+  # Save ggplot ----------------------------------------------------------------
+
+  ggplot2::ggsave(
+    here::here("ms", "figs", paste0(plot_name, file_type)),
+    width = width,
+    height = height,
+    units = "mm",
+    dpi = dpi
+  )
+
+  # Return path
+  return(paste0("ms/", "figs/", plot_name, file_type))
+}
+
+plot_released_by_size <- function (plot_name,
+                                   data,
+                                   regions,
+                                   size_range,
+                                   year_range,
+                                   binwidth = 10,
+                                   width = 190,
+                                   height = 100,
+                                   dpi = 300,
+                                   file_type = ".png") {
+
+  # Assemble data --------------------------------------------------------------
+
+  data <- data %>%
+    dplyr::filter(size_released %in% size_range) %>%
+    dplyr::filter(year_released %in% year_range) %>%
+    dplyr::mutate(
+      region_released = number_to_region(region_released, toupper(regions))
+    )
+
+  # Assemble plot --------------------------------------------------------------
+
+  p1 <- ggplot2::ggplot(
+    data = data,
+    mapping = ggplot2::aes(x = size_released)
+  ) +
+    ggplot2::geom_histogram(
+      binwidth = binwidth
+    ) +
+    ggplot2::geom_vline(
+      xintercept = c(400, 800),
+      colour = c("black"),
+      linetype = 1,
+      linewidth = 0.25
+    ) +
+    ggplot2::geom_vline(
+      xintercept = c(550),
+      colour = c("black"),
+      linetype = 2,
+      linewidth = 0.25
+    ) +
+    ggplot2::facet_grid(
+      rows = ggplot2::vars(region_released),
+      switch = "y"
+    ) +
+    ggplot2::scale_x_continuous(
+      name = "Sablefish length (mm)"
+    ) +
+    ggplot2::scale_y_continuous(
+      name = "Sablefish released",
+      position = "right"
+    ) +
+    ggsidekick::theme_sleek() +
+    ggplot2::theme(
+      legend.title = ggplot2::element_blank(),
+      strip.text.y.left = ggplot2::element_text(angle = 0)
+    )
+
+  # Save ggplot ----------------------------------------------------------------
+
+  ggplot2::ggsave(
+    here::here("ms", "figs", paste0(plot_name, file_type)),
+    width = width,
+    height = height,
+    units = "mm",
+    dpi = dpi
+  )
+
+  # Return path
+  return(paste0("ms/", "figs/", plot_name, file_type))
+}
+
+plot_recovered_by_year <- function (plot_name,
+                                    data,
+                                    size_range, # Released size
+                                    year_range,
+                                    year_xmin,
+                                    year_xmax,
+                                    regions,
+                                    bar_width = 0.75,
+                                    width = 190,
+                                    height = 100,
+                                    dpi = 300,
+                                    file_type = ".png") {
+
+  # Assemble data --------------------------------------------------------------
+
+  data <- data %>%
+    dplyr::filter(size_released %in% size_range) %>%
+    dplyr::filter(year_released %in% year_range) %>%
+    dplyr::filter(year_recovered %in% year_range) %>%
+    dplyr::mutate(
+      region_released = number_to_region(region_released, toupper(regions)),
+      region_recovered = number_to_region(region_recovered, toupper(regions)),
+      max_liberty = factor(ifelse(days_liberty <= 1095, 0, 1), c(1, 0))
+    )
+
+  # Assemble plot --------------------------------------------------------------
+
+  p1 <- ggplot2::ggplot(
+    data = data,
+    mapping = ggplot2::aes(
+      x = year_recovered,
+      fill = max_liberty
+    )
+  ) +
+    ggplot2::geom_bar(
+      width = bar_width
+    ) +
+    ggplot2::facet_grid(
+      rows = ggplot2::vars(region_released),
+      cols = ggplot2::vars(region_recovered),
+      switch = "y"
+    ) +
+    ggplot2::coord_cartesian(xlim = c(year_xmin, year_xmax)) +
+    ggplot2::scale_x_continuous(
+      name = "Year"
+    ) +
+    ggplot2::scale_y_continuous(
+      name = "Tags recovered",
+      position = "right"
+    ) +
+    ggsidekick::theme_sleek() +
+    ggplot2::theme(
+      legend.position = "none",
+      legend.title = ggplot2::element_blank(),
+      strip.text.y.left = ggplot2::element_text(angle = 0)
+    )
+
+  # Save ggplot ----------------------------------------------------------------
+
+  ggplot2::ggsave(
+    here::here("ms", "figs", paste0(plot_name, file_type)),
+    width = width,
+    height = height,
+    units = "mm",
+    dpi = dpi
+  )
+
+  # Return path
+  return(paste0("ms/", "figs/", plot_name, file_type))
+}
+
+plot_duration_at_liberty <- function (plot_name,
+                                      data,
+                                      size_range, # Released size
+                                      year_range,
+                                      regions,
+                                      binwidth = 10,
+                                      width = 190,
+                                      height = 100,
+                                      dpi = 300,
+                                      file_type = ".png") {
+
+  # Assemble data --------------------------------------------------------------
+
+  data <- data %>%
+    dplyr::filter(size_released %in% size_range) %>%
+    dplyr::filter(year_released %in% year_range) %>%
+    dplyr::filter(year_recovered %in% year_range) %>%
+    dplyr::mutate(
+      region_released = number_to_region(region_released, toupper(regions)),
+      region_recovered = number_to_region(region_recovered, toupper(regions))
+    )
+
+  # Assemble plot --------------------------------------------------------------
+
+  p1 <- ggplot2::ggplot(
+    data = data,
+    mapping = ggplot2::aes(x = days_liberty)
+  ) +
+    ggplot2::geom_histogram(
+      binwidth = binwidth
+    ) +
+    ggplot2::geom_vline(
+      xintercept = c(1095),
+      colour = c("black"),
+      linetype = 2,
+      linewidth = 0.25
+    ) +
+    ggplot2::facet_grid(
+      rows = ggplot2::vars(region_released),
+      switch = "y"
+    ) +
+    ggplot2::scale_x_continuous(
+      name = "Duration at liberty (days)"
+    ) +
+    ggplot2::scale_y_continuous(
+      name = "Sablefish recovered",
+      position = "right"
+    ) +
+    ggsidekick::theme_sleek() +
+    ggplot2::theme(
+      legend.title = ggplot2::element_blank(),
+      strip.text.y.left = ggplot2::element_text(angle = 0)
+    )
 
 
+  # Save ggplot ----------------------------------------------------------------
+
+  ggplot2::ggsave(
+    here::here("ms", "figs", paste0(plot_name, file_type)),
+    width = width,
+    height = height,
+    units = "mm",
+    dpi = dpi
+  )
+
+  # Return path
+  return(paste0("ms/", "figs/", plot_name, file_type))
+}
 
 
 

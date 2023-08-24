@@ -138,6 +138,21 @@ number_to_region <- function (x, regions) {
   regions[x]
 }
 
+#' Regions 3 to regions 8
+#'
+#' @param x [numeric()]
+#'
+#' @return [numeric()]
+#' @export
+#'
+#' @examples
+#'
+#' regions_8_to_3(c(1:8))
+#'
+regions_8_to_3 <- function(x) {
+  c(rep(1, 6), 2, 3)[x]
+}
+
 #' Round to Character
 #'
 #' @param x [numeric()] Value to round
