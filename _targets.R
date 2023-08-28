@@ -1637,7 +1637,13 @@ list(
       format = "file"
     )
   ),
+  # Plot map regions 3 released ------------------------------------------------
 
+  # Copied from sablefish-data/ to preserve data privacy
+
+  # Plot map regions 3 recovered -----------------------------------------------
+
+  # Copied from sablefish-data/ to preserve data privacy
 
 
 
