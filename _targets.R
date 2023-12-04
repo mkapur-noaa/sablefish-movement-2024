@@ -71,6 +71,11 @@ list(
     tar_target(step_duration_max, 12L), # Max duration at large before recovery
     list()
   ),
+  # Define minimum duration for tag mixing before recovery ---------------------
+  list(
+    tar_target(days_duration_min, 90),
+    list()
+  ),
   # Column name arguments ------------------------------------------------------
   list(
     tar_target(colname_date_released, "date_released"),
@@ -338,6 +343,7 @@ list(
         year_end = year_end,
         step_interval = step_interval,
         step_duration_max = step_duration_max,
+        days_duration_min = days_duration_min,
         colname_date_released = colname_date_released,
         colname_date_recovered = colname_date_recovered,
         colname_region_released = colname_region_released, #
@@ -404,6 +410,7 @@ list(
         year_end = year_end,
         step_interval = step_interval,
         step_duration_max = step_duration_max,
+        days_duration_min = days_duration_min,
         colname_date_released = colname_date_released,
         colname_date_recovered = colname_date_recovered,
         colname_region_released = colname_omregion_released, #
@@ -470,6 +477,7 @@ list(
         year_end = year_end,
         step_interval = step_interval,
         step_duration_max = step_duration_max,
+        days_duration_min = days_duration_min,
         colname_date_released = colname_date_released,
         colname_date_recovered = colname_date_recovered,
         colname_region_released = colname_region_released, #
@@ -536,6 +544,7 @@ list(
         year_end = year_end,
         step_interval = step_interval,
         step_duration_max = step_duration_max,
+        days_duration_min = days_duration_min,
         colname_date_released = colname_date_released,
         colname_date_recovered = colname_date_recovered,
         colname_region_released = colname_region_released, #
@@ -602,6 +611,7 @@ list(
         year_end = year_end,
         step_interval = step_interval,
         step_duration_max = step_duration_max,
+        days_duration_min = days_duration_min,
         colname_date_released = colname_date_released,
         colname_date_recovered = colname_date_recovered,
         colname_region_released = colname_omregion_released, #
@@ -668,6 +678,7 @@ list(
         year_end = 1994,
         step_interval = step_interval,
         step_duration_max = step_duration_max,
+        days_duration_min = days_duration_min,
         colname_date_released = colname_date_released,
         colname_date_recovered = colname_date_recovered,
         colname_region_released = colname_region_released, #
@@ -734,6 +745,7 @@ list(
         year_end = 2006,
         step_interval = step_interval,
         step_duration_max = step_duration_max,
+        days_duration_min = days_duration_min,
         colname_date_released = colname_date_released,
         colname_date_recovered = colname_date_recovered,
         colname_region_released = colname_region_released, #
@@ -800,6 +812,7 @@ list(
         year_end = 2017,
         step_interval = step_interval,
         step_duration_max = step_duration_max,
+        days_duration_min = days_duration_min,
         colname_date_released = colname_date_released,
         colname_date_recovered = colname_date_recovered,
         colname_region_released = colname_region_released, #
@@ -866,6 +879,7 @@ list(
         year_end = year_end,
         step_interval = step_interval,
         step_duration_max = step_duration_max,
+        days_duration_min = days_duration_min,
         colname_date_released = colname_date_released,
         colname_date_recovered = colname_date_recovered,
         colname_region_released = colname_region_released, #
@@ -932,6 +946,7 @@ list(
         year_end = year_end,
         step_interval = step_interval,
         step_duration_max = step_duration_max,
+        days_duration_min = days_duration_min,
         colname_date_released = colname_date_released,
         colname_date_recovered = colname_date_recovered,
         colname_region_released = colname_region_released, #
@@ -998,6 +1013,7 @@ list(
         year_end = year_end,
         step_interval = step_interval,
         step_duration_max = 42, # (2017 - 1979 + 1) x 4
+        days_duration_min = days_duration_min,
         colname_date_released = colname_date_released,
         colname_date_recovered = colname_date_recovered,
         colname_region_released = colname_region_released, #
@@ -1064,6 +1080,7 @@ list(
         year_end = year_end,
         step_interval = step_interval,
         step_duration_max = step_duration_max,
+        days_duration_min = days_duration_min,
         colname_date_released = colname_date_released,
         colname_date_recovered = colname_date_recovered,
         colname_region_released = colname_region_released, #
