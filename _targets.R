@@ -655,17 +655,17 @@ list(
       )
     )
   ),
-  # Fit regions 3 mean block 1979-1995 -----------------------------------------
+  # Fit regions 3 mean block 1979-1994 -----------------------------------------
   list(
     tar_target(
-      mmmstan_regions_3_mean_block_1979_1995, #
+      mmmstan_regions_3_mean_block_1979_1994, #
       mmmstan::mmmstan(
         tag_data = tag_data,
         # Tag arguments
         list_regions = list_regions_3, #
         list_sizes = list_sizes_1, #
         year_start = 1979,
-        year_end = 1995,
+        year_end = 1994,
         step_interval = step_interval,
         step_duration_max = step_duration_max,
         colname_date_released = colname_date_released,
@@ -681,7 +681,7 @@ list(
         mu_movement_step_diag = mu_movement_step_diag_3, #
         sd_movement_step_diag = sd_movement_step_diag_3, #
         # Fishing rate priors
-        mu_fishing_rate = mu_fishing_rate_3[1:17,], #
+        mu_fishing_rate = mu_fishing_rate_3[1:16,], #
         cv_fishing_rate = cv_fishing_rate,
         # Selectivity priors
         mu_selectivity = NULL, #
@@ -721,17 +721,17 @@ list(
       )
     )
   ),
-  # Fit regions 3 mean block 1995-2010 -----------------------------------------
+  # Fit regions 3 mean block 1995-2006 -----------------------------------------
   list(
     tar_target(
-      mmmstan_regions_3_mean_block_1995_2010, #
+      mmmstan_regions_3_mean_block_1995_2006, #
       mmmstan::mmmstan(
         tag_data = tag_data,
         # Tag arguments
         list_regions = list_regions_3, #
         list_sizes = list_sizes_1, #
         year_start = 1995,
-        year_end = 2010,
+        year_end = 2006,
         step_interval = step_interval,
         step_duration_max = step_duration_max,
         colname_date_released = colname_date_released,
@@ -747,7 +747,7 @@ list(
         mu_movement_step_diag = mu_movement_step_diag_3, #
         sd_movement_step_diag = sd_movement_step_diag_3, #
         # Fishing rate priors
-        mu_fishing_rate = mu_fishing_rate_3[17:32,], #
+        mu_fishing_rate = mu_fishing_rate_3[17:28,], #
         cv_fishing_rate = cv_fishing_rate,
         # Selectivity priors
         mu_selectivity = NULL, #
@@ -1117,7 +1117,6 @@ list(
       )
     )
   ),
-
   # # Compute abundance exchange -------------------------------------------------
   # list(
   #   tar_target(
@@ -1129,7 +1128,17 @@ list(
   #   ),
   #   list()
   # ),
-
+  # # Compute abundance percent attributable -------------------------------------
+  # list(
+  #   tar_target(
+  #     abundance_percent_attributable,
+  #     create_abundance_percent_attributable(
+  #       abundance,
+  #       mmmstan_regions_3_mean$summary$movement_rate
+  #     )
+  #   ),
+  #   list()
+  # ),
   # Plot heat regions 3 mean ---------------------------------------------------
   list(
     tar_target(
@@ -1284,13 +1293,13 @@ list(
     ),
     format = "file"
   ),
-  # Plot heat regions 3 mean block 1979-1995 -----------------------------------
+  # Plot heat regions 3 mean block 1979-1994 -----------------------------------
   list(
     tar_target(
-      heat_regions_3_mean_block_1979_1995,
+      heat_regions_3_mean_block_1979_1994,
       plot_heat(
-        data = mmmstan_regions_3_mean_block_1979_1995$summary$movement_rate,
-        plot_name = "heat-regions-3-mean-block-1979-1995",
+        data = mmmstan_regions_3_mean_block_1979_1994$summary$movement_rate,
+        plot_name = "heat-regions-3-mean-block-1979-1994",
         regions = toupper(names(list_regions_3)),
         size_text = 6,
         size_mean = 3,
@@ -1312,13 +1321,13 @@ list(
       format = "file"
     )
   ),
-  # Plot heat regions 3 mean block 1995-2010 -----------------------------------
+  # Plot heat regions 3 mean block 1995-2006 -----------------------------------
   list(
     tar_target(
-      heat_regions_3_mean_block_1995_2010,
+      heat_regions_3_mean_block_1995_2006,
       plot_heat(
-        data = mmmstan_regions_3_mean_block_1995_2010$summary$movement_rate,
-        plot_name = "heat-regions-3-mean-block-1995-2010",
+        data = mmmstan_regions_3_mean_block_1995_2006$summary$movement_rate,
+        plot_name = "heat-regions-3-mean-block-1995-2006",
         regions = toupper(names(list_regions_3)),
         size_text = 6,
         size_mean = 3,
