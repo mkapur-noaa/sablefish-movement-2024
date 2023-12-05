@@ -1,3 +1,51 @@
+create_abundance_exchange <- function (abundance,
+                                       movement_rate,
+                                       index = NULL,
+                                       n_draws = 1000) {
+
+  # Check arguments ------------------------------------------------------------
+
+  # Create abundance draws array of matrices -----------------------------------
+
+  # Create movement rate draws array of matrices -------------------------------
+
+  # Compute abundance exchange draws array of matrices -------------------------
+
+  # Compute abundance exchange means tibble ------------------------------------
+
+  # Compute abundance exchange sds tibble --------------------------------------
+
+  # Compute values tibble ------------------------------------------------------
+
+  # Return values --------------------------------------------------------------
+
+}
+
+create_percent_attributable <- function (abundance,
+                                         movement_rate,
+                                         index = NULL,
+                                         n_draws = 1000) {
+
+  # Check arguments ------------------------------------------------------------
+
+  # Create abundance draws array of matrices -----------------------------------
+
+  # Create movement rate draws array of matrices -------------------------------
+
+  # Compute percent attributable draws array of matrices -----------------------
+
+  # Compute percent attributable means tibble ----------------------------------
+
+  # Compute percent attributable sds tibble ------------------------------------
+
+  # Compute values tibble ------------------------------------------------------
+
+  # Return values --------------------------------------------------------------
+
+}
+
+
+# Outdated template for new versions
 create_abundance_exchange <- function (abundance, movement_mean) {
 
   # Check arguments ------------------------------------------------------------

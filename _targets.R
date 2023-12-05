@@ -1134,24 +1134,50 @@ list(
       )
     )
   ),
+  # Create movement block list -------------------------------------------------
+  list(
+    tar_target(
+      movement_block_list,
+      list(
+        mmmstan_regions_3_mean_block_1979_1994$summary$movement_rate,
+        mmmstan_regions_3_mean_block_1995_2006$summary$movement_rate,
+        mmmstan_regions_3_mean_block_2007_2017$summary$movement_rate
+      )
+    )
+  ),
+  # Create movement block index ------------------------------------------------
+  list(
+    tar_target(
+      movement_block_index,
+      list(
+        c(1:16), # 1979--1994
+        c(17:28), # 1995--2006
+        c(29:39) # 2007--2017
+      )
+    )
+  ),
   # # Compute abundance exchange -------------------------------------------------
   # list(
   #   tar_target(
   #     abundance_exchange,
   #     create_abundance_exchange(
-  #       abundance,
-  #       mmmstan_regions_3_mean$summary$movement_rate
+  #       abundance = abundance,
+  #       movement_rate = movement_block_list,
+  #       index = movement_block_index,
+  #       n_draws = 1000
   #     )
   #   ),
   #   list()
   # ),
-  # # Compute abundance percent attributable -------------------------------------
+  # # Compute percent attributable -----------------------------------------------
   # list(
   #   tar_target(
-  #     abundance_percent_attributable,
-  #     create_abundance_percent_attributable(
-  #       abundance,
-  #       mmmstan_regions_3_mean$summary$movement_rate
+  #     percent_attributable,
+  #     creates_percent_attributable(
+  #       abundance = abundance,
+  #       movement_rate = movement_block_list,
+  #       index = movement_block_index,
+  #       n_draws = 1000
   #     )
   #   ),
   #   list()
