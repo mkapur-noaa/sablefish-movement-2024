@@ -38,7 +38,7 @@ abundance_ak <- tibble::tibble(
 abundance_bc <- tibble::tibble(
   region_name = "British Columbia",
   region_short = "BC",
-  region_number = 1,
+  region_number = 2,
   year = 1979:2018,
   total = 10000000,
   sd = 1000000
@@ -47,7 +47,7 @@ abundance_bc <- tibble::tibble(
 abundance_cc <- tibble::tibble(
   region_name = "California Current",
   region_short = "CC",
-  region_number = 1,
+  region_number = 3,
   year = 1979:2018,
   total = 100000000,
   sd = 10000000
