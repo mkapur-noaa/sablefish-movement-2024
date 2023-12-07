@@ -103,6 +103,92 @@ create_abundance_exchange <- function (abundance,
 
 }
 
+create_percent_attributable <- function (abundance,
+                                         movement_list,
+                                         index_list = NULL,
+                                         years = 1979:2017,
+                                         n_draws = 1000) {
+
+  # Check arguments ------------------------------------------------------------
+
+  # Augment abundance ----------------------------------------------------------
+
+  abundance <- abundance %>%
+    dplyr::mutate(ind_year = year - min(years) + 1) %>%
+    dplyr::filter(year %in% years)
+
+  # Create values --------------------------------------------------------------
+
+  n_rows <- nrow(abundance)
+  n_years <- length(years)
+  n_blocks <- length(movement_list)
+
+  # Create abundance draws array of matrices -----------------------------------
+
+  # Instantiate abundance array
+  abundance_array <- array(0, dim = c(3, 3, n_draws, n_years))
+  # Populate abundance array
+  for (i in seq_len(n_rows)) {
+    # For clarity
+    x <- abundance$region_number[i]
+    n <- abundance$ind_year[i]
+    a_mean <- abundance$total[i]
+    a_sd <- abundance$sd[i]
+    # Assign value
+    abundance_array[x, x, , n] <- stats::rnorm(n_draws, a_mean, a_sd)
+  }
+
+  # Create movement rate draws array of matrices -------------------------------
+
+  # Instantiate movement array
+  movement_array <- array(0, dim = c(3, 3, n_draws, n_years))
+  # Populate movement array
+  for (i in seq_len(n_blocks)) {
+    for (j in seq_along(index_list[[i]])) {
+      for (k in 1:9) { # 9 rows each block
+        # For clarity
+        x <- movement_list[[i]]$x[k]
+        y <- movement_list[[i]]$y[k]
+        n <- index_list[[i]][j]
+        m_mean <- movement_list[[i]]$mean[k]
+        m_sd <- movement_list[[i]]$sd[k]
+        # Assign value
+        movement_array[x, y, , n] <- stats::rnorm(n_draws, m_mean, m_sd)
+      }
+    }
+  }
+
+  # Compute abundance exchange draws array of matrices -------------------------
+
+  # Instantiate abundance exchange array
+  exchange_array <- array(0, dim = c(3, 3, n_draws, n_years))
+  # Populate abundance exchange array
+  for (n in seq_len(n_years)) {
+    for (d in seq_len(n_draws)) {
+      exchange_array[ , , d, n] = abundance_array[ , , d, n] %*%
+        movement_array[ , , d, n]
+    }
+  }
+
+  # Create tibble --------------------------------------------------------------
+
+  # TODO: Create tibble
+
+
+  # # As tibble: | year | region | mean | q5 | q95 |
+  # percent_attributable <- m_percent %>%
+  #   tibble::as_tibble() %>%
+  #   dplyr::arrange(regions, year) %>%
+  #   dplyr::ungroup() %>%
+  #   dplyr::select(-1)
+
+  # Return tibble --------------------------------------------------------------
+
+  # return(percent_attributable)
+
+}
+
+
 #' Number To Region
 #'
 #' @param x [numeric()]
