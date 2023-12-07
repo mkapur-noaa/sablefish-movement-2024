@@ -1157,31 +1157,18 @@ list(
     )
   ),
   # # Compute abundance exchange -------------------------------------------------
-  # list(
-  #   tar_target(
-  #     abundance_exchange,
-  #     create_abundance_exchange(
-  #       abundance = abundance,
-  #       movement_rate = movement_block_list,
-  #       index = movement_block_index,
-  #       n_draws = 1000
-  #     )
-  #   ),
-  #   list()
-  # ),
-  # # Compute percent attributable -----------------------------------------------
-  # list(
-  #   tar_target(
-  #     percent_attributable,
-  #     creates_percent_attributable(
-  #       abundance = abundance,
-  #       movement_rate = movement_block_list,
-  #       index = movement_block_index,
-  #       n_draws = 1000
-  #     )
-  #   ),
-  #   list()
-  # ),
+  list(
+    tar_target(
+      abundance_exchange,
+      create_abundance_exchange(
+        abundance = abundance,
+        movement_list = movement_block_list,
+        index_list = movement_block_index,
+        years = c(1979:2017),
+        n_draws = 1000
+      )
+    )
+  ),
   # Plot heat regions 3 mean ---------------------------------------------------
   list(
     tar_target(

@@ -1,174 +1,107 @@
 create_abundance_exchange <- function (abundance,
-                                       movement_rate,
-                                       index = NULL,
+                                       movement_list,
+                                       index_list = NULL,
+                                       years = 1979:2017,
                                        n_draws = 1000) {
 
   # Check arguments ------------------------------------------------------------
 
+  # Augment abundance ----------------------------------------------------------
+
+  abundance <- abundance %>%
+    dplyr::mutate(ind_year = year - min(years) + 1) %>%
+    dplyr::filter(year %in% years)
+
+  # Create values --------------------------------------------------------------
+
+  n_rows <- nrow(abundance)
+  n_years <- length(years)
+  n_blocks <- length(movement_list)
+
   # Create abundance draws array of matrices -----------------------------------
 
+  # Instantiate abundance array
+  abundance_array <- array(0, dim = c(3, 3, n_draws, n_years))
+  # Populate abundance array
+  for (i in seq_len(n_rows)) {
+    # For clarity
+    x <- abundance$region_number[i]
+    n <- abundance$ind_year[i]
+    a_mean <- abundance$total[i]
+    a_sd <- abundance$sd[i]
+    # Assign value
+    abundance_array[x, x, , n] <- stats::rnorm(n_draws, a_mean, a_sd)
+  }
+
   # Create movement rate draws array of matrices -------------------------------
+
+  # Instantiate movement array
+  movement_array <- array(0, dim = c(3, 3, n_draws, n_years))
+  # Populate movement array
+  for (i in seq_len(n_blocks)) {
+    for (j in seq_along(index_list[[i]])) {
+      for (k in 1:9) { # 9 rows each block
+        # For clarity
+        x <- movement_list[[i]]$x[k]
+        y <- movement_list[[i]]$y[k]
+        n <- index_list[[i]][j]
+        m_mean <- movement_list[[i]]$mean[k]
+        m_sd <- movement_list[[i]]$sd[k]
+        # Assign value
+        movement_array[x, y, , n] <- stats::rnorm(n_draws, m_mean, m_sd)
+      }
+    }
+  }
 
   # Compute abundance exchange draws array of matrices -------------------------
 
-  # Compute abundance exchange means tibble ------------------------------------
-
-  # Compute abundance exchange sds tibble --------------------------------------
-
-  # Compute values tibble ------------------------------------------------------
-
-  # Return values --------------------------------------------------------------
-
-}
-
-create_percent_attributable <- function (abundance,
-                                         movement_rate,
-                                         index = NULL,
-                                         n_draws = 1000) {
-
-  # Check arguments ------------------------------------------------------------
-
-  # Create abundance draws array of matrices -----------------------------------
-
-  # Create movement rate draws array of matrices -------------------------------
-
-  # Compute percent attributable draws array of matrices -----------------------
-
-  # Compute percent attributable means tibble ----------------------------------
-
-  # Compute percent attributable sds tibble ------------------------------------
-
-  # Compute values tibble ------------------------------------------------------
-
-  # Return values --------------------------------------------------------------
-
-}
-
-
-# Outdated template for new versions
-create_abundance_exchange <- function (abundance, movement_mean) {
-
-  # Check arguments ------------------------------------------------------------
-
-  # Assemble movement mean matrix ----------------------------------------------
-
-  # Declare matrices
-  mmean <- matrix(0.0, nrow = 3, ncol = 3)
-  m5 <- matrix(0.0, nrow = 3, ncol = 3)
-  m95 <- matrix(0.0, nrow = 3, ncol = 3)
-  # Populate matrices
-  for (i in seq_len(nrow(movement_mean))) {
-    mmean[movement_mean$x[i], movement_mean$y[i]] <- movement_mean$mean[i]
-    m5[movement_mean$x[i], movement_mean$y[i]] <- movement_mean$q5[i]
-    m95[movement_mean$x[i], movement_mean$y[i]] <- movement_mean$q95[i]
+  # Instantiate abundance exchange array
+  exchange_array <- array(0, dim = c(3, 3, n_draws, n_years))
+  # Populate abundance exchange array
+  for (n in seq_len(n_years)) {
+    for (d in seq_len(n_draws)) {
+      exchange_array[ , , d, n] = abundance_array[ , , d, n] %*%
+        movement_array[ , , d, n]
+    }
   }
 
-  # Assemble abundance array ---------------------------------------------------
+  # Create tibble --------------------------------------------------------------
 
-  # Augment abundance
-  abundance <- abundance %>%
-    dplyr::group_by(.data$region_name) %>%
-    dplyr::mutate(t = dplyr::row_number()) %>%
-    dplyr::ungroup()
-  # Declare arrays
-  abundance_array <- array(0.0, dim = c(max(abundance$t), 3, 3))
-  # Populate array
-  for (i in seq_len(nrow(abundance))) {
-    abundance_array[
-      abundance$t[i],
-      abundance$region_number[i],
-      abundance$region_number[i]
-    ] <- abundance$total[i]
+  # Create regions matrix
+  v_regions <- c("akak","akbc","akcc","bcak","bcbc","bccc","ccak","ccbc","cccc")
+  m_regions <- matrix(v_regions, nrow = 3, ncol = 3, byrow = TRUE)
+  # Instantiate abundance exchange matrix
+  m_exchange <- matrix(0, nrow = 9 * n_years, ncol = 6)
+  colnames(m_exchange) <- c("index", "year", "regions", "mean", "q5", "q95")
+  # Populate abundance exchange matrix
+  row_count <- 0
+  for (n in seq_len(n_years)) {
+    for (y in 1:3) {
+      for (x in 1:3) {
+        # Increment row count
+        row_count <- row_count + 1
+        # Assign values
+        m_exchange[row_count, 1] <- n
+        m_exchange[row_count, 2] <- n + min(years) - 1
+        m_exchange[row_count, 3] <- m_regions[x, y]
+        m_exchange[row_count, 4] <- mean(exchange_array[x, y, , n])
+        m_exchange[row_count, 5] <- quantile(exchange_array[x, y, , n], 0.05)
+        m_exchange[row_count, 6] <- quantile(exchange_array[x, y, , n], 0.95)
+      }
+    }
   }
-
-  # Assemble abundance exchange array ------------------------------------------
-
-  # Declare array
-  exchange_mean <- array(0.0, dim = c(max(abundance$t), 3, 3))
-  exchange_q5 <- array(0.0, dim = c(max(abundance$t), 3, 3))
-  exchange_q95 <- array(0.0, dim = c(max(abundance$t), 3, 3))
-  # Populate array
-  for (i in seq_len(dim(abundance_array)[1])) {
-    exchange_mean[i,,] <- as.matrix(abundance_array[i,,]) %*% mmean
-    exchange_q5[i,,] <- as.matrix(abundance_array[i,,]) %*% m5
-    exchange_q95[i,,] <- as.matrix(abundance_array[i,,]) %*% m95
-  }
-
-  # Assemble exchange sum ------------------------------------------------------
-
-  # Declare
-  exchange_sum <- array(0.0, dim = c(max(abundance$t), 4))
-  exchange_s5 <- array(0.0, dim = c(max(abundance$t), 4))
-  exchange_s95 <- array(0.0, dim = c(max(abundance$t), 4))
-  # Populate
-  for (i in seq_len(max(abundance$t))) {
-    # Mean
-    exchange_sum[i, 1] <- exchange_mean[i, 1, 2] + exchange_mean[i, 1, 3] # AK S
-    exchange_sum[i, 2] <- exchange_mean[i, 2, 1] + exchange_mean[i, 3, 1] # BC N
-    exchange_sum[i, 3] <- exchange_mean[i, 2, 3] + exchange_mean[i, 1, 3] # BC S
-    exchange_sum[i, 4] <- exchange_mean[i, 3, 1] + exchange_mean[i, 3, 2] # CC N
-    # Q5
-    exchange_s5[i, 1] <- exchange_q5[i, 1, 2] + exchange_q5[i, 1, 3] # AK S
-    exchange_s5[i, 2] <- exchange_q5[i, 2, 1] + exchange_q5[i, 3, 1] # BC N
-    exchange_s5[i, 3] <- exchange_q5[i, 2, 3] + exchange_q5[i, 1, 3] # BC S
-    exchange_s5[i, 4] <- exchange_q5[i, 3, 1] + exchange_q5[i, 3, 2] # CC N
-    # Q95
-    exchange_s95[i, 1] <- exchange_q95[i, 1, 2] + exchange_q95[i, 1, 3] # AK S
-    exchange_s95[i, 2] <- exchange_q95[i, 2, 1] + exchange_q95[i, 3, 1] # BC N
-    exchange_s95[i, 3] <- exchange_q95[i, 2, 3] + exchange_q95[i, 1, 3] # BC S
-    exchange_s95[i, 4] <- exchange_q95[i, 3, 1] + exchange_q95[i, 3, 2] # CC N
-  }
-
-  # To tibble
-  exchange_sum_tibble <- exchange_sum %>%
-    magrittr::set_colnames(c("ak s", "bc n", "bc s", "cc n")) %>%
+  # As tibble: | year | regions | mean | q5 | q95 |
+  abundance_exchange <- m_exchange %>%
     tibble::as_tibble() %>%
-    tidyr::pivot_longer(
-      cols = 1:4,
-      names_to = "direction",
-      values_to = "mean"
-    ) %>%
-    dplyr::arrange(.data$direction) %>%
-    dplyr::mutate(year = rep(1979:2018, 4)) %>%
-    dplyr::relocate(.data$year, .before = 1)
-  # Q5
-  exchange_s5_tibble <- exchange_s5 %>%
-    magrittr::set_colnames(c("ak s", "bc n", "bc s", "cc n")) %>%
-    tibble::as_tibble() %>%
-    tidyr::pivot_longer(
-      cols = 1:4,
-      names_to = "direction",
-      values_to = "q5"
-    ) %>%
-    dplyr::arrange(.data$direction) %>%
-    dplyr::mutate(year = rep(1979:2018, 4)) %>%
-    dplyr::relocate(.data$year, .before = 1)
-  # Q95
-  exchange_s95_tibble <- exchange_s95 %>%
-    magrittr::set_colnames(c("ak s", "bc n", "bc s", "cc n")) %>%
-    tibble::as_tibble() %>%
-    tidyr::pivot_longer(
-      cols = 1:4,
-      names_to = "direction",
-      values_to = "q95"
-    ) %>%
-    dplyr::arrange(.data$direction) %>%
-    dplyr::mutate(year = rep(1979:2018, 4)) %>%
-    dplyr::relocate(.data$year, .before = 1)
+    dplyr::arrange(regions, year) %>%
+    dplyr::ungroup() %>%
+    dplyr::select(-1)
 
-  # Assemble abundance exchange ------------------------------------------------
-
-  # Declare
-  abundance_exchange <- exchange_sum_tibble %>%
-    dplyr::left_join(exchange_s5_tibble, by = c("year", "direction")) %>%
-    dplyr::left_join(exchange_s95_tibble, by = c("year", "direction"))
-
-
-  # Return value ---------------------------------------------------------------
+  # Return tibble --------------------------------------------------------------
 
   return(abundance_exchange)
-}
 
+}
 
 #' Number To Region
 #'
