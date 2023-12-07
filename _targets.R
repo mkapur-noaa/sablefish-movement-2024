@@ -1169,19 +1169,19 @@ list(
       )
     )
   ),
-  # # Compute percent attributable -----------------------------------------------
-  # list(
-  #   tar_target(
-  #     percent_attributable,
-  #     create_percent_attributable(
-  #       abundance = abundance,
-  #       movement_list = movement_block_list,
-  #       index_list = movement_block_index,
-  #       years = c(1979:2017),
-  #       n_draws = 1000
-  #     )
-  #   )
-  # ),
+  # Compute percent attributable -----------------------------------------------
+  list(
+    tar_target(
+      percent_attributable,
+      create_percent_attributable(
+        abundance = abundance,
+        movement_list = movement_block_list,
+        index_list = movement_block_index,
+        years = c(1979:2017),
+        n_draws = 1000
+      )
+    )
+  ),
   # Plot heat regions 3 mean ---------------------------------------------------
   list(
     tar_target(

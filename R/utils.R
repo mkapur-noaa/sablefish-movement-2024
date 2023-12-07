@@ -172,20 +172,46 @@ create_percent_attributable <- function (abundance,
 
   # Create tibble --------------------------------------------------------------
 
-  # TODO: Create tibble
-
-
-  # # As tibble: | year | region | mean | q5 | q95 |
-  # percent_attributable <- m_percent %>%
-  #   tibble::as_tibble() %>%
-  #   dplyr::arrange(regions, year) %>%
-  #   dplyr::ungroup() %>%
-  #   dplyr::select(-1)
+  # Create regions matrix
+  v_regions <- c("akak","akbc","akcc","bcak","bcbc","bccc","ccak","ccbc","cccc")
+  m_regions <- matrix(v_regions, nrow = 3, ncol = 3, byrow = TRUE)
+  # Instantiate abundance exchange matrix
+  m_percent <- matrix(0, nrow = 9 * n_years, ncol = 6)
+  colnames(m_percent) <- c("index", "year", "regions", "mean", "q5", "q95")
+  # Populate percent attributable matrix
+  row_count <- 0
+  for (n in seq_len(n_years)) {
+    for (y in 1:3) {
+      # Compute denominator: abundance draws in region y (col) after movement
+      v_denom <- exchange_array[1, y, , n] +
+        exchange_array[2, y, , n] +
+        exchange_array[3, y, , n]
+      # Compute values: percent abundance draws in y attributable to x
+      for (x in 1:3) {
+        # Increment row count
+        row_count <- row_count + 1
+        # Compute values
+        pct_draws <- exchange_array[x, y, , n] / v_denom
+        # Assign values
+        m_percent[row_count, 1] <- n
+        m_percent[row_count, 2] <- n + min(years) - 1
+        m_percent[row_count, 3] <- m_regions[x, y]
+        m_percent[row_count, 4] <- mean(pct_draws)
+        m_percent[row_count, 5] <- quantile(pct_draws, 0.05)
+        m_percent[row_count, 6] <- quantile(pct_draws, 0.95)
+      }
+    }
+  }
+  # As tibble: | year | regions | mean | q5 | q95 |
+  percent_attributable <- m_percent %>%
+    tibble::as_tibble() %>%
+    dplyr::arrange(regions, year) %>%
+    dplyr::ungroup() %>%
+    dplyr::select(-1)
 
   # Return tibble --------------------------------------------------------------
 
-  # return(percent_attributable)
-
+  return(percent_attributable)
 }
 
 
