@@ -4,20 +4,20 @@ source("R/utils.R")
 library(magrittr)
 
 # Define path
-path <- "~/github/sablefish-data/data/harvest_rates.rda"
+path <- "~/github/sablefish-data/data/fishing_rates.rda"
 
 # Assign value
 fishing_rate <- read_from_path(path = path) %>%
   dplyr::mutate(
-    fishing_rate = -log(1 - .data$harvest_rate)
+    fishing_rate = -log(1 - fishing_rate)
   ) %>%
   dplyr::select(
-    .data$spatial,
-    .data$name,
-    .data$short,
-    .data$number,
-    .data$year,
-    .data$fishing_rate
+    spatial,
+    name,
+    short,
+    number,
+    year,
+    fishing_rate
   )
 
 # Write to data/
