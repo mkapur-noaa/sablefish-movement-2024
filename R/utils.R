@@ -27,7 +27,7 @@ create_abundance_exchange <- function (abundance,
     # For clarity
     x <- abundance$region_number[i]
     n <- abundance$ind_year[i]
-    a_mean <- abundance$total[i]
+    a_mean <- abundance$abundance[i]
     a_sd <- abundance$sd[i]
     # Assign value
     abundance_array[x, x, , n] <- stats::rnorm(n_draws, a_mean, a_sd)
@@ -132,7 +132,7 @@ create_percent_attributable <- function (abundance,
     # For clarity
     x <- abundance$region_number[i]
     n <- abundance$ind_year[i]
-    a_mean <- abundance$total[i]
+    a_mean <- abundance$abundance[i]
     a_sd <- abundance$sd[i]
     # Assign value
     abundance_array[x, x, , n] <- stats::rnorm(n_draws, a_mean, a_sd)
