@@ -422,6 +422,261 @@ plot_cols <- function (data,
   return(paste0("ms/", "figs/", plot_name, file_type))
 }
 
+plot_abundance <- function (data,
+                            plot_name,
+                            x_axis_label = "Year",
+                            y_axis_label = "Abundance exchange (millions)",
+                            toptop = "bcak",
+                            topbottom = "akbc",
+                            bottomtop = "ccbc",
+                            bottombottom = "bccc",
+                            toptop_annotation = "AK",
+                            topbottom_annotation = "BC",
+                            bottomtop_annotation = "BC",
+                            bottombottom_annotation = "CC",
+                            linewidth_hline = 0.5,
+                            linewidth_error = 0.5,
+                            x_limits = c(1979, 2020),
+                            y_limits_top = c(-1, 1),
+                            y_limits_bottom = c(-1, 1),
+                            y_limits_top_breaks = c(-1, 0, 1),
+                            y_limits_bottom_breaks = c(-1, 0, 1),
+                            relative_panel_height = c(1, 1),
+                            x_annotation = 2019,
+                            y_annotation = 0.1,
+                            width = 190,
+                            height = 140,
+                            dpi = 300,
+                            file_type = ".png") {
+
+  # Check arguments ------------------------------------------------------------
+
+  # Create annotation data -----------------------------------------------------
+
+  toptop_annotation_data <- tibble::tibble(
+    x = x_annotation,
+    y = y_annotation,
+    label = toptop_annotation
+  )
+
+  topbottom_annotation_data <- tibble::tibble(
+    x = x_annotation,
+    y = -y_annotation,
+    label = topbottom_annotation
+  )
+
+  bottomtop_annotation_data <- tibble::tibble(
+    x = x_annotation,
+    y = y_annotation,
+    label = bottomtop_annotation
+  )
+
+  bottombottom_annotation_data <- tibble::tibble(
+    x = x_annotation,
+    y = -y_annotation,
+    label = bottombottom_annotation
+  )
+
+  # Define plots ---------------------------------------------------------------
+
+  # Top panel
+  p1 <- ggplot2::ggplot() +
+    ggplot2::geom_col(
+      data = data %>% dplyr::filter(regions == toptop),
+      ggplot2::aes(x = year, y = mean)
+    ) +
+    ggplot2::geom_col(
+      data = data %>% dplyr::filter(regions == topbottom),
+      ggplot2::aes(x = .data$year, y = -.data$mean)
+    ) +
+    ggplot2::geom_hline(
+      yintercept = 0,
+      linewidth = linewidth_hline,
+      col = "white"
+    ) +
+    # ggplot2::geom_line(
+    #   data = line_1,
+    #   ggplot2::aes(x = .data$year, y = .data$net_mean)
+    # ) +
+    ggplot2::geom_errorbar(
+      data = data %>% dplyr::filter(regions == toptop),
+      ggplot2::aes(
+        x = .data$year,
+        ymin = .data$q5,
+        ymax = .data$q95
+      ),
+      linewidth = linewidth_error,
+      width = 0
+    ) +
+    ggplot2::geom_errorbar(
+      data = data %>% dplyr::filter(regions == topbottom),
+      ggplot2::aes(
+        x = .data$year,
+        ymin = -.data$q5,
+        ymax = -.data$q95
+      ),
+      linewidth = linewidth_error,
+      width = 0
+    ) +
+    # ggplot2::geom_errorbar(
+    #   data = line_1,
+    #   ggplot2::aes(
+    #     x = .data$year,
+    #     ymin = .data$net_q5,
+    #     ymax = .data$net_q95
+    #   ),
+    #   size = size_error,
+    #   width = 0
+    # ) +
+    ggplot2::scale_x_continuous(
+      limits = x_limits
+    ) +
+    ggplot2::scale_y_continuous(
+      limits = y_limits_top,
+      breaks = y_limits_top_breaks,
+      labels = as.character(abs(y_limits_top_breaks))
+    ) +
+    # ggplot2::scale_y_continuous(
+    #   limits = c(-22e6, 5e6),
+    #   breaks = seq(-2e7, 5e6, 5e6),
+    #   labels = c(20, 15, 10, 5, 0, 5)
+    # ) +
+    ggplot2::geom_text(
+      data = toptop_annotation_data,
+      ggplot2::aes(x = x, y = y, label = label),
+      na.rm = TRUE
+    ) +
+    ggplot2::geom_text(
+      data = topbottom_annotation_data,
+      ggplot2::aes(x = x, y = y, label = label),
+      na.rm = TRUE
+    ) +
+    ggsidekick::theme_sleek() +
+    ggplot2::theme(
+      axis.title.x = ggplot2::element_blank(),
+      axis.text.x = ggplot2::element_blank(),
+      axis.ticks.x = ggplot2::element_blank(),
+      axis.title.y = ggplot2::element_blank(),
+      plot.margin = ggplot2::margin(t = 1, r = 1, b = 1, l = 1, "mm")
+    )
+  # Bottom
+  p2 <- ggplot2::ggplot() +
+    ggplot2::geom_col(
+      data = data %>% dplyr::filter(regions == bottomtop),
+      ggplot2::aes(x = .data$year, y = .data$mean)
+    ) +
+    ggplot2::geom_col(
+      data = data %>% dplyr::filter(regions == bottombottom),
+      ggplot2::aes(x = .data$year, y = -.data$mean)
+    ) +
+    ggplot2::geom_hline(
+      yintercept = 0,
+      linewidth = linewidth_hline,
+      col = "white"
+    ) +
+    # ggplot2::geom_line(
+    #   data = line_2,
+    #   ggplot2::aes(x = .data$year, y = .data$net_mean)
+    # ) +
+    ggplot2::geom_errorbar(
+      data = data %>% dplyr::filter(regions == bottomtop),
+      ggplot2::aes(
+        x = .data$year,
+        ymin = .data$q5,
+        ymax = .data$q95
+      ),
+      linewidth = linewidth_error,
+      width = 0
+    ) +
+    ggplot2::geom_errorbar(
+      data = data %>% dplyr::filter(regions == bottombottom),
+      ggplot2::aes(
+        x = .data$year,
+        ymin = -.data$q5,
+        ymax = -.data$q95
+      ),
+      linewidth = linewidth_error,
+      width = 0
+    ) +
+    # ggplot2::geom_errorbar(
+    #   data = line_2,
+    #   ggplot2::aes(
+    #     x = .data$year,
+    #     ymin = .data$net_q5,
+    #     ymax = .data$net_q95
+    #   ),
+    #   size = size_error,
+    #   width = 0
+    # ) +
+    ggplot2::scale_x_continuous(
+      limits = x_limits
+    ) +
+    ggplot2::scale_y_continuous(
+      limits = y_limits_bottom,
+      breaks = y_limits_bottom_breaks,
+      labels = as.character(abs(y_limits_bottom_breaks))
+    ) +
+    # ggplot2::scale_y_continuous(
+    #   limits = c(-4e6, 15e6),
+    #   breaks = seq(-5e6, 15e6, 5e6),
+    #   labels = c(5, 0, 5, 10, 15)
+    # ) +
+    ggplot2::geom_text(
+      data = bottomtop_annotation_data,
+      ggplot2::aes(x = x, y = y, label = label),
+      na.rm = TRUE
+    ) +
+    ggplot2::geom_text(
+      data = bottombottom_annotation_data,
+      ggplot2::aes(x = x, y = y, label = label),
+      na.rm = TRUE
+    ) +
+    ggsidekick::theme_sleek() +
+    ggplot2::theme(
+      axis.title.y = ggplot2::element_blank(),
+      axis.title.x = ggplot2::element_blank(),
+      plot.margin = ggplot2::margin(t = 1, r = 1, b = 1, l = 1, "mm")
+    )
+
+
+  # Assemble panel figure ------------------------------------------------------
+
+  p0 <- ggpubr::ggarrange(
+    p1, p2,
+    heights = relative_panel_height,
+    nrow = 2,
+    align = "v"
+  ) %>%
+    ggpubr::annotate_figure(
+      left = ggpubr::text_grob(
+        label = y_axis_label,
+        size = 10,
+        rot = 90
+      ),
+      bottom = ggpubr::text_grob(
+        label = x_axis_label,
+        size = 10
+      )
+    ) +
+    ggplot2::theme(
+      plot.background = ggplot2::element_rect(fill = "white", color = NA)
+    )
+
+
+  # Save ggplot ----------------------------------------------------------------
+
+  ggplot2::ggsave(
+    here::here("ms", "figs", paste0(plot_name, file_type)),
+    width = width,
+    height = height,
+    units = "mm",
+    dpi = dpi
+  )
+
+  # Return path
+  return(paste0("ms/", "figs/", plot_name, file_type))
+}
+
 plot_exchange <- function (data,
                            plot_name,
                            size_hline = 0.5,

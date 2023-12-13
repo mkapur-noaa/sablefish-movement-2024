@@ -1697,8 +1697,75 @@ list(
 
   # Copied from sablefish-data/ to preserve data privacy
 
-
-
+  # Plot abundance exchange ----------------------------------------------------
+  list(
+    tar_target(
+      bar_abundance_exchange,
+      plot_abundance(
+        data = abundance_exchange,
+        plot_name = "bar-abundance-exchange",
+        x_axis_label = "Year",
+        y_axis_label = "Abundance exchange (millions)",
+        toptop = "bcak",
+        topbottom = "akbc",
+        bottomtop = "ccbc",
+        bottombottom = "bccc",
+        toptop_annotation = "AK",
+        topbottom_annotation = "BC",
+        bottomtop_annotation = "BC",
+        bottombottom_annotation = "CC",
+        linewidth_hline = 0.5,
+        linewidth_error = 0.5,
+        x_limits = c(1978, 2020),
+        y_limits_top = c(-20, 20),
+        y_limits_bottom = c(-10, 80),
+        y_limits_top_breaks = round(seq(-20, 20, 10), 0),
+        y_limits_bottom_breaks = round(seq(-10, 80, 10), 0),
+        relative_panel_height = c(40, 90),
+        x_annotation = 2019,
+        y_annotation = 8,
+        width = 190,
+        height = 140,
+        dpi = figure_dpi,
+        file_type = figure_ext
+      ),
+      format = "file"
+    )
+  ),
+  # Plot percent attributable --------------------------------------------------
+  list(
+    tar_target(
+      bar_percent_attributable,
+      plot_abundance(
+        data = percent_attributable,
+        plot_name = "bar-percent-attributable",
+        y_axis_label = "Abundance proportion attributable to movement",
+        toptop = "bcak",
+        topbottom = "akbc",
+        bottomtop = "ccbc",
+        bottombottom = "bccc",
+        toptop_annotation = "AK",
+        topbottom_annotation = "BC",
+        bottomtop_annotation = "BC",
+        bottombottom_annotation = "CC",
+        linewidth_hline = 0.5,
+        linewidth_error = 0.5,
+        x_limits = c(1978, 2020),
+        y_limits_top = c(-0.6, 0.2),
+        y_limits_bottom = c(-0.2, 0.8),
+        y_limits_top_breaks = round(seq(-0.6, 0.2, 0.2), 1),
+        y_limits_bottom_breaks = round(seq(-0.2, 0.8, 0.2), 1),
+        relative_panel_height = c(0.8, 1),
+        x_annotation = 2019,
+        y_annotation = 0.1,
+        width = 190,
+        height = 140,
+        dpi = figure_dpi,
+        file_type = figure_ext
+      ),
+      format = "file"
+    )
+  ),
   # # Plot abundance exchange ----------------------------------------------------
   # list(
   #   tar_target(
