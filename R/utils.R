@@ -70,10 +70,17 @@ create_abundance_exchange <- function (abundance,
   # Create regions matrix
   v_regions <- c("akak","akbc","akcc","bcak","bcbc","bccc","ccak","ccbc","cccc")
   m_regions <- matrix(v_regions, nrow = 3, ncol = 3, byrow = TRUE)
-  # Instantiate abundance exchange matrix
-  m_exchange <- matrix(0, nrow = 9 * n_years, ncol = 6)
-  colnames(m_exchange) <- c("index", "year", "regions", "mean", "q5", "q95")
-  # Populate abundance exchange matrix
+  # Instantiate tibble
+  t_exchange <- tibble::tibble(
+    index = NA_integer_,
+    year = NA_integer_,
+    regions = NA_character_,
+    mean = NA_real_,
+    q5 = NA_real_,
+    q95 = NA_real_,
+    .rows = 9 * n_years
+  )
+  # Populate tibble
   row_count <- 0
   for (n in seq_len(n_years)) {
     for (y in 1:3) {
@@ -81,18 +88,17 @@ create_abundance_exchange <- function (abundance,
         # Increment row count
         row_count <- row_count + 1
         # Assign values
-        m_exchange[row_count, 1] <- n
-        m_exchange[row_count, 2] <- n + min(years) - 1
-        m_exchange[row_count, 3] <- m_regions[x, y]
-        m_exchange[row_count, 4] <- mean(exchange_array[x, y, , n])
-        m_exchange[row_count, 5] <- quantile(exchange_array[x, y, , n], 0.05)
-        m_exchange[row_count, 6] <- quantile(exchange_array[x, y, , n], 0.95)
+        t_exchange$index[row_count] <- n
+        t_exchange$year[row_count] <- n + min(years) - 1
+        t_exchange$regions[row_count] <- m_regions[x, y]
+        t_exchange$mean[row_count] <- mean(exchange_array[x, y, , n])
+        t_exchange$q5[row_count] <- quantile(exchange_array[x, y, , n], 0.05)
+        t_exchange$q95[row_count] <- quantile(exchange_array[x, y, , n], 0.95)
       }
     }
   }
   # As tibble: | year | regions | mean | q5 | q95 |
-  abundance_exchange <- m_exchange %>%
-    tibble::as_tibble() %>%
+  abundance_exchange <- t_exchange %>%
     dplyr::arrange(regions, year) %>%
     dplyr::ungroup() %>%
     dplyr::select(-1)
@@ -175,10 +181,17 @@ create_percent_attributable <- function (abundance,
   # Create regions matrix
   v_regions <- c("akak","akbc","akcc","bcak","bcbc","bccc","ccak","ccbc","cccc")
   m_regions <- matrix(v_regions, nrow = 3, ncol = 3, byrow = TRUE)
-  # Instantiate abundance exchange matrix
-  m_percent <- matrix(0, nrow = 9 * n_years, ncol = 6)
-  colnames(m_percent) <- c("index", "year", "regions", "mean", "q5", "q95")
-  # Populate percent attributable matrix
+  # Instantiate tibble
+  t_percent <- tibble::tibble(
+    index = NA_integer_,
+    year = NA_integer_,
+    regions = NA_character_,
+    mean = NA_real_,
+    q5 = NA_real_,
+    q95 = NA_real_,
+    .rows = 9 * n_years
+  )
+  # Populate tibble
   row_count <- 0
   for (n in seq_len(n_years)) {
     for (y in 1:3) {
@@ -193,18 +206,17 @@ create_percent_attributable <- function (abundance,
         # Compute values
         pct_draws <- exchange_array[x, y, , n] / v_denom
         # Assign values
-        m_percent[row_count, 1] <- n
-        m_percent[row_count, 2] <- n + min(years) - 1
-        m_percent[row_count, 3] <- m_regions[x, y]
-        m_percent[row_count, 4] <- mean(pct_draws)
-        m_percent[row_count, 5] <- quantile(pct_draws, 0.05)
-        m_percent[row_count, 6] <- quantile(pct_draws, 0.95)
+        t_percent$index[row_count] <- n
+        t_percent$year[row_count] <- n + min(years) - 1
+        t_percent$regions[row_count] <- m_regions[x, y]
+        t_percent$mean[row_count] <- mean(pct_draws)
+        t_percent$q5[row_count] <- quantile(pct_draws, 0.05)
+        t_percent$q95[row_count] <- quantile(pct_draws, 0.95)
       }
     }
   }
   # As tibble: | year | regions | mean | q5 | q95 |
-  percent_attributable <- m_percent %>%
-    tibble::as_tibble() %>%
+  percent_attributable <- t_percent %>%
     dplyr::arrange(regions, year) %>%
     dplyr::ungroup() %>%
     dplyr::select(-1)
