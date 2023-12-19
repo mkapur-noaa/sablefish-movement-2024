@@ -1,0 +1,39 @@
+\documentclass[11pt, oneside]{article}
+\usepackage{geometry}
+\geometry{letterpaper}
+
+% Load the .csv to table package
+\usepackage{pgfplotstable}
+
+\begin{document}
+
+% Example table script
+\begin{table}[h]
+  \begin{center}
+  \caption{Sablefish movement rates between regions (per fish per year).}
+  \label{tab:movement-rates}
+    \pgfplotstabletypeset[
+      col sep=comma,                       % Commas separate .csv values
+      columns/{0}/.style={column name={}}, % Replace autofilled column name by " "
+      string type                          % Expect characters
+    ]{example.csv}
+  \end{center}
+\end{table}
+
+\end{document}  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
