@@ -372,3 +372,69 @@ write_movement_rate_csv <- function (m, name, path = "ms/tabs") {
 
   file.path(path, fs::path_ext_set(name, ".csv"))
 }
+
+#' Write Value to Latex Macro
+#'
+#' @param name [character()] Macro name
+#' @param value [numeric()] Macro value
+#' @param path [character()] File path
+#' @param filename [character()] File name including extension
+#'
+#' @return NULL
+#' @importFrom magrittr "%>%"
+#' @export
+#'
+write_tex <- function (name,
+                       value,
+                       path = file.path("ms","vals"),
+                       filename = "values.tex") {
+
+  # Write latex macro ----------------------------------------------------------
+
+  paste0("\\newcommand{\\", name, "}{", value, "}") %>%
+    readr::write_lines(here::here(path, filename), append = TRUE)
+
+  # Return NULL ----------------------------------------------------------------
+
+  invisible()
+}
+
+#' Clear Latex Macros
+#'
+#' @return NULL
+#' @export
+#'
+clear_tex <- function(path = file.path("ms", "vals"), filename = "values.tex") {
+  # Clear tex
+  readr::write_lines(NULL, here::here(path, filename), append = FALSE)
+  # Return NULL
+  invisible()
+}
+
+write_values_tex <- function (name_value_list = list(zero = 0),
+                              path = file.path("ms", "vals"),
+                              filename = "values.tex",
+                              clear_first = FALSE) {
+
+  # Check arguments ------------------------------------------------------------
+
+  # TODO: Ensure names have no underscores
+
+  # Clear first ----------------------------------------------------------------
+
+  if (clear_first) clear_tex(path = path, filename = filename)
+
+  # Write values ---------------------------------------------------------------
+
+  purrr::map2(
+    .x = names(name_value_list),
+    .y = name_value_list,
+    .f = write_tex,
+    path = path,
+    filename = filename
+  )
+
+  # Return path ----------------------------------------------------------------
+
+  file.path(path, filename)
+}
