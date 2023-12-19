@@ -1261,6 +1261,252 @@ list(
       )
     )
   ),
+  # Define tex values ----------------------------------------------------------
+  list(
+    # Tag arrays (Regions 3)
+    tar_target(
+      tag_array_released,
+      aperm(
+        mmmstan_regions_3_mean$data$tags, # [N - 1, D, L, X, X]
+        perm = c(4, 5, 3, 1, 2)           # [X, X, L, N - 1, D]
+      )[,,,, 1, drop = TRUE]              # [X, X, N - 1]
+    ),
+    tar_target(
+      tag_array_recovered,
+      aperm(
+        mmmstan_regions_3_mean$data$tags,       # [N - 1, D, L, X, X]
+        perm = c(4, 5, 3, 1, 2)                 # [X, X, L, N - 1, D]
+      )[,,,, 2:step_duration_max, drop = TRUE]  # [X, X, N - 1, D - 1]
+    ),
+    # Data values (as used in model)
+    tar_target(
+      n_released,
+      sum(tag_array_released)
+    ),
+    tar_target(
+      n_released_ak,
+      sum(tag_array_released[1, 1, ])
+    ),
+    tar_target(
+      n_released_bc,
+      sum(tag_array_released[2, 2, ])
+    ),
+    tar_target(
+      n_released_cc,
+      sum(tag_array_released[3, 3, ])
+    ),
+    tar_target(
+      n_recovered,
+      sum(tag_array_recovered)
+    ),
+    tar_target(
+      n_recovered_ak, # Number recovered from AK release
+      sum(tag_array_recovered[1,,,])
+    ),
+    tar_target(
+      n_recovered_bc, # Number recovered from BC release
+      sum(tag_array_recovered[2,,,])
+    ),
+    tar_target(
+      n_recovered_cc, # Number recovered from CC release
+      sum(tag_array_recovered[2,,,])
+    ),
+    # Data values (from raw data)
+    tar_target(
+      raw_n_released,
+      tag_data %>%
+        nrow()
+    ),
+    tar_target(
+      raw_n_released_ak,
+      tag_data %>%
+        dplyr::filter(region_released %in% c(1:6)) %>%
+        nrow()
+    ),
+    tar_target(
+      raw_n_released_bc,
+      tag_data %>%
+        dplyr::filter(region_released %in% c(7)) %>%
+        nrow()
+    ),
+    tar_target(
+      raw_n_released_cc,
+      tag_data %>%
+        dplyr::filter(region_released %in% c(8)) %>%
+        nrow()
+    ),
+    tar_target(
+      raw_n_recovered,
+      tag_data %>%
+        tidyr::drop_na(region_recovered) %>%
+        nrow()
+    ),
+    tar_target(
+      raw_n_recovered_ak,
+      tag_data %>%
+        dplyr::filter(region_released %in% c(1:6)) %>%
+        tidyr::drop_na(region_recovered) %>%
+        nrow()
+    ),
+    tar_target(
+      raw_n_recovered_bc,
+      tag_data %>%
+        dplyr::filter(region_released %in% c(7)) %>%
+        tidyr::drop_na(region_recovered) %>%
+        nrow()
+    ),
+    tar_target(
+      raw_n_recovered_cc,
+      tag_data %>%
+        dplyr::filter(region_released %in% c(8)) %>%
+        tidyr::drop_na(region_recovered) %>%
+        nrow()
+    ),
+    tar_target(
+      raw_days_duration_min,
+      tag_data %>%
+        dplyr::pull(days_liberty) %>%
+        min(na.rm = TRUE)
+    ),
+    tar_target(
+      raw_days_duration_mean,
+      tag_data %>%
+        dplyr::pull(days_liberty) %>%
+        mean(na.rm = TRUE) %>%
+        round()
+    ),
+    tar_target(
+      raw_days_duration_max,
+      tag_data %>%
+        dplyr::pull(days_liberty) %>%
+        max(na.rm = TRUE)
+    ),
+    tar_target(
+      raw_distance_min,
+      tag_data %>%
+        dplyr::pull(tag_distance) %>%
+        min(na.rm = TRUE) %>%
+        magrittr::divide_by(1000) %>% # km
+        round()
+    ),
+    tar_target(
+      raw_distance_mean,
+      tag_data %>%
+        dplyr::pull(tag_distance) %>%
+        mean(na.rm = TRUE)%>%
+        magrittr::divide_by(1000) %>% # km
+        round()
+    ),
+    tar_target(
+      raw_distance_max,
+      tag_data %>%
+        dplyr::pull(tag_distance) %>%
+        max(na.rm = TRUE)%>%
+        magrittr::divide_by(1000) %>% # km
+        round()
+    ),
+    # Data values (constraints imposed)
+    tar_target(
+      released_size_min,
+      min(list_sizes_1$sml)
+    ),
+    tar_target(
+      released_size_max,
+      max(list_sizes_1$sml)
+    ),
+    tar_target(
+      released_size_small_min,
+      min(list_sizes_2$s)
+    ),
+    tar_target(
+      released_size_small_max,
+      max(list_sizes_2$s)
+    ),
+    tar_target(
+      released_size_large_min,
+      min(list_sizes_2$l)
+    ),
+    tar_target(
+      released_size_large_max,
+      max(list_sizes_2$l)
+    ),
+    list()
+  ),
+  # Write tex values -----------------------------------------------------------
+  list(
+    tar_target(
+      values_tex,
+      write_values_tex(
+        # Note: no underscores permitted in TeX macro names
+        name_value_list = list(
+          # Analysis values
+          yearStart = year_start,
+          yearEnd = year_end,
+          nYears = year_end - year_start + 1,
+          nRegionsThree = length(list_regions_3),
+          nRegionsSix = length(list_regions_6),
+          nRegionsEight = length(list_regions_8),
+          # Data values (as used in model)
+          nReleased = n_released,
+          nReleasedAK = n_released_ak,
+          nReleasedBC = n_released_bc,
+          nReleasedCC = n_released_cc,
+          nRecovered = n_recovered,
+          nRecoveredAK = n_recovered_ak, # Recovered from AK release
+          nRecoveredBC = n_recovered_bc, # Recovered from BC release
+          nRecoveredCC = n_recovered_cc, # Recovered from CC release
+          # Data values (from raw data)
+          rawNReleased = raw_n_released,
+          rawNReleasedAK = raw_n_released_ak,
+          rawNReleasedBC = raw_n_released_bc,
+          rawNReleasedCC = raw_n_released_cc,
+          rawNRecovered = raw_n_recovered,
+          rawNRecoveredAK = raw_n_recovered_ak, # Recovered from AK release
+          rawNRecoveredBC = raw_n_recovered_bc, # Recovered from BC release
+          rawNRecoveredCC = raw_n_recovered_cc, # Recovered from CC release
+          rawDaysDurationMin = raw_days_duration_min,
+          rawDaysDurationMean = raw_days_duration_mean,
+          rawDaysDurationMax = raw_days_duration_max,
+          rawDistanceMin = raw_distance_min,
+          rawDistanceMean = raw_distance_mean,
+          rawDistanceMax = raw_distance_max,
+          # Data values (constraints imposed)
+          daysDurationMin = days_duration_min,
+          releasedSizeMin = released_size_min,
+          releasedSizeMax = released_size_max,
+          releasedSizeSmallMin = released_size_small_min,
+          releasedSizeSmallMax = released_size_small_max,
+          releasedSizeLargeMin = released_size_large_min,
+          releasedSizeLargeMax = released_size_large_max,
+          # Prior values
+          muNaturalMortality = mu_natural_mortality_rate_3[1],
+          sdNaturalMortality = sd_natural_mortality_rate_3[1],
+          muInitialLossRate = mu_initial_loss_rate,
+          sdInitialLossRate = sd_initial_loss_rate,
+          muOngoingLossRate = mu_ongoing_loss_rate,
+          sdOngoingLossRate = sd_ongoing_loss_rate,
+          muReportingRateAK = mu_reporting_rate_3[1],
+          muReportingRateBC = mu_reporting_rate_3[2],
+          muReportingRateCC = mu_reporting_rate_3[3],
+          sdReportingRateAK = sd_reporting_rate_3[1],
+          sdReportingRateBC = sd_reporting_rate_3[2],
+          sdReportingRateCC = sd_reporting_rate_3[3],
+          # Model values
+          nChains = chains,
+          stepSize = step_size,
+          adaptDelta = adapt_delta,
+          iterWarmup = iter_warmup,
+          iterSampling = iter_sampling,
+          maxTreedepth = max_treedepth,
+          threadsPerChain = threads_per_chain
+        ),
+        path = file.path("ms", "vals"),
+        filename = "values.tex",
+        clear_first = TRUE
+      ),
+      format = "file"
+    )
+  ),
   # Plot heat regions 3 mean ---------------------------------------------------
   list(
     tar_target(
@@ -1845,22 +2091,5 @@ list(
       format = "file"
     )
   ),
-  # # Plot abundance exchange ----------------------------------------------------
-  # list(
-  #   tar_target(
-  #     bar_abundance_exchange,
-  #     plot_exchange(
-  #       data = abundance_exchange,
-  #       plot_name = "bar-abundance-exchange",
-  #       size_hline = 0.5,
-  #       size_error = 0.5,
-  #       width = 190,
-  #       height = 140,
-  #       dpi = figure_dpi,
-  #       file_type = figure_ext
-  #     ),
-  #     format = "file"
-  #   )
-  # ),
   list()
 )
