@@ -319,6 +319,54 @@ write_data <- function (..., path = "data") {
   file.path(path, fs::path_ext_set(name, ".rda"))
 }
 
+write_movement_rate_csv <- function (m, name, path = "ms/tabs") {
+
+  # Check arguments ------------------------------------------------------------
+
+  # Define regions -------------------------------------------------------------
+
+  if (max(m$x) == 3) {
+    regions <- c("AK", "BC", "CC")
+  } else if (max(m$x) == 6) {
+    regions <- c("WAK", "EAK", "NBC", "SBC", "NCC", "SCC")
+  } else if (max(m$x) == 8) {
+    regions <- c("BS", "AI", "WG", "CG", "EG", "SE", "BC", "CC")
+  } else {
+    stop("move must have 3, 6, or 8 regions")
+  }
+
+  # Create tibble --------------------------------------------------------------
+
+  rates <- m %>%
+    dplyr::mutate(
+      value = paste0(
+        round_to_character(mean, 3), # round(mean, 3)
+        " (",
+        round_to_character(q5, 3), # round(q5, 3)
+        "-",
+        round_to_character(q95, 3), # round(q95, 3)
+        ")"
+      )
+    ) %>%
+    tidyr::pivot_wider(
+      id_cols = x,
+      names_from = y,
+      values_from = value
+    ) %>%
+    dplyr::mutate(x = number_to_region(x, regions)) %>%
+    magrittr::set_colnames(c(" ", regions))
+
+  # Write csv ------------------------------------------------------------------
+
+  readr::write_csv(x = rates, file = paste0(path, "/", name, ".csv"))
+
+  # Return extension -----------------------------------------------------------
+
+  file.path(path, fs::path_ext_set(name, ".csv"))
+}
+
+
+
 # Current above here -----------------------------------------------------------
 
 

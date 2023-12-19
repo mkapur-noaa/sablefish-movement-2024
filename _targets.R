@@ -1134,6 +1134,85 @@ list(
       )
     )
   ),
+  # Write movement rate table csv files ----------------------------------------
+  list(
+    # Movement means
+    tar_target(
+      movement_rate_csv_regions_3_mean,
+      write_movement_rate_csv(
+        m = mmmstan_regions_3_mean$summary$movement_rate,
+        name = "movement-rate-regions-3-mean",
+        path = "ms/tabs"
+      ),
+      format = "file"
+    ),
+    tar_target(
+      movement_rate_csv_regions_6_mean,
+      write_movement_rate_csv(
+        m = mmmstan_regions_6_mean$summary$movement_rate,
+        name = "movement-rate-regions-6-mean",
+        path = "ms/tabs"
+      ),
+      format = "file"
+    ),
+    tar_target(
+      movement_rate_csv_regions_8_mean,
+      write_movement_rate_csv(
+        m = mmmstan_regions_8_mean$summary$movement_rate,
+        name = "movement-rate-regions-8-mean",
+        path = "ms/tabs"
+      ),
+      format = "file"
+    ),
+    # Movement blocks
+    tar_target(
+      movement_rate_csv_regions_3_mean_block_1979_1994,
+      write_movement_rate_csv(
+        m = mmmstan_regions_3_mean_block_1979_1994$summary$movement_rate,
+        name = "movement-rate-regions-3-mean-block-1979-1994",
+        path = "ms/tabs"
+      ),
+      format = "file"
+    ),
+    tar_target(
+      movement_rate_csv_regions_3_mean_block_1995_2006,
+      write_movement_rate_csv(
+        m = mmmstan_regions_3_mean_block_1995_2006$summary$movement_rate,
+        name = "movement-rate-regions-3-mean-block-1995-2006",
+        path = "ms/tabs"
+      ),
+      format = "file"
+    ),
+    tar_target(
+      movement_rate_csv_regions_3_mean_block_2007_2017,
+      write_movement_rate_csv(
+        m = mmmstan_regions_3_mean_block_2007_2017$summary$movement_rate,
+        name = "movement-rate-regions-3-mean-block-2007-2017",
+        path = "ms/tabs"
+      ),
+      format = "file"
+    ),
+    # Movement mean sensitivity
+    tar_target(
+      movement_rate_csv_regions_3_mean_3x_cv_fishing_rate,
+      write_movement_rate_csv(
+        m = mmmstan_regions_3_mean_3x_cv_fishing_rate$summary$movement_rate,
+        name = "movement-rate-regions-3-mean-3x-cv-fishing-rate",
+        path = "ms/tabs"
+      ),
+      format = "file"
+    ),
+    tar_target(
+      movement_rate_csv_regions_3_mean_3x_sd_reporting_rate,
+      write_movement_rate_csv(
+        m = mmmstan_regions_3_mean_3x_sd_reporting_rate$summary$movement_rate,
+        name = "movement-rate-regions-3-mean-3x-sd-reporting-rate",
+        path = "ms/tabs"
+      ),
+      format = "file"
+    ),
+    list()
+  ),
   # Create movement block list -------------------------------------------------
   list(
     tar_target(
