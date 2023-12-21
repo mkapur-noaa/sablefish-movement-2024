@@ -169,6 +169,239 @@ plot_map <- function (regions,
   return(paste0("ms/", "figs/", plot_name, file_type))
 }
 
+plot_network <- function (regions,
+                          rates,
+                          plot_name,
+                          size_short = 2,
+                          size_line = 0.25,
+                          size_text = 2,
+                          scale_edge_width_min = 1,
+                          scale_edge_width_max = 6,
+                          size_label = 5,
+                          hjust_label = 0,
+                          vjust_label = 0,
+                          strength = 4,
+                          color_land = "white",
+                          color_ocean = "grey98",
+                          color_region = "grey30",
+                          fill_land = "white",
+                          fill_ocean = "grey95",
+                          fill_region = "grey85",
+                          nudge_x = NULL,
+                          nudge_y = NULL,
+                          xmin = 169,
+                          ymin = 31,
+                          xmax = 241,
+                          ymax = 65.5,
+                          width = 90,
+                          height = 60,
+                          dpi = 300,
+                          file_type = ".png") {
+
+  # Check arguments ------------------------------------------------------------
+
+  # Define centroid ------------------------------------------------------------
+
+  sf::sf_use_s2(FALSE)
+  regions <- regions %>%
+    cbind(sf::st_coordinates(suppressWarnings(sf::st_centroid(.$geometry))))
+
+  # Define network nodes -------------------------------------------------------
+
+  nodes <- tibble::tibble(
+    id = dplyr::pull(regions, 3),
+    label = dplyr::pull(regions, 2)
+  )
+
+  # Define network edges -------------------------------------------------------
+
+  edges <- rates %>%
+    dplyr::select(
+      from = x,
+      to = y,
+      weight = mean
+    ) %>%
+    dplyr::filter(abs(from - to) == 1)
+
+  # Define network -------------------------------------------------------------
+
+  network <- tidygraph::tbl_graph(
+    nodes = nodes,
+    edges = edges,
+    directed = TRUE
+  )
+
+  # Define network layout ------------------------------------------------------
+
+  layout <- ggraph::create_layout(
+    graph = network,
+    layout = "manual",
+    circular = FALSE,
+    x = dplyr::pull(regions, X), # Passed to ggraph:::layout_tbl_graph_manual()
+    y = dplyr::pull(regions, Y)  # Passed to ggraph:::layout_tbl_graph_manual()
+  )
+
+  # Define coastline -----------------------------------------------------------
+
+  coastline <- rnaturalearth::ne_coastline(scale = 50, returnclass = "sf") %>%
+    sf::st_transform(crs = "+proj=longlat +datum=WGS84 +no_defs") %>%
+    st_recenter(clon = 180) %>%
+    sf::st_make_valid()
+
+  # Define land ----------------------------------------------------------------
+
+  land <- rnaturalearth::ne_countries(scale = 50, returnclass = "sf") %>%
+    sf::st_transform(crs = "+proj=longlat +datum=WGS84 +no_defs") %>%
+    st_recenter(clon = 180) %>%
+    sf::st_make_valid()
+
+  # Define outline -------------------------------------------------------------
+
+  xbuf <- 3
+  ybuf <- 2.5
+
+  outline <- tibble::tibble(
+    x = c(xmin - xbuf, xmin - xbuf, xmax + xbuf, xmax + xbuf, xmin - xbuf),
+    y = c(ymin - ybuf, ymax + ybuf, ymax + ybuf, ymin - ybuf, ymin - ybuf)
+  )
+
+  # Define inset ---------------------------------------------------------------
+
+  inset <- ggplot2::ggplot() +
+    ggplot2::geom_sf(
+      data = land,
+      color = color_land,
+      fill = fill_land,
+      lwd = 0.1
+    ) +
+    ggplot2::geom_sf(
+      data = coastline,
+      color = color_region,
+      fill = NA,
+      lwd = 0.25
+    ) +
+    ggplot2::coord_sf(
+      xlim = c(130, 300),
+      ylim = c(8, 80)
+    ) +
+    ggplot2::geom_polygon(
+      data = outline,
+      mapping = ggplot2::aes(x = x, y = y),
+      fill = NA,
+      color = "grey60",
+      linewidth = 0.5
+    ) +
+    ggsidekick::theme_sleek() +
+    ggplot2::theme(
+      axis.title.x = ggplot2::element_blank(),
+      axis.title.y = ggplot2::element_blank(),
+      axis.text.x = ggplot2::element_blank(),
+      axis.text.y = ggplot2::element_blank(),
+      axis.ticks.x = ggplot2::element_blank(),
+      axis.ticks.y = ggplot2::element_blank(),
+      panel.background = ggplot2::element_rect(fill = fill_ocean, color = NA),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank(),
+      plot.background = ggplot2::element_rect(fill = "transparent", color = NA)
+    )
+
+  # Define plot ----------------------------------------------------------------
+
+  p1 <- ggplot2::ggplot(data = layout) +
+    ggplot2::geom_sf(
+      data = land,
+      color = color_land,
+      fill = fill_land,
+      lwd = 0.1
+    ) +
+    ggplot2::geom_sf(
+      data = coastline,
+      color = color_region,
+      fill = NA,
+      lwd = 0.25
+    ) +
+    ggplot2::geom_sf(
+      data = regions,
+      col = color_region,
+      fill = fill_region,
+      linewidth = size_line
+    ) +
+    ggraph::geom_edge_fan(
+      mapping = ggplot2::aes(
+        width = weight,
+        label = paste0(as.character(round(weight, 2) * 100), "%"),
+        hjust = hjust_label,
+        vjust = vjust_label
+      ),
+      label_size = size_label,
+      strength = strength,
+      arrow = ggplot2::arrow(
+        length = grid::unit(0.5 + 3 * edges$weight, "mm"),
+        type = "closed"
+      ),
+      end_cap = ggraph::circle(2.5, "mm")
+    ) +
+    ggraph::scale_edge_width(
+      range = c(scale_edge_width_min, scale_edge_width_max)
+    ) +
+    ggplot2::geom_label(
+      data = regions,
+      mapping = ggplot2::aes(X, Y, label = region_short),
+      size = size_short,
+      label.r = grid::unit(0.05, "lines"),
+      label.size = 0.125,
+      label.padding = grid::unit(0.06, "lines"),
+      nudge_x = nudge_x,
+      nudge_y = nudge_y
+    ) +
+    ggplot2::coord_sf(
+      xlim = c(xmin, xmax),
+      ylim = c(ymin, ymax)
+    ) +
+    ggspatial::annotation_north_arrow(
+      height = grid::unit(0.25, "npc"),
+      width = grid::unit(0.2, "npc"),
+      pad_x = grid::unit(0.8, "npc"),
+      pad_y = grid::unit(0.72, "npc"),
+      style = ggspatial::north_arrow_fancy_orienteering(
+        text_col = "grey60",
+        line_col = "grey60",
+        fill = c("white", "grey60")
+      )
+    ) +
+    ggsidekick::theme_sleek() +
+    ggplot2::theme(
+      axis.title = ggplot2::element_blank(),
+      axis.text = ggplot2::element_text(size = size_text),
+      legend.position = "none",
+      panel.background = ggplot2::element_rect(fill = fill_ocean, color = NA),
+      panel.grid.major = ggplot2::element_line(color = color_ocean),
+      panel.grid.minor = ggplot2::element_blank(),
+      plot.background = ggplot2::element_rect(fill = "white", color = NA),
+      plot.margin = ggplot2::margin(t = 2, r = 2, b = 2, l = 2)
+    ) +
+    ggplot2::annotation_custom(
+      ggplot2::ggplotGrob(inset),
+      xmin = xmin - 5.6,
+      ymin = ymin - 4.5,
+      xmax = 200,
+      ymax = 45
+    )
+
+  # Save ggplot ----------------------------------------------------------------
+
+  ggplot2::ggsave(
+    here::here("ms", "figs", paste0(plot_name, file_type)),
+    width = width,
+    height = height,
+    units = "mm",
+    dpi = dpi
+  )
+
+  # Return path
+  return(paste0("ms/", "figs/", plot_name, file_type))
+}
+
 plot_heat <- function (data,
                        plot_name,
                        regions,
