@@ -11,6 +11,7 @@ tar_option_set(
   packages = c(
     "dplyr",
     "fs",
+    "ggraph",
     "ggplot2",
     "ggpubr",
     "ggsidekick",
@@ -25,6 +26,7 @@ tar_option_set(
     "rnaturalearthdata",
     "sf",
     "tictoc",
+    "tidygraph",
     "tidyr",
     "usethis"
   )
@@ -1503,6 +1505,41 @@ list(
         path = file.path("ms", "vals"),
         filename = "values.tex",
         clear_first = TRUE
+      ),
+      format = "file"
+    )
+  ),
+  # Plot map network regions 6 -------------------------------------------------
+  list(
+    tar_target(
+      map_network_regions_6,
+      plot_network(
+        regions = sf_omregions,
+        rates = mmmstan_regions_6_mean$summary$movement_rate,
+        plot_name = "map-network-regions-6",
+        size_short = 1.75,
+        size_line = 0.25,
+        size_text = 5,
+        scale_edge_width_min = 0.2,
+        scale_edge_width_max = 2,
+        size_label = 3,
+        hjust_label = c(0.5, 0.3, 0.8, -0.3, 1.3, -0.2, 1.15, -0.1, 1.3, 0.05),
+        vjust_label = c(1.5, -0.55, 1.4, -0.5, 1, 0.2, 0, 0.5, 0, -0.4),
+        strength = 4,
+        color_land = "white",
+        color_ocean = "grey96",
+        color_region = "grey30",
+        fill_land = "white",
+        fill_ocean = "grey95",
+        fill_region = "grey85",
+        xmin = 169,
+        ymin = 31,
+        xmax = 240.5,
+        ymax = 65.5,
+        width = 90,
+        height = 65,
+        dpi = figure_dpi,
+        file_type = figure_ext
       ),
       format = "file"
     )
