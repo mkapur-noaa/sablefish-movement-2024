@@ -75,7 +75,151 @@ Co-authorship and final author order to folow the PSTAT Data Sharing and Collabo
 
 \section{Figures}
 
+% map-network-regions-6
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = 0.7\textwidth]{map-network-regions-6}
+    \caption{TBD}
+    \label{fig:map-network-regions-6}
+\end{figure}
+
+% \begin{figure}[htb]
+%     \centering
+%     \includegraphics[width = 0.7\textwidth]{map-regions-6}
+%     \caption{TBD}
+%     \label{fig:map-regions-6}
+% \end{figure}
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = 0.7\textwidth]{map-regions-3-released}
+    \caption{TBD}
+    \label{fig:map-regions-3-released}
+\end{figure}
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = 0.4\textwidth]{map-regions-3-recovered}
+    \caption{TBD}
+    \label{fig:map-regions-3-recovered}
+\end{figure}
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = 0.7\textwidth]{bar-regions-3-released-by-size}
+    \caption{TBD}
+    \label{fig:bar-regions-3-released-by-size}
+\end{figure}
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = 0.7\textwidth]{bar-abundance-exchange}
+    \caption{TBD}
+    \label{fig:bar-abundance-exchange}
+\end{figure}
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = 0.7\textwidth]{bar-percent-attributable}
+    \caption{TBD}
+    \label{fig:bar-percent-attributable}
+\end{figure}
+
 \section{Tables}
+
+
+\begin{table}[h]
+  \begin{center}
+  \caption{Sablefish movement rates between regions (per fish per year).}
+  \label{tab:movement-rate-regions-6-mean}
+    \pgfplotstabletypeset[
+      col sep=comma,                       % Commas separate .csv values
+      columns/{0}/.style={column name={}}, % Replace autofilled column name by " "
+      string type                          % Expect characters
+    ]{tabs/movement-rate-regions-6-mean.csv}
+  \end{center}
+\end{table}
+
+\section{Supplementary information}
+
+% Example table script
+\begin{table}[h]
+  \begin{center}
+  \caption{Sablefish movement rates between regions (per fish per year).}
+  \label{tab:movement-rate-regions-3-mean}
+    \pgfplotstabletypeset[
+      col sep=comma,                       % Commas separate .csv values
+      columns/{0}/.style={column name={}}, % Replace autofilled column name by " "
+      string type                          % Expect characters
+    ]{tabs/movement-rate-regions-3-mean.csv}
+  \end{center}
+\end{table}
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = 0.7\textwidth]{bar-regions-3-released-by-year}
+    \caption{TBD}
+    \label{fig:bar-regions-3-released-by-year}
+\end{figure}
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = 0.7\textwidth]{bar-regions-3-recovered-by-year}
+    \caption{TBD}
+    \label{fig:bar-regions-3-recovered-by-year}
+\end{figure}
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = 0.7\textwidth]{bar-regions-3-duration-at-liberty}
+    \caption{TBD}
+    \label{fig:bar-regions-3-duration-at-liberty}
+\end{figure}
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = 0.7\textwidth]{bar-regions-3-fishing-priors-posteriors}
+    \caption{TBD}
+    \label{fig:bar-regions-3-fishing-priors-posteriors}
+\end{figure}
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = 0.7\textwidth]{bar-regions-3-mortality-priors-posteriors}
+    \caption{TBD}
+    \label{fig:bar-regions-3-mortality-priors-posteriors}
+\end{figure}
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = 0.7\textwidth]{bar-regions-3-reporting-priors-posteriors}
+    \caption{TBD}
+    \label{fig:bar-regions-3-reporting-priors-posteriors}
+\end{figure}
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = 0.7\textwidth]{bar-regions-3-size}
+    \caption{TBD}
+    \label{fig:bar-regions-3-size}
+\end{figure}
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = 0.7\textwidth]{bar-regions-3-size-no-duration-constraint}
+    \caption{TBD}
+    \label{fig:bar-regions-3-size-no-duration-constraint}
+\end{figure}
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = 0.7\textwidth]{bar-regions-3-size-no-recovery-transition}
+    \caption{TBD}
+    \label{fig:bar-regions-3-size-no-recovery-transition}
+\end{figure}
+
+
+
 
 \newpage
 \bibliography{refs}
