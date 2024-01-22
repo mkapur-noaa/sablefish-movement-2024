@@ -38,6 +38,7 @@ Rplots.pdf
 *.log
 *.odt
 *.out
+manuscript.pdf
 
 # Org
 *org#

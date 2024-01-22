@@ -1,0 +1,91 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{bm}
+\usepackage{lineno}
+\renewcommand\linenumberfont{\normalfont\bfseries\small\color{darkgrey}}
+\usepackage{booktabs}
+\usepackage[round]{natbib}
+\bibliographystyle{plainnat}
+\usepackage{authblk}
+% Linux Libertine:
+\usepackage{textcomp}
+\usepackage[sb]{libertine}
+\usepackage[varqu,varl]{inconsolata}% sans serif typewriter
+\usepackage[libertine,bigdelims,vvarbb]{newtxmath} % bb from STIX
+\usepackage[cal=boondoxo]{mathalfa} % mathcal
+\useosf % osf for text, not math
+\usepackage[supstfm=libertinesups,%
+  supscaled=1.2,%
+  raised=-.13em]{superiors}
+\usepackage{setspace}
+\usepackage{siunitx}
+\usepackage[section]{placeins} % Keep floats (figs, tabs, eqns) in the right section
+% I assume these all work together to make nice colour
+\usepackage[dvipsnames]{xcolor}
+\definecolor{niceblue}{HTML}{236899} % Depends \usepackage[dvipsnames]{xcolor}
+\definecolor{darkgrey}{HTML}{A9A9A9} % Depends \usepackage[dvipsnames]{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=black,      
+    urlcolor=niceblue,
+    citecolor=niceblue,
+    linkbordercolor = white
+}
+% End nice colour
+\usepackage{pgfplotstable} % For tables
+\pgfplotsset{compat=1.16} % For tables
+\input{./vals/values}
+\usepackage{graphicx}
+\graphicspath{ {./figs/} }
+
+% Title
+\title{}
+
+% Authors
+\author[1]{Luke A. Rogers}
+\author[]{...}
+
+%Affiliations
+\affil[1]{Pacific Biological Station, Fisheries and Oceans Canada, Nanaimo, BC, V9T 6N7, Canada}
+
+\begin{document}
+
+\maketitle
+\linenumbers
+\setcounter{secnumdepth}{0}
+
+\section{Co-authorship}
+Co-authorship and final author order to folow the PSTAT Data Sharing and Collaboration Agreement (\href{https://docs.google.com/document/d/1AXIhq6lO_qOPf7q67s_SiDOD6qEfih0COtxQZo7v-Hc/edit?usp=sharing}{here}).
+
+\section{Abstract}
+
+\section{Introduction}
+
+\section{Methods}
+
+\section{Results}
+
+\section{Discussion}
+
+\section{Acknowledgements}
+
+\section{Figures}
+
+\section{Tables}
+
+\newpage
+\bibliography{refs}
+
+% End
+\end{document}
+
+
+
+
+
+
+
