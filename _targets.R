@@ -1524,7 +1524,7 @@ list(
   # Plot map network regions 6 -------------------------------------------------
   list(
     tar_target(
-      map_network_regions_6,
+      map_regions_6_network,
       plot_network(
         regions = sf_omregions,
         rates = mmmstan_regions_6_mean$summary$movement_rate,
