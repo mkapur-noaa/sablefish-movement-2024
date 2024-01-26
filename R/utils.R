@@ -327,7 +327,7 @@ write_data <- function (..., path = "data") {
   file.path(path, fs::path_ext_set(name, ".rda"))
 }
 
-write_movement_rate_csv <- function (m, name, path = "ms/tabs") {
+write_movement_rate_csv <- function (m, name, digits = 2, path = "ms/tabs") {
 
   # Check arguments ------------------------------------------------------------
 
@@ -348,11 +348,11 @@ write_movement_rate_csv <- function (m, name, path = "ms/tabs") {
   rates <- m %>%
     dplyr::mutate(
       value = paste0(
-        round_to_character(mean, 3, tex = TRUE),
+        round_to_character(mean, digits, tex = TRUE),
         " (",
-        round_to_character(q5, 3, tex = TRUE),
+        round_to_character(q5, digits, tex = TRUE),
         "-",
-        round_to_character(q95, 3, tex = TRUE),
+        round_to_character(q95, digits, tex = TRUE),
         ")"
       )
     ) %>%
