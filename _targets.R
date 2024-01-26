@@ -1556,90 +1556,90 @@ list(
       format = "file"
     )
   ),
-  # Plot heat regions 3 mean ---------------------------------------------------
-  list(
-    tar_target(
-      heat_regions_3_mean,
-      plot_heat(
-        data = mmmstan_regions_3_mean$summary$movement_rate,
-        plot_name = "heat-regions-3-mean",
-        regions = toupper(names(list_regions_3)),
-        size_text = 6,
-        size_mean = 3,
-        nudge_mean = 0.1,
-        size_sd = 1.35,
-        nudge_sd = 0.15,
-        legend_name = "Movement rate",
-        xlab = NULL,
-        ylab = NULL,
-        xtext = TRUE,
-        ytext = TRUE,
-        margin_x = 0,
-        margin_y = 0,
-        width = 90,
-        height = 100,
-        dpi = figure_dpi,
-        file_type = figure_ext
-      ),
-      format = "file"
-    )
-  ),
-  # Plot heat regions 6 mean ---------------------------------------------------
-  list(
-    tar_target(
-      heat_regions_6_mean,
-      plot_heat(
-        data = mmmstan_regions_6_mean$summary$movement_rate,
-        plot_name = "heat-regions-6-mean",
-        regions = toupper(names(list_regions_6)),
-        size_text = 6,
-        size_mean = 3,
-        nudge_mean = 0.1,
-        size_sd = 1.35,
-        nudge_sd = 0.15,
-        legend_name = "Movement rate",
-        xlab = NULL,
-        ylab = NULL,
-        xtext = TRUE,
-        ytext = TRUE,
-        margin_x = 0,
-        margin_y = 0,
-        width = 90,
-        height = 100,
-        dpi = figure_dpi,
-        file_type = figure_ext
-      ),
-      format = "file"
-    )
-  ),
-  # Plot heat regions 8 mean ---------------------------------------------------
-  list(
-    tar_target(
-      heat_regions_8_mean,
-      plot_heat(
-        data = mmmstan_regions_8_mean$summary$movement_rate,
-        plot_name = "heat-regions-8-mean",
-        regions = toupper(names(list_regions_8)),
-        size_text = 6,
-        size_mean = 3,
-        nudge_mean = 0.1,
-        size_sd = 1.35,
-        nudge_sd = 0.15,
-        legend_name = "Movement rate",
-        xlab = NULL,
-        ylab = NULL,
-        xtext = TRUE,
-        ytext = TRUE,
-        margin_x = 0,
-        margin_y = 0,
-        width = 90,
-        height = 100,
-        dpi = figure_dpi,
-        file_type = figure_ext
-      ),
-      format = "file"
-    )
-  ),
+  # # Plot heat regions 3 mean ---------------------------------------------------
+  # list(
+  #   tar_target(
+  #     heat_regions_3_mean,
+  #     plot_heat(
+  #       data = mmmstan_regions_3_mean$summary$movement_rate,
+  #       plot_name = "heat-regions-3-mean",
+  #       regions = toupper(names(list_regions_3)),
+  #       size_text = 6,
+  #       size_mean = 3,
+  #       nudge_mean = 0.1,
+  #       size_sd = 1.35,
+  #       nudge_sd = 0.15,
+  #       legend_name = "Movement rate",
+  #       xlab = NULL,
+  #       ylab = NULL,
+  #       xtext = TRUE,
+  #       ytext = TRUE,
+  #       margin_x = 0,
+  #       margin_y = 0,
+  #       width = 90,
+  #       height = 100,
+  #       dpi = figure_dpi,
+  #       file_type = figure_ext
+  #     ),
+  #     format = "file"
+  #   )
+  # ),
+  # # Plot heat regions 6 mean ---------------------------------------------------
+  # list(
+  #   tar_target(
+  #     heat_regions_6_mean,
+  #     plot_heat(
+  #       data = mmmstan_regions_6_mean$summary$movement_rate,
+  #       plot_name = "heat-regions-6-mean",
+  #       regions = toupper(names(list_regions_6)),
+  #       size_text = 6,
+  #       size_mean = 3,
+  #       nudge_mean = 0.1,
+  #       size_sd = 1.35,
+  #       nudge_sd = 0.15,
+  #       legend_name = "Movement rate",
+  #       xlab = NULL,
+  #       ylab = NULL,
+  #       xtext = TRUE,
+  #       ytext = TRUE,
+  #       margin_x = 0,
+  #       margin_y = 0,
+  #       width = 90,
+  #       height = 100,
+  #       dpi = figure_dpi,
+  #       file_type = figure_ext
+  #     ),
+  #     format = "file"
+  #   )
+  # ),
+  # # Plot heat regions 8 mean ---------------------------------------------------
+  # list(
+  #   tar_target(
+  #     heat_regions_8_mean,
+  #     plot_heat(
+  #       data = mmmstan_regions_8_mean$summary$movement_rate,
+  #       plot_name = "heat-regions-8-mean",
+  #       regions = toupper(names(list_regions_8)),
+  #       size_text = 6,
+  #       size_mean = 3,
+  #       nudge_mean = 0.1,
+  #       size_sd = 1.35,
+  #       nudge_sd = 0.15,
+  #       legend_name = "Movement rate",
+  #       xlab = NULL,
+  #       ylab = NULL,
+  #       xtext = TRUE,
+  #       ytext = TRUE,
+  #       margin_x = 0,
+  #       margin_y = 0,
+  #       width = 90,
+  #       height = 100,
+  #       dpi = figure_dpi,
+  #       file_type = figure_ext
+  #     ),
+  #     format = "file"
+  #   )
+  # ),
   # Plot bar regions 3 size ----------------------------------------------------
   list(
     tar_target(
@@ -1675,146 +1675,146 @@ list(
     ),
     format = "file"
   ),
-  # Plot heat regions 3 mean block 1979-1994 -----------------------------------
-  list(
-    tar_target(
-      heat_regions_3_mean_block_1979_1994,
-      plot_heat(
-        data = mmmstan_regions_3_mean_block_1979_1994$summary$movement_rate,
-        plot_name = "heat-regions-3-mean-block-1979-1994",
-        regions = toupper(names(list_regions_3)),
-        size_text = 6,
-        size_mean = 3,
-        nudge_mean = 0.1,
-        size_sd = 1.35,
-        nudge_sd = 0.15,
-        legend_name = "Movement rate",
-        xlab = NULL,
-        ylab = NULL,
-        xtext = TRUE,
-        ytext = TRUE,
-        margin_x = 0,
-        margin_y = 0,
-        width = 90,
-        height = 100,
-        dpi = figure_dpi,
-        file_type = figure_ext
-      ),
-      format = "file"
-    )
-  ),
-  # Plot heat regions 3 mean block 1995-2006 -----------------------------------
-  list(
-    tar_target(
-      heat_regions_3_mean_block_1995_2006,
-      plot_heat(
-        data = mmmstan_regions_3_mean_block_1995_2006$summary$movement_rate,
-        plot_name = "heat-regions-3-mean-block-1995-2006",
-        regions = toupper(names(list_regions_3)),
-        size_text = 6,
-        size_mean = 3,
-        nudge_mean = 0.1,
-        size_sd = 1.35,
-        nudge_sd = 0.15,
-        legend_name = "Movement rate",
-        xlab = NULL,
-        ylab = NULL,
-        xtext = TRUE,
-        ytext = TRUE,
-        margin_x = 0,
-        margin_y = 0,
-        width = 90,
-        height = 100,
-        dpi = figure_dpi,
-        file_type = figure_ext
-      ),
-      format = "file"
-    )
-  ),
-  # Plot heat regions 3 mean block 2007-2017 -----------------------------------
-  list(
-    tar_target(
-      heat_regions_3_mean_block_2007_2017,
-      plot_heat(
-        data = mmmstan_regions_3_mean_block_2007_2017$summary$movement_rate,
-        plot_name = "heat-regions-3-mean-block-2007-2017",
-        regions = toupper(names(list_regions_3)),
-        size_text = 6,
-        size_mean = 3,
-        nudge_mean = 0.1,
-        size_sd = 1.35,
-        nudge_sd = 0.15,
-        legend_name = "Movement rate",
-        xlab = NULL,
-        ylab = NULL,
-        xtext = TRUE,
-        ytext = TRUE,
-        margin_x = 0,
-        margin_y = 0,
-        width = 90,
-        height = 100,
-        dpi = figure_dpi,
-        file_type = figure_ext
-      ),
-      format = "file"
-    )
-  ),
-  # Plot heat regions 3 mean 3x cv_fishing_rate --------------------------------
-  list(
-    tar_target(
-      heat_regions_3_mean_3x_cv_fishing_rate,
-      plot_heat(
-        data = mmmstan_regions_3_mean_3x_cv_fishing_rate$summary$movement_rate,
-        plot_name = "heat-regions-3-mean-3x-cv-fishing-rate",
-        regions = toupper(names(list_regions_3)),
-        size_text = 6,
-        size_mean = 3,
-        nudge_mean = 0.1,
-        size_sd = 1.35,
-        nudge_sd = 0.15,
-        legend_name = "Movement rate",
-        xlab = NULL,
-        ylab = NULL,
-        xtext = TRUE,
-        ytext = TRUE,
-        margin_x = 0,
-        margin_y = 0,
-        width = 90,
-        height = 100,
-        dpi = figure_dpi,
-        file_type = figure_ext
-      ),
-      format = "file"
-    )
-  ),
-  # Plot heat regions 3 mean 3x sd_reporting_rate ------------------------------
-  list(
-    tar_target(
-      heat_regions_3_mean_3x_sd_reporting_rate,
-      plot_heat(
-        data = mmmstan_regions_3_mean_3x_sd_reporting_rate$summary$movement_rate,
-        plot_name = "heat-regions-3-mean-3x-sd-reporting-rate",
-        regions = toupper(names(list_regions_3)),
-        size_text = 6,
-        size_mean = 3,
-        nudge_mean = 0.1,
-        size_sd = 1.35,
-        nudge_sd = 0.15,
-        legend_name = "Movement rate",
-        xlab = NULL,
-        ylab = NULL,
-        xtext = TRUE,
-        ytext = TRUE,
-        margin_x = 0,
-        margin_y = 0,
-        width = 90,
-        height = 100,
-        dpi = figure_dpi,
-        file_type = figure_ext
-      ),
-      format = "file"
-    )
-  ),
+  # # Plot heat regions 3 mean block 1979-1994 -----------------------------------
+  # list(
+  #   tar_target(
+  #     heat_regions_3_mean_block_1979_1994,
+  #     plot_heat(
+  #       data = mmmstan_regions_3_mean_block_1979_1994$summary$movement_rate,
+  #       plot_name = "heat-regions-3-mean-block-1979-1994",
+  #       regions = toupper(names(list_regions_3)),
+  #       size_text = 6,
+  #       size_mean = 3,
+  #       nudge_mean = 0.1,
+  #       size_sd = 1.35,
+  #       nudge_sd = 0.15,
+  #       legend_name = "Movement rate",
+  #       xlab = NULL,
+  #       ylab = NULL,
+  #       xtext = TRUE,
+  #       ytext = TRUE,
+  #       margin_x = 0,
+  #       margin_y = 0,
+  #       width = 90,
+  #       height = 100,
+  #       dpi = figure_dpi,
+  #       file_type = figure_ext
+  #     ),
+  #     format = "file"
+  #   )
+  # ),
+  # # Plot heat regions 3 mean block 1995-2006 -----------------------------------
+  # list(
+  #   tar_target(
+  #     heat_regions_3_mean_block_1995_2006,
+  #     plot_heat(
+  #       data = mmmstan_regions_3_mean_block_1995_2006$summary$movement_rate,
+  #       plot_name = "heat-regions-3-mean-block-1995-2006",
+  #       regions = toupper(names(list_regions_3)),
+  #       size_text = 6,
+  #       size_mean = 3,
+  #       nudge_mean = 0.1,
+  #       size_sd = 1.35,
+  #       nudge_sd = 0.15,
+  #       legend_name = "Movement rate",
+  #       xlab = NULL,
+  #       ylab = NULL,
+  #       xtext = TRUE,
+  #       ytext = TRUE,
+  #       margin_x = 0,
+  #       margin_y = 0,
+  #       width = 90,
+  #       height = 100,
+  #       dpi = figure_dpi,
+  #       file_type = figure_ext
+  #     ),
+  #     format = "file"
+  #   )
+  # ),
+  # # Plot heat regions 3 mean block 2007-2017 -----------------------------------
+  # list(
+  #   tar_target(
+  #     heat_regions_3_mean_block_2007_2017,
+  #     plot_heat(
+  #       data = mmmstan_regions_3_mean_block_2007_2017$summary$movement_rate,
+  #       plot_name = "heat-regions-3-mean-block-2007-2017",
+  #       regions = toupper(names(list_regions_3)),
+  #       size_text = 6,
+  #       size_mean = 3,
+  #       nudge_mean = 0.1,
+  #       size_sd = 1.35,
+  #       nudge_sd = 0.15,
+  #       legend_name = "Movement rate",
+  #       xlab = NULL,
+  #       ylab = NULL,
+  #       xtext = TRUE,
+  #       ytext = TRUE,
+  #       margin_x = 0,
+  #       margin_y = 0,
+  #       width = 90,
+  #       height = 100,
+  #       dpi = figure_dpi,
+  #       file_type = figure_ext
+  #     ),
+  #     format = "file"
+  #   )
+  # ),
+  # # Plot heat regions 3 mean 3x cv_fishing_rate --------------------------------
+  # list(
+  #   tar_target(
+  #     heat_regions_3_mean_3x_cv_fishing_rate,
+  #     plot_heat(
+  #       data = mmmstan_regions_3_mean_3x_cv_fishing_rate$summary$movement_rate,
+  #       plot_name = "heat-regions-3-mean-3x-cv-fishing-rate",
+  #       regions = toupper(names(list_regions_3)),
+  #       size_text = 6,
+  #       size_mean = 3,
+  #       nudge_mean = 0.1,
+  #       size_sd = 1.35,
+  #       nudge_sd = 0.15,
+  #       legend_name = "Movement rate",
+  #       xlab = NULL,
+  #       ylab = NULL,
+  #       xtext = TRUE,
+  #       ytext = TRUE,
+  #       margin_x = 0,
+  #       margin_y = 0,
+  #       width = 90,
+  #       height = 100,
+  #       dpi = figure_dpi,
+  #       file_type = figure_ext
+  #     ),
+  #     format = "file"
+  #   )
+  # ),
+  # # Plot heat regions 3 mean 3x sd_reporting_rate ------------------------------
+  # list(
+  #   tar_target(
+  #     heat_regions_3_mean_3x_sd_reporting_rate,
+  #     plot_heat(
+  #       data = mmmstan_regions_3_mean_3x_sd_reporting_rate$summary$movement_rate,
+  #       plot_name = "heat-regions-3-mean-3x-sd-reporting-rate",
+  #       regions = toupper(names(list_regions_3)),
+  #       size_text = 6,
+  #       size_mean = 3,
+  #       nudge_mean = 0.1,
+  #       size_sd = 1.35,
+  #       nudge_sd = 0.15,
+  #       legend_name = "Movement rate",
+  #       xlab = NULL,
+  #       ylab = NULL,
+  #       xtext = TRUE,
+  #       ytext = TRUE,
+  #       margin_x = 0,
+  #       margin_y = 0,
+  #       width = 90,
+  #       height = 100,
+  #       dpi = figure_dpi,
+  #       file_type = figure_ext
+  #     ),
+  #     format = "file"
+  #   )
+  # ),
   # Plot bar regions 3 size no duration constraint -----------------------------
   list(
     tar_target(
