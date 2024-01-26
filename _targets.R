@@ -40,6 +40,10 @@ list(
     tar_target(figure_dpi, 600),
     tar_target(figure_ext, ".png")
   ),
+  # Define table options -------------------------------------------------------
+  list(
+    tar_target(table_digits, 2)
+  ),
   # Define years ---------------------------------------------------------------
   list(
     tar_target(year_start, 1979), # Year of first tag released
@@ -1144,6 +1148,7 @@ list(
       write_movement_rate_csv(
         m = mmmstan_regions_3_mean$summary$movement_rate,
         name = "movement-rate-regions-3-mean",
+        digits = table_digits,
         path = "ms/tabs"
       ),
       format = "file"
@@ -1153,6 +1158,7 @@ list(
       write_movement_rate_csv(
         m = mmmstan_regions_6_mean$summary$movement_rate,
         name = "movement-rate-regions-6-mean",
+        digits = table_digits,
         path = "ms/tabs"
       ),
       format = "file"
@@ -1162,6 +1168,7 @@ list(
       write_movement_rate_csv(
         m = mmmstan_regions_8_mean$summary$movement_rate,
         name = "movement-rate-regions-8-mean",
+        digits = table_digits,
         path = "ms/tabs"
       ),
       format = "file"
@@ -1172,6 +1179,7 @@ list(
       write_movement_rate_csv(
         m = mmmstan_regions_3_mean_block_1979_1994$summary$movement_rate,
         name = "movement-rate-regions-3-mean-block-1979-1994",
+        digits = table_digits,
         path = "ms/tabs"
       ),
       format = "file"
@@ -1181,6 +1189,7 @@ list(
       write_movement_rate_csv(
         m = mmmstan_regions_3_mean_block_1995_2006$summary$movement_rate,
         name = "movement-rate-regions-3-mean-block-1995-2006",
+        digits = table_digits,
         path = "ms/tabs"
       ),
       format = "file"
@@ -1190,6 +1199,7 @@ list(
       write_movement_rate_csv(
         m = mmmstan_regions_3_mean_block_2007_2017$summary$movement_rate,
         name = "movement-rate-regions-3-mean-block-2007-2017",
+        digits = table_digits,
         path = "ms/tabs"
       ),
       format = "file"
@@ -1200,6 +1210,7 @@ list(
       write_movement_rate_csv(
         m = mmmstan_regions_3_mean_3x_cv_fishing_rate$summary$movement_rate,
         name = "movement-rate-regions-3-mean-3x-cv-fishing-rate",
+        digits = table_digits,
         path = "ms/tabs"
       ),
       format = "file"
@@ -1209,6 +1220,7 @@ list(
       write_movement_rate_csv(
         m = mmmstan_regions_3_mean_3x_sd_reporting_rate$summary$movement_rate,
         name = "movement-rate-regions-3-mean-3x-sd-reporting-rate",
+        digits = table_digits,
         path = "ms/tabs"
       ),
       format = "file"
@@ -1516,15 +1528,15 @@ list(
       plot_network(
         regions = sf_omregions,
         rates = mmmstan_regions_6_mean$summary$movement_rate,
-        plot_name = "map-network-regions-6",
+        plot_name = "map-regions-6-network",
         size_short = 1.75,
         size_line = 0.25,
         size_text = 5,
         scale_edge_width_min = 0.2,
-        scale_edge_width_max = 2,
+        scale_edge_width_max = 1.2,
         size_label = 3,
-        hjust_label = c(0.5, 0.3, 0.8, -0.3, 1.3, -0.2, 1.15, -0.1, 1.3, 0.05),
-        vjust_label = c(1.5, -0.55, 1.4, -0.5, 1, 0.2, 0, 0.5, 0, -0.4),
+        hjust_label = c(0.5, 0.3, 1.1, -0.1, 1.5, -0.75, 1.15, -0.45, 1.5, 0.05),
+        vjust_label = c(1.5, -0.55, 1.4, -2.3, 1.2, -0.15, 0, 1.7, 0, -0.4),
         strength = 4,
         color_land = "white",
         color_ocean = "grey96",
@@ -1636,41 +1648,6 @@ list(
         data = mmmstan_regions_3_size$summary$movement_rate,
         plot_name = "bar-regions-3-size",
         regions = toupper(names(list_regions_3)),
-        xvar = "l",
-        xlab = "Length class",
-        ylab = "Annual movement rate",
-        x_text = c("Small", "Large"),
-        x_breaks = 1:2,
-        y_text = as.character(seq(0, 1, 0.25)),
-        y_breaks = seq(0, 1, 0.25),
-        x_angle = 0,
-        hjust = 0.5,
-        vjust = 0.5,
-        size_title = 8,
-        size_strip = 8,
-        size_text = 6,
-        size_error = 0.3,
-        panel_spacing = 1,
-        xmin = NA,
-        xmax = NA,
-        ymin = 0.0,
-        ymax = 1.0,
-        width = 190,
-        height = 170,
-        dpi = figure_dpi,
-        file_type = figure_ext
-      )
-    ),
-    format = "file"
-  ),
-  # Plot bar regions 6 size ----------------------------------------------------
-  list(
-    tar_target(
-      bar_regions_6_size,
-      plot_cols(
-        data = mmmstan_regions_6_size$summary$movement_rate,
-        plot_name = "bar-regions-6-size",
-        regions = toupper(names(list_regions_6)),
         xvar = "l",
         xlab = "Length class",
         ylab = "Annual movement rate",
