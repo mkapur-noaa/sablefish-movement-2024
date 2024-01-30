@@ -3,7 +3,9 @@
 \usepackage[margin=2cm]{geometry}
 \usepackage{amsmath, amssymb}
 \usepackage{bm}
+\usepackage{gensymb}
 \usepackage{lineno}
+\usepackage{lscape}
 \renewcommand\linenumberfont{\normalfont\bfseries\small\color{darkgrey}}
 \usepackage{booktabs}
 \usepackage[round]{natbib}
@@ -91,53 +93,39 @@ Co-authorship and final author order to folow the PSTAT Data Sharing and Collabo
 
 \section{Figures}
 
-% map-network-regions-6
+% map-regions-6-network
 \begin{figure}[htb]
     \centering
     \includegraphics[width = 0.7\textwidth]{map-regions-6-network}
-    \caption{TBD}
+    \caption{Annual sablefish movement rates among six biogeographic regions in the northeast Pacific Ocean. Shown are 1\degree{} (between neighbouring regions: black arrows) percentage movement rates (per fish per year). WAK: West Alaska; EAK: East Alaska; NBC: North British Columbia; SBC: South British Columbia; NCC: North California Current; SCC: South California Current.}
     \label{fig:map-network-regions-6}
 \end{figure}
 
-% \begin{figure}[htb]
-%     \centering
-%     \includegraphics[width = 0.7\textwidth]{map-regions-6}
-%     \caption{TBD}
-%     \label{fig:map-regions-6}
-% \end{figure}
-
 \begin{figure}[htb]
     \centering
-    \includegraphics[width = 0.7\textwidth]{map-regions-3-released}
-    \caption{TBD}
-    \label{fig:map-regions-3-released}
-\end{figure}
-
-\begin{figure}[htb]
-    \centering
-    \includegraphics[width = 0.4\textwidth]{map-regions-3-recovered}
-    \caption{TBD}
-    \label{fig:map-regions-3-recovered}
+    \includegraphics[width = 0.4\textwidth]{map-regions-3-released-recovered}
+    \caption{Tagged sablefish released (top panel; coastwide) and recovered (bottom three panels by jurisdiction released) during 1979--2018. AK: Alaska; BC: British Columbia; CC: California Current.}
+    \label{fig:map-regions-3-released-recovered}
 \end{figure}
 
 \begin{figure}[htb]
     \centering
     \includegraphics[width = 0.7\textwidth]{bar-regions-3-released-by-size}
-    \caption{TBD}
+    \caption{Sablefish released length (fork length: mm) by jurisdiction. AK: Alaska; BC: British Columbia; CC: California Current. Vertical lines show minimum and maximum sablefish length included in the study (solid lines; 400--800 mm) and division between small and large sablefish size classes (dashed line; 550 mm).}
     \label{fig:bar-regions-3-released-by-size}
 \end{figure}
 
 \begin{figure}[htb]
     \centering
     \includegraphics[width = 0.7\textwidth]{bar-abundance-exchange}
-    \caption{TBD}
+    \caption{Sablefish abundance exchange (millions; 90\%{} CI) between jurisdictions estimated from annual 1\degree{} movement rates with uncertainty and numbers of fish (age 2+) with uncertainty. Annual movement rates were estimated by year block: 1979--1994; 1995--2006; 2007--2017. Top panel: sablefish movement from BC to AK (above horizontal axis) and from AK to BC (below horizontal axis). Bottom panel: sablefish movement from CC to BC (above horizontal axis) and from BC to CC (below horizontal axis). AK: Alaska; BC: British Columbia; CC: California Current.}
     \label{fig:bar-abundance-exchange}
 \end{figure}
 
 \begin{figure}[htb]
     \centering
     \includegraphics[width = 0.7\textwidth]{bar-percent-attributable}
-    \caption{TBD}
+    \caption{Proportion of sablefish abundance (90\%{} CI) within jurisdiction attributable to 1\degree{} movement between jurisdictions. Estimated from annual numbers of fish (age 2+) with uncertainty and annual movement rates with uncertainty. Annual movement rates were estimated by year block: 1979--1994; 1995--2006; 2007--2017. Top panel: proportion of numbers of sablefish in AK attributable to movement from BC (above horizontal axis) and proportion in BC attributable to movement from AK (below horizontal axis). Bottom panel: proportion of numbers of sablefish in BC attributable to movement from CC (above horizontal axis) and proportion in CC attributable to movement from BC (below horizontal axis). AK: Alaska; BC: British Columbia; CC: California Current.}
     \label{fig:bar-percent-attributable}
 \end{figure}
 
@@ -146,7 +134,7 @@ Co-authorship and final author order to folow the PSTAT Data Sharing and Collabo
 
 \begin{table}[h]
   \begin{center}
-  \caption{Sablefish movement rates between regions (per fish per year).}
+  \caption{Sablefish mean annual movement rates (per fish per year; 90\%{} CI) between six biogeographic regions in the northeast Pacific Ocean. WAK: West Alaska; EAK: East Alaska; NBC: North British Columbia; SBC: South British Columbia; NCC: North California Current; SCC: South California Current.}
   \label{tab:movement-rate-regions-6-mean}
     \pgfplotstabletypeset[
       col sep=comma,                       % Commas separate .csv values
@@ -158,37 +146,26 @@ Co-authorship and final author order to folow the PSTAT Data Sharing and Collabo
 
 \section{Supplementary information}
 
-% Example table script
-\begin{table}[h]
-  \begin{center}
-  \caption{Sablefish movement rates between regions (per fish per year).}
-  \label{tab:movement-rate-regions-3-mean}
-    \pgfplotstabletypeset[
-      col sep=comma,                       % Commas separate .csv values
-      columns/{0}/.style={column name={}}, % Replace autofilled column name by " "
-      string type                          % Expect characters
-    ]{tabs/movement-rate-regions-3-mean.csv}
-  \end{center}
-\end{table}
+\subsection{Supplementary figures}
 
 \begin{figure}[htb]
     \centering
-    \includegraphics[width = 0.7\textwidth]{bar-regions-3-released-by-year}
-    \caption{TBD}
+    \includegraphics[width = 0.4\textwidth]{bar-regions-3-released-by-year}
+    \caption{Number of tagged sablefish released by jurisdiction by year. AK: Alaska; BC: British Columbia; CC: California Current.}
     \label{fig:bar-regions-3-released-by-year}
 \end{figure}
 
 \begin{figure}[htb]
     \centering
     \includegraphics[width = 0.7\textwidth]{bar-regions-3-recovered-by-year}
-    \caption{TBD}
+    \caption{Number of tagged sablefish recovered by jurisdiction released (panel rows) and jurisdiction recovered (panel columns) by year. Green: recovered within 3 years of release; Orange: recovered more than three years after release. AK: Alaska; BC: British Columbia; CC: California Current.}
     \label{fig:bar-regions-3-recovered-by-year}
 \end{figure}
 
 \begin{figure}[htb]
     \centering
     \includegraphics[width = 0.7\textwidth]{bar-regions-3-duration-at-liberty}
-    \caption{TBD}
+    \caption{Number of tagged sablefish recovered by jurisdiction released (panel rows) and duration at liberty (days) between date released and recovered. Dashed line: 3 years duration at liberty. AK: Alaska; BC: British Columbia; CC: California Current.}
     \label{fig:bar-regions-3-duration-at-liberty}
 \end{figure}
 
@@ -201,14 +178,14 @@ Co-authorship and final author order to folow the PSTAT Data Sharing and Collabo
 
 \begin{figure}[htb]
     \centering
-    \includegraphics[width = 0.7\textwidth]{bar-regions-3-mortality-priors-posteriors}
+    \includegraphics[width = 0.4\textwidth]{bar-regions-3-mortality-priors-posteriors}
     \caption{TBD}
     \label{fig:bar-regions-3-mortality-priors-posteriors}
 \end{figure}
 
 \begin{figure}[htb]
     \centering
-    \includegraphics[width = 0.7\textwidth]{bar-regions-3-reporting-priors-posteriors}
+    \includegraphics[width = 0.4\textwidth]{bar-regions-3-reporting-priors-posteriors}
     \caption{TBD}
     \label{fig:bar-regions-3-reporting-priors-posteriors}
 \end{figure}
@@ -234,7 +211,108 @@ Co-authorship and final author order to folow the PSTAT Data Sharing and Collabo
     \label{fig:bar-regions-3-size-no-recovery-transition}
 \end{figure}
 
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = 0.7\textwidth]{map-regions-6}
+    \caption{TBD}
+    \label{fig:map-regions-6}
+\end{figure}
 
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width = 0.7\textwidth]{map-regions-8}
+    \caption{TBD}
+    \label{fig:map-regions-8}
+\end{figure}
+
+
+\subsection{Supplementary tables}
+
+\begin{table}[h]
+  \begin{center}
+  \caption{Sablefish movement rates between regions (per fish per year).}
+  \label{tab:movement-rate-regions-3-mean}
+    \pgfplotstabletypeset[
+      col sep=comma,                       % Commas separate .csv values
+      columns/{0}/.style={column name={}}, % Replace autofilled column name by " "
+      string type                          % Expect characters
+    ]{tabs/movement-rate-regions-3-mean.csv}
+  \end{center}
+\end{table}
+
+\begin{landscape}
+\begin{table}[h]
+  \begin{center}
+  \caption{Sablefish movement rates between regions (per fish per year).}
+  \label{tab:movement-rate-regions-8-mean}
+    \pgfplotstabletypeset[
+      col sep=comma,                       % Commas separate .csv values
+      columns/{0}/.style={column name={}}, % Replace autofilled column name by " "
+      string type                          % Expect characters
+    ]{tabs/movement-rate-regions-8-mean.csv}
+  \end{center}
+\end{table}
+\end{landscape}
+
+\begin{table}[h]
+  \begin{center}
+  \caption{Sablefish movement rates between regions (per fish per year).}
+  \label{tab:movement-rate-regions-3-mean-3x-cv-fishing-rate}
+    \pgfplotstabletypeset[
+      col sep=comma,                       % Commas separate .csv values
+      columns/{0}/.style={column name={}}, % Replace autofilled column name by " "
+      string type                          % Expect characters
+    ]{tabs/movement-rate-regions-3-mean-3x-cv-fishing-rate.csv}
+  \end{center}
+\end{table}
+
+\begin{table}[h]
+  \begin{center}
+  \caption{Sablefish movement rates between regions (per fish per year).}
+  \label{tab:movement-rate-regions-3-mean-3x-sd-reporting-rate}
+    \pgfplotstabletypeset[
+      col sep=comma,                       % Commas separate .csv values
+      columns/{0}/.style={column name={}}, % Replace autofilled column name by " "
+      string type                          % Expect characters
+    ]{tabs/movement-rate-regions-3-mean-3x-sd-reporting-rate.csv}
+  \end{center}
+\end{table}
+
+\begin{table}[h]
+  \begin{center}
+  \caption{Sablefish movement rates between regions (per fish per year).}
+  \label{tab:movement-rate-regions-3-mean-block-1979-1994}
+    \pgfplotstabletypeset[
+      col sep=comma,                       % Commas separate .csv values
+      columns/{0}/.style={column name={}}, % Replace autofilled column name by " "
+      string type                          % Expect characters
+    ]{tabs/movement-rate-regions-3-mean-block-1979-1994.csv}
+  \end{center}
+\end{table}
+
+\begin{table}[h]
+  \begin{center}
+  \caption{Sablefish movement rates between regions (per fish per year).}
+  \label{tab:movement-rate-regions-3-mean-block-1995-2006}
+    \pgfplotstabletypeset[
+      col sep=comma,                       % Commas separate .csv values
+      columns/{0}/.style={column name={}}, % Replace autofilled column name by " "
+      string type                          % Expect characters
+    ]{tabs/movement-rate-regions-3-mean-block-1995-2006.csv}
+  \end{center}
+\end{table}
+
+\begin{table}[h]
+  \begin{center}
+  \caption{Sablefish movement rates between regions (per fish per year).}
+  \label{tab:movement-rate-regions-3-mean-block-2007-2017}
+    \pgfplotstabletypeset[
+      col sep=comma,                       % Commas separate .csv values
+      columns/{0}/.style={column name={}}, % Replace autofilled column name by " "
+      string type                          % Expect characters
+    ]{tabs/movement-rate-regions-3-mean-block-2007-2017.csv}
+  \end{center}
+\end{table}
 
 
 \newpage
