@@ -243,7 +243,7 @@ number_to_region <- function (x, regions) {
   regions[x]
 }
 
-#' Regions 3 to regions 8
+#' Regions 8 to regions 3
 #'
 #' @param x [numeric()]
 #'
