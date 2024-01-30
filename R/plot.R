@@ -1485,7 +1485,7 @@ plot_released_by_year <- function (plot_name,
       name = "Year"
     ) +
     ggplot2::scale_y_continuous(
-      name = "Tags released",
+      name = "Tagged sablefish released",
       position = "right"
     ) +
     ggsidekick::theme_sleek() +
@@ -1627,7 +1627,7 @@ plot_recovered_by_year <- function (plot_name,
       name = "Year"
     ) +
     ggplot2::scale_y_continuous(
-      name = "Tags recovered",
+      name = "Tagged sablefish recovered",
       position = "right"
     ) +
     ggsidekick::theme_sleek() +
