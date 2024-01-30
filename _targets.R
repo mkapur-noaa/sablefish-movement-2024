@@ -1920,8 +1920,8 @@ list(
         regions = toupper(names(list_regions_3)),
         bar_width = 0.75,
         position_dodge = 0.8,
-        width = 190,
-        height = 100,
+        width = 90,
+        height = 60,
         dpi = 300,
         file_type = ".png"
       ),
@@ -1940,8 +1940,8 @@ list(
         regions = toupper(names(list_regions_3)),
         bar_width = 0.75,
         position_dodge = 0.8,
-        width = 190,
-        height = 100,
+        width = 90,
+        height = 60,
         dpi = 300,
         file_type = ".png"
       ),
@@ -1961,8 +1961,8 @@ list(
         year_xmax = 2020,
         regions = toupper(names(list_regions_3)),
         bar_width = 0.75,
-        width = 190,
-        height = 100,
+        width = 90,
+        height = 60,
         dpi = 300,
         file_type = ".png"
       ),
