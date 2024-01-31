@@ -8,9 +8,6 @@ path <- "~/github/sablefish-data/data/fishing_rates.rda"
 
 # Assign value
 fishing_rate <- read_from_path(path = path) %>%
-  dplyr::mutate(
-    fishing_rate = -log(1 - fishing_rate)
-  ) %>%
   dplyr::select(
     spatial,
     name,

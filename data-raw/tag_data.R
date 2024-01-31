@@ -17,23 +17,15 @@ tag_data <- tags_released %>%
     tags_recovered,
     by = c(
       "tag_id",
-      "released_date",
-      "released_length",
-      "released_region",
-      "released_omregion",
+      "date_released",
+      "size_released",
+      "region_released_3",
+      "region_released_6",
+      "region_released_8",
       "source"
     )
-  ) %>%
-  dplyr::rename(
-    date_released = .data$released_date,
-    date_recovered = .data$recovered_date,
-    region_released = .data$released_region,
-    region_recovered = .data$recovered_region,
-    omregion_released = .data$released_omregion,
-    omregion_recovered = .data$recovered_omregion,
-    size_released = .data$released_length,
-    size_recovered = .data$recovered_length
   )
 
 # Write to data/
 write_data(tag_data)
+
