@@ -54,7 +54,7 @@ list(
   list(
     tar_target(
       list_regions_3,
-      list(ak = 1:6, bc = 7, cc = 8)
+      list(ak = 1, bc = 2, cc = 3)
     ),
     tar_target(
       list_regions_6,
@@ -86,12 +86,13 @@ list(
   list(
     tar_target(colname_date_released, "date_released"),
     tar_target(colname_date_recovered, "date_recovered"),
-    tar_target(colname_region_released, "region_released"),
-    tar_target(colname_region_recovered, "region_recovered"),
+    tar_target(colname_region_released_3, "region_released_3"),
+    tar_target(colname_region_released_6, "region_released_6"),
+    tar_target(colname_region_released_8, "region_released_8"),
+    tar_target(colname_region_recovered_3, "region_recovered_3"),
+    tar_target(colname_region_recovered_6, "region_recovered_6"),
+    tar_target(colname_region_recovered_8, "region_recovered_8"),
     tar_target(colname_size_released, "size_released"),
-    # Operating model regions
-    tar_target(colname_omregion_released, "omregion_released"),
-    tar_target(colname_omregion_recovered, "omregion_recovered"),
     list()
   ),
   # Define movement step diagonal priors ---------------------------------------
@@ -171,13 +172,13 @@ list(
       format = "file"
     ),
     tar_target(
-      watch_sf_regions,
-      "data/sf_regions.rda",
+      watch_sf_regions_6,
+      "data/sf_regions_6.rda",
       format = "file"
     ),
     tar_target(
-      watch_sf_omregions,
-      "data/sf_omregions.rda",
+      watch_sf_regions_8,
+      "data/sf_regions_8.rda",
       format = "file"
     ),
     list()
@@ -186,8 +187,8 @@ list(
   list(
     tar_target(tag_data, read_from_path(watch_tag_data)),
     tar_target(abundance, read_from_path(watch_abundance)),
-    tar_target(sf_regions, read_from_path(watch_sf_regions)),
-    tar_target(sf_omregions, read_from_path(watch_sf_omregions)),
+    tar_target(sf_regions_6, read_from_path(watch_sf_regions_6)),
+    tar_target(sf_regions_8, read_from_path(watch_sf_regions_8)),
     list()
   ),
   # Assemble tag data no recovery transition -----------------------------------
@@ -203,56 +204,31 @@ list(
         )
     )
   ),
-  # Assemble tag data 3 regions ------------------------------------------------
-  list(
-    tar_target(
-      tag_data_3,
-      tag_data %>%
-        dplyr::mutate(year_released = lubridate::year(date_released)) %>%
-        dplyr::mutate(year_recovered = lubridate::year(date_recovered)) %>%
-        dplyr::mutate(region_released = regions_8_to_3(region_released)) %>%
-        dplyr::mutate(region_recovered = regions_8_to_3(region_recovered)) %>%
-        dplyr::select(
-          tag_id,
-          year_released,
-          size_released,
-          region_released,
-          source,
-          year_recovered,
-          size_recovered,
-          region_recovered,
-          days_liberty,
-          tag_distance
-        )
-    )
-  ),
   # Assemble fishing rate priors -----------------------------------------------
   list(
     # Regions 3
     tar_target(
       mu_fishing_rate_3,
       read_from_path(watch_fishing_rate) %>%
-        dplyr::filter(.data$spatial == "omregion") %>%
-        dplyr::filter(.data$year %in% c(year_start:year_end)) %>%
-        dplyr::select(.data$year, .data$short, .data$fishing_rate) %>%
-        dplyr::mutate(short = tolower(.data$short)) %>%
-        dplyr::filter(.data$short %in% c("wak", "nbc", "ncc")) %>%
+        dplyr::filter(spatial == "regions_3") %>%
+        dplyr::filter(year %in% c(year_start:year_end)) %>%
+        dplyr::select(year, short, fishing_rate) %>%
+        dplyr::mutate(short = tolower(short)) %>%
         tidyr::pivot_wider(
-          names_from = .data$short,
-          values_from = .data$fishing_rate
+          names_from = short,
+          values_from = fishing_rate
         ) %>%
-        dplyr::rename(ak = .data$wak, bc = .data$nbc, cc = .data$ncc) %>%
-        dplyr::select(.data$ak, .data$bc, .data$cc) %>%
+        dplyr::select(-1L) %>%
         as.matrix()
     ),
     # Regions 6
     tar_target(
       mu_fishing_rate_6,
       read_from_path(watch_fishing_rate) %>%
-        dplyr::filter(.data$spatial == "omregion") %>%
-        dplyr::filter(.data$year %in% c(year_start:year_end)) %>%
-        dplyr::select(.data$year, .data$short, .data$fishing_rate) %>%
-        dplyr::mutate(short = tolower(.data$short)) %>%
+        dplyr::filter(spatial == "regions_6") %>%
+        dplyr::filter(year %in% c(year_start:year_end)) %>%
+        dplyr::select(year, short, fishing_rate) %>%
+        dplyr::mutate(short = tolower(short)) %>%
         tidyr::pivot_wider(
           names_from = .data$short,
           values_from = .data$fishing_rate
@@ -264,10 +240,10 @@ list(
     tar_target(
       mu_fishing_rate_8,
       read_from_path(watch_fishing_rate) %>%
-        dplyr::filter(.data$spatial == "region") %>%
-        dplyr::filter(.data$year %in% c(year_start:year_end)) %>%
-        dplyr::select(.data$year, .data$short, .data$fishing_rate) %>%
-        dplyr::mutate(short = tolower(.data$short)) %>%
+        dplyr::filter(spatial == "regions_8") %>%
+        dplyr::filter(year %in% c(year_start:year_end)) %>%
+        dplyr::select(year, short, fishing_rate) %>%
+        dplyr::mutate(short = tolower(short)) %>%
         tidyr::pivot_wider(
           names_from = .data$short,
           values_from = .data$fishing_rate
@@ -283,8 +259,9 @@ list(
     tar_target(
       map_regions_6,
       plot_map(
-        regions = sf_omregions,
+        regions = sf_regions_6,
         plot_name = "map-regions-6",
+        colname_regions_short = "region_short_6",
         size_short = 1.75,
         size_line = 0.25,
         size_text = 5,
@@ -311,8 +288,9 @@ list(
     tar_target(
       map_regions_8,
       plot_map(
-        regions = sf_regions,
+        regions = sf_regions_8,
         plot_name = "map-regions-8",
+        colname_regions_short = "region_short_8",
         size_short = 1.75,
         size_line = 0.25,
         size_text = 5,
@@ -352,8 +330,8 @@ list(
         days_duration_min = days_duration_min,
         colname_date_released = colname_date_released,
         colname_date_recovered = colname_date_recovered,
-        colname_region_released = colname_region_released, #
-        colname_region_recovered = colname_region_recovered, #
+        colname_region_released = colname_region_released_3, #
+        colname_region_recovered = colname_region_recovered_3, #
         colname_size_released = colname_size_released,
         # Movement index
         movement_pattern = 2L, # See: ?mmmstan::create_movement_index()
@@ -419,8 +397,8 @@ list(
         days_duration_min = days_duration_min,
         colname_date_released = colname_date_released,
         colname_date_recovered = colname_date_recovered,
-        colname_region_released = colname_omregion_released, #
-        colname_region_recovered = colname_omregion_recovered, #
+        colname_region_released = colname_region_released_6, #
+        colname_region_recovered = colname_region_recovered_6, #
         colname_size_released = colname_size_released,
         # Movement index
         movement_pattern = 2L, # See: ?mmmstan::create_movement_index()
@@ -486,8 +464,8 @@ list(
         days_duration_min = days_duration_min,
         colname_date_released = colname_date_released,
         colname_date_recovered = colname_date_recovered,
-        colname_region_released = colname_region_released, #
-        colname_region_recovered = colname_region_recovered, #
+        colname_region_released = colname_region_released_8, #
+        colname_region_recovered = colname_region_recovered_8, #
         colname_size_released = colname_size_released,
         # Movement index
         movement_pattern = 2L, # See: ?mmmstan::create_movement_index()
@@ -553,8 +531,8 @@ list(
         days_duration_min = days_duration_min,
         colname_date_released = colname_date_released,
         colname_date_recovered = colname_date_recovered,
-        colname_region_released = colname_region_released, #
-        colname_region_recovered = colname_region_recovered, #
+        colname_region_released = colname_region_released_8, #
+        colname_region_recovered = colname_region_recovered_8, #
         colname_size_released = colname_size_released,
         # Movement index
         movement_pattern = 2L, # See: ?mmmstan::create_movement_index()
@@ -604,73 +582,6 @@ list(
       )
     )
   ),
-  # Fit regions 6 size ---------------------------------------------------------
-  list(
-    tar_target(
-      mmmstan_regions_6_size, #
-      mmmstan::mmmstan(
-        tag_data = tag_data,
-        # Tag arguments
-        list_regions = list_regions_6, #
-        list_sizes = list_sizes_2, #
-        year_start = year_start,
-        year_end = year_end,
-        step_interval = step_interval,
-        step_duration_max = step_duration_max,
-        days_duration_min = days_duration_min,
-        colname_date_released = colname_date_released,
-        colname_date_recovered = colname_date_recovered,
-        colname_region_released = colname_omregion_released, #
-        colname_region_recovered = colname_omregion_recovered, #
-        colname_size_released = colname_size_released,
-        # Movement index
-        movement_pattern = 2L, # See: ?mmmstan::create_movement_index()
-        movement_allow = NULL, #
-        movement_disallow = NULL, #
-        # Movement step mean priors
-        mu_movement_step_diag = mu_movement_step_diag_6, #
-        sd_movement_step_diag = sd_movement_step_diag_6, #
-        # Fishing rate priors
-        mu_fishing_rate = mu_fishing_rate_6, #
-        cv_fishing_rate = cv_fishing_rate,
-        # Selectivity priors
-        mu_selectivity = mu_selectivity_6, #
-        cv_selectivity = cv_selectivity, #
-        # Fishing weight priors
-        mu_fishing_weight = NULL, # Not implemented
-        sd_fishing_weight = NULL, # Not implemented
-        # Natural mortality rate priors
-        mu_natural_mortality_rate = mu_natural_mortality_rate_6, #
-        sd_natural_mortality_rate = sd_natural_mortality_rate_6, #
-        # Fractional (per tag) reporting rate priors
-        mu_reporting_rate = mu_reporting_rate_6, #
-        sd_reporting_rate = sd_reporting_rate_6, #
-        # Fractional (per tag) initial loss rate priors
-        mu_initial_loss_rate = mu_initial_loss_rate,
-        sd_initial_loss_rate = sd_initial_loss_rate,
-        # Instantaneous ongoing loss rate priors
-        mu_ongoing_loss_rate = mu_ongoing_loss_rate,
-        sd_ongoing_loss_rate = sd_ongoing_loss_rate,
-        # Dispersion priors
-        mu_dispersion = mu_dispersion,
-        sd_dispersion = sd_dispersion,
-        # Tolerance values
-        tolerance_expected = tolerance_expected,
-        tolerance_fishing = tolerance_fishing,
-        # CmdStanR
-        data = NULL,
-        chains = chains,
-        step_size = step_size,
-        adapt_delta = adapt_delta,
-        iter_warmup = iter_warmup,
-        iter_sampling = iter_sampling,
-        max_treedepth = max_treedepth,
-        use_reduce_sum = use_reduce_sum,
-        threads_per_chain = threads_per_chain,
-        refresh = refresh
-      )
-    )
-  ),
   # Fit regions 3 mean block 1979-1994 -----------------------------------------
   list(
     tar_target(
@@ -687,8 +598,8 @@ list(
         days_duration_min = days_duration_min,
         colname_date_released = colname_date_released,
         colname_date_recovered = colname_date_recovered,
-        colname_region_released = colname_region_released, #
-        colname_region_recovered = colname_region_recovered, #
+        colname_region_released = colname_region_released_3, #
+        colname_region_recovered = colname_region_recovered_3, #
         colname_size_released = colname_size_released,
         # Movement index
         movement_pattern = 2L, # See: ?mmmstan::create_movement_index()
@@ -754,8 +665,8 @@ list(
         days_duration_min = days_duration_min,
         colname_date_released = colname_date_released,
         colname_date_recovered = colname_date_recovered,
-        colname_region_released = colname_region_released, #
-        colname_region_recovered = colname_region_recovered, #
+        colname_region_released = colname_region_released_3, #
+        colname_region_recovered = colname_region_recovered_3, #
         colname_size_released = colname_size_released,
         # Movement index
         movement_pattern = 2L, # See: ?mmmstan::create_movement_index()
@@ -821,8 +732,8 @@ list(
         days_duration_min = days_duration_min,
         colname_date_released = colname_date_released,
         colname_date_recovered = colname_date_recovered,
-        colname_region_released = colname_region_released, #
-        colname_region_recovered = colname_region_recovered, #
+        colname_region_released = colname_region_released_3, #
+        colname_region_recovered = colname_region_recovered_3, #
         colname_size_released = colname_size_released,
         # Movement index
         movement_pattern = 2L, # See: ?mmmstan::create_movement_index()
@@ -888,8 +799,8 @@ list(
         days_duration_min = days_duration_min,
         colname_date_released = colname_date_released,
         colname_date_recovered = colname_date_recovered,
-        colname_region_released = colname_region_released, #
-        colname_region_recovered = colname_region_recovered, #
+        colname_region_released = colname_region_released_3, #
+        colname_region_recovered = colname_region_recovered_3, #
         colname_size_released = colname_size_released,
         # Movement index
         movement_pattern = 2L, # See: ?mmmstan::create_movement_index()
@@ -955,8 +866,8 @@ list(
         days_duration_min = days_duration_min,
         colname_date_released = colname_date_released,
         colname_date_recovered = colname_date_recovered,
-        colname_region_released = colname_region_released, #
-        colname_region_recovered = colname_region_recovered, #
+        colname_region_released = colname_region_released_3, #
+        colname_region_recovered = colname_region_recovered_3, #
         colname_size_released = colname_size_released,
         # Movement index
         movement_pattern = 2L, # See: ?mmmstan::create_movement_index()
@@ -1022,8 +933,8 @@ list(
         days_duration_min = days_duration_min,
         colname_date_released = colname_date_released,
         colname_date_recovered = colname_date_recovered,
-        colname_region_released = colname_region_released, #
-        colname_region_recovered = colname_region_recovered, #
+        colname_region_released = colname_region_released_3, #
+        colname_region_recovered = colname_region_recovered_3, #
         colname_size_released = colname_size_released,
         # Movement index
         movement_pattern = 2L, # See: ?mmmstan::create_movement_index()
@@ -1089,8 +1000,8 @@ list(
         days_duration_min = days_duration_min,
         colname_date_released = colname_date_released,
         colname_date_recovered = colname_date_recovered,
-        colname_region_released = colname_region_released, #
-        colname_region_recovered = colname_region_recovered, #
+        colname_region_released = colname_region_released_3, #
+        colname_region_recovered = colname_region_recovered_3, #
         colname_size_released = colname_size_released,
         # Movement index
         movement_pattern = 2L, # See: ?mmmstan::create_movement_index()
@@ -1323,80 +1234,80 @@ list(
     ),
     tar_target(
       n_recovered_cc, # Number recovered from CC release
-      sum(tag_array_recovered[2,,,])
+      sum(tag_array_recovered[3,,,])
     ),
     # Data values (from raw data)
     tar_target(
-      raw_n_released,
+      n_released_raw,
       tag_data %>%
         nrow()
     ),
     tar_target(
-      raw_n_released_ak,
+      n_released_ak_raw,
       tag_data %>%
-        dplyr::filter(region_released %in% c(1:6)) %>%
+        dplyr::filter(region_released_3 == 1) %>%
         nrow()
     ),
     tar_target(
-      raw_n_released_bc,
+      n_released_bc_raw,
       tag_data %>%
-        dplyr::filter(region_released %in% c(7)) %>%
+        dplyr::filter(region_released_3 == 2) %>%
         nrow()
     ),
     tar_target(
-      raw_n_released_cc,
+      n_released_cc_raw,
       tag_data %>%
-        dplyr::filter(region_released %in% c(8)) %>%
+        dplyr::filter(region_released_3 == 3) %>%
         nrow()
     ),
     tar_target(
-      raw_n_recovered,
+      n_recovered_raw,
       tag_data %>%
-        tidyr::drop_na(region_recovered) %>%
+        tidyr::drop_na(region_recovered_3) %>%
         nrow()
     ),
     tar_target(
-      raw_n_recovered_ak,
+      n_recovered_ak_raw,
       tag_data %>%
-        dplyr::filter(region_released %in% c(1:6)) %>%
-        tidyr::drop_na(region_recovered) %>%
+        dplyr::filter(region_released_3 == 1) %>%
+        tidyr::drop_na(region_recovered_3) %>%
         nrow()
     ),
     tar_target(
-      raw_n_recovered_bc,
+      n_recovered_bc_raw,
       tag_data %>%
-        dplyr::filter(region_released %in% c(7)) %>%
-        tidyr::drop_na(region_recovered) %>%
+        dplyr::filter(region_released_3 == 2) %>%
+        tidyr::drop_na(region_recovered_3) %>%
         nrow()
     ),
     tar_target(
-      raw_n_recovered_cc,
+      n_recovered_cc_raw,
       tag_data %>%
-        dplyr::filter(region_released %in% c(8)) %>%
-        tidyr::drop_na(region_recovered) %>%
+        dplyr::filter(region_released_3 == 3) %>%
+        tidyr::drop_na(region_recovered_3) %>%
         nrow()
     ),
     tar_target(
-      raw_days_duration_min,
+      days_duration_min_raw,
       tag_data %>%
         dplyr::pull(days_liberty) %>%
         min(na.rm = TRUE)
     ),
     tar_target(
-      raw_days_duration_mean,
+      days_duration_mean_raw,
       tag_data %>%
         dplyr::pull(days_liberty) %>%
         mean(na.rm = TRUE) %>%
         round()
     ),
     tar_target(
-      raw_days_duration_max,
+      days_duration_max_raw,
       tag_data %>%
         dplyr::pull(days_liberty) %>%
         max(na.rm = TRUE)
     ),
     tar_target(
-      raw_distance_min,
+      distance_min_raw,
       tag_data %>%
         dplyr::pull(tag_distance) %>%
         min(na.rm = TRUE) %>%
@@ -1404,7 +1315,7 @@ list(
         round()
     ),
     tar_target(
-      raw_distance_mean,
+      distance_mean_raw,
       tag_data %>%
         dplyr::pull(tag_distance) %>%
         mean(na.rm = TRUE)%>%
@@ -1412,7 +1323,7 @@ list(
         round()
     ),
     tar_target(
-      raw_distance_max,
+      distance_max_raw,
       tag_data %>%
         dplyr::pull(tag_distance) %>%
         max(na.rm = TRUE)%>%
@@ -1470,20 +1381,20 @@ list(
           nRecoveredBC = n_recovered_bc, # Recovered from BC release
           nRecoveredCC = n_recovered_cc, # Recovered from CC release
           # Data values (from raw data)
-          rawNReleased = raw_n_released,
-          rawNReleasedAK = raw_n_released_ak,
-          rawNReleasedBC = raw_n_released_bc,
-          rawNReleasedCC = raw_n_released_cc,
-          rawNRecovered = raw_n_recovered,
-          rawNRecoveredAK = raw_n_recovered_ak, # Recovered from AK release
-          rawNRecoveredBC = raw_n_recovered_bc, # Recovered from BC release
-          rawNRecoveredCC = raw_n_recovered_cc, # Recovered from CC release
-          rawDaysDurationMin = raw_days_duration_min,
-          rawDaysDurationMean = raw_days_duration_mean,
-          rawDaysDurationMax = raw_days_duration_max,
-          rawDistanceMin = raw_distance_min,
-          rawDistanceMean = raw_distance_mean,
-          rawDistanceMax = raw_distance_max,
+          nReleasedRaw = n_released_raw,
+          nReleasedAKRaw = n_released_ak_raw,
+          nReleasedBCRaw = n_released_bc_raw,
+          nReleasedCCRaw = n_released_cc_raw,
+          nRecoveredRaw = n_recovered_raw,
+          nRecoveredAKRaw = n_recovered_ak_raw, # Recovered from AK release
+          nRecoveredBCRaw = n_recovered_bc_raw, # Recovered from BC release
+          nRecoveredCCRaw = n_recovered_cc_raw, # Recovered from CC release
+          daysDurationMinRaw = days_duration_min_raw,
+          daysDurationMeanRaw = days_duration_mean_raw,
+          daysDurationMaxRaw = days_duration_max_raw,
+          distanceMinRaw = distance_min_raw,
+          distanceMeanRaw = distance_mean_raw,
+          distanceMaxRaw = distance_max_raw,
           # Data values (constraints imposed)
           daysDurationMin = days_duration_min,
           releasedSizeMin = released_size_min,
@@ -1526,9 +1437,10 @@ list(
     tar_target(
       map_regions_6_network,
       plot_network(
-        regions = sf_omregions,
+        regions = sf_regions_6,
         rates = mmmstan_regions_6_mean$summary$movement_rate,
         plot_name = "map-regions-6-network",
+        colname_regions_short = "region_short_6",
         size_short = 1.75,
         size_line = 0.25,
         size_text = 5,
@@ -1556,90 +1468,6 @@ list(
       format = "file"
     )
   ),
-  # # Plot heat regions 3 mean ---------------------------------------------------
-  # list(
-  #   tar_target(
-  #     heat_regions_3_mean,
-  #     plot_heat(
-  #       data = mmmstan_regions_3_mean$summary$movement_rate,
-  #       plot_name = "heat-regions-3-mean",
-  #       regions = toupper(names(list_regions_3)),
-  #       size_text = 6,
-  #       size_mean = 3,
-  #       nudge_mean = 0.1,
-  #       size_sd = 1.35,
-  #       nudge_sd = 0.15,
-  #       legend_name = "Movement rate",
-  #       xlab = NULL,
-  #       ylab = NULL,
-  #       xtext = TRUE,
-  #       ytext = TRUE,
-  #       margin_x = 0,
-  #       margin_y = 0,
-  #       width = 90,
-  #       height = 100,
-  #       dpi = figure_dpi,
-  #       file_type = figure_ext
-  #     ),
-  #     format = "file"
-  #   )
-  # ),
-  # # Plot heat regions 6 mean ---------------------------------------------------
-  # list(
-  #   tar_target(
-  #     heat_regions_6_mean,
-  #     plot_heat(
-  #       data = mmmstan_regions_6_mean$summary$movement_rate,
-  #       plot_name = "heat-regions-6-mean",
-  #       regions = toupper(names(list_regions_6)),
-  #       size_text = 6,
-  #       size_mean = 3,
-  #       nudge_mean = 0.1,
-  #       size_sd = 1.35,
-  #       nudge_sd = 0.15,
-  #       legend_name = "Movement rate",
-  #       xlab = NULL,
-  #       ylab = NULL,
-  #       xtext = TRUE,
-  #       ytext = TRUE,
-  #       margin_x = 0,
-  #       margin_y = 0,
-  #       width = 90,
-  #       height = 100,
-  #       dpi = figure_dpi,
-  #       file_type = figure_ext
-  #     ),
-  #     format = "file"
-  #   )
-  # ),
-  # # Plot heat regions 8 mean ---------------------------------------------------
-  # list(
-  #   tar_target(
-  #     heat_regions_8_mean,
-  #     plot_heat(
-  #       data = mmmstan_regions_8_mean$summary$movement_rate,
-  #       plot_name = "heat-regions-8-mean",
-  #       regions = toupper(names(list_regions_8)),
-  #       size_text = 6,
-  #       size_mean = 3,
-  #       nudge_mean = 0.1,
-  #       size_sd = 1.35,
-  #       nudge_sd = 0.15,
-  #       legend_name = "Movement rate",
-  #       xlab = NULL,
-  #       ylab = NULL,
-  #       xtext = TRUE,
-  #       ytext = TRUE,
-  #       margin_x = 0,
-  #       margin_y = 0,
-  #       width = 90,
-  #       height = 100,
-  #       dpi = figure_dpi,
-  #       file_type = figure_ext
-  #     ),
-  #     format = "file"
-  #   )
-  # ),
   # Plot bar regions 3 size ----------------------------------------------------
   list(
     tar_target(
@@ -1675,146 +1503,6 @@ list(
     ),
     format = "file"
   ),
-  # # Plot heat regions 3 mean block 1979-1994 -----------------------------------
-  # list(
-  #   tar_target(
-  #     heat_regions_3_mean_block_1979_1994,
-  #     plot_heat(
-  #       data = mmmstan_regions_3_mean_block_1979_1994$summary$movement_rate,
-  #       plot_name = "heat-regions-3-mean-block-1979-1994",
-  #       regions = toupper(names(list_regions_3)),
-  #       size_text = 6,
-  #       size_mean = 3,
-  #       nudge_mean = 0.1,
-  #       size_sd = 1.35,
-  #       nudge_sd = 0.15,
-  #       legend_name = "Movement rate",
-  #       xlab = NULL,
-  #       ylab = NULL,
-  #       xtext = TRUE,
-  #       ytext = TRUE,
-  #       margin_x = 0,
-  #       margin_y = 0,
-  #       width = 90,
-  #       height = 100,
-  #       dpi = figure_dpi,
-  #       file_type = figure_ext
-  #     ),
-  #     format = "file"
-  #   )
-  # ),
-  # # Plot heat regions 3 mean block 1995-2006 -----------------------------------
-  # list(
-  #   tar_target(
-  #     heat_regions_3_mean_block_1995_2006,
-  #     plot_heat(
-  #       data = mmmstan_regions_3_mean_block_1995_2006$summary$movement_rate,
-  #       plot_name = "heat-regions-3-mean-block-1995-2006",
-  #       regions = toupper(names(list_regions_3)),
-  #       size_text = 6,
-  #       size_mean = 3,
-  #       nudge_mean = 0.1,
-  #       size_sd = 1.35,
-  #       nudge_sd = 0.15,
-  #       legend_name = "Movement rate",
-  #       xlab = NULL,
-  #       ylab = NULL,
-  #       xtext = TRUE,
-  #       ytext = TRUE,
-  #       margin_x = 0,
-  #       margin_y = 0,
-  #       width = 90,
-  #       height = 100,
-  #       dpi = figure_dpi,
-  #       file_type = figure_ext
-  #     ),
-  #     format = "file"
-  #   )
-  # ),
-  # # Plot heat regions 3 mean block 2007-2017 -----------------------------------
-  # list(
-  #   tar_target(
-  #     heat_regions_3_mean_block_2007_2017,
-  #     plot_heat(
-  #       data = mmmstan_regions_3_mean_block_2007_2017$summary$movement_rate,
-  #       plot_name = "heat-regions-3-mean-block-2007-2017",
-  #       regions = toupper(names(list_regions_3)),
-  #       size_text = 6,
-  #       size_mean = 3,
-  #       nudge_mean = 0.1,
-  #       size_sd = 1.35,
-  #       nudge_sd = 0.15,
-  #       legend_name = "Movement rate",
-  #       xlab = NULL,
-  #       ylab = NULL,
-  #       xtext = TRUE,
-  #       ytext = TRUE,
-  #       margin_x = 0,
-  #       margin_y = 0,
-  #       width = 90,
-  #       height = 100,
-  #       dpi = figure_dpi,
-  #       file_type = figure_ext
-  #     ),
-  #     format = "file"
-  #   )
-  # ),
-  # # Plot heat regions 3 mean 3x cv_fishing_rate --------------------------------
-  # list(
-  #   tar_target(
-  #     heat_regions_3_mean_3x_cv_fishing_rate,
-  #     plot_heat(
-  #       data = mmmstan_regions_3_mean_3x_cv_fishing_rate$summary$movement_rate,
-  #       plot_name = "heat-regions-3-mean-3x-cv-fishing-rate",
-  #       regions = toupper(names(list_regions_3)),
-  #       size_text = 6,
-  #       size_mean = 3,
-  #       nudge_mean = 0.1,
-  #       size_sd = 1.35,
-  #       nudge_sd = 0.15,
-  #       legend_name = "Movement rate",
-  #       xlab = NULL,
-  #       ylab = NULL,
-  #       xtext = TRUE,
-  #       ytext = TRUE,
-  #       margin_x = 0,
-  #       margin_y = 0,
-  #       width = 90,
-  #       height = 100,
-  #       dpi = figure_dpi,
-  #       file_type = figure_ext
-  #     ),
-  #     format = "file"
-  #   )
-  # ),
-  # # Plot heat regions 3 mean 3x sd_reporting_rate ------------------------------
-  # list(
-  #   tar_target(
-  #     heat_regions_3_mean_3x_sd_reporting_rate,
-  #     plot_heat(
-  #       data = mmmstan_regions_3_mean_3x_sd_reporting_rate$summary$movement_rate,
-  #       plot_name = "heat-regions-3-mean-3x-sd-reporting-rate",
-  #       regions = toupper(names(list_regions_3)),
-  #       size_text = 6,
-  #       size_mean = 3,
-  #       nudge_mean = 0.1,
-  #       size_sd = 1.35,
-  #       nudge_sd = 0.15,
-  #       legend_name = "Movement rate",
-  #       xlab = NULL,
-  #       ylab = NULL,
-  #       xtext = TRUE,
-  #       ytext = TRUE,
-  #       margin_x = 0,
-  #       margin_y = 0,
-  #       width = 90,
-  #       height = 100,
-  #       dpi = figure_dpi,
-  #       file_type = figure_ext
-  #     ),
-  #     format = "file"
-  #   )
-  # ),
   # Plot bar regions 3 size no duration constraint -----------------------------
   list(
     tar_target(
@@ -1954,7 +1642,7 @@ list(
       bar_regions_3_released_by_year,
       plot_released_by_year(
         plot_name = "bar-regions-3-released-by-year",
-        data = tag_data_3,
+        data = tag_data,
         size_range = 400:800,
         year_start = year_start,
         year_xmin = year_start,
@@ -1975,7 +1663,7 @@ list(
       bar_regions_3_released_by_size,
       plot_released_by_size(
         plot_name = "bar-regions-3-released-by-size",
-        data = tag_data_3,
+        data = tag_data,
         regions = toupper(names(list_regions_3)),
         size_range = 200:1000,
         year_range = 1979:2017,
@@ -1994,7 +1682,7 @@ list(
       bar_regions_3_recovered_by_year,
       plot_recovered_by_year(
         plot_name = "bar-regions-3-recovered-by-year",
-        data = tag_data_3,
+        data = tag_data,
         size_range = 400:800, # Released size
         year_range = 1979:2017,
         year_xmin = 1979,
@@ -2015,7 +1703,7 @@ list(
       bar_regions_3_duration_at_liberty, # Based on days_liberty
       plot_duration_at_liberty(          # Model uses duration in steps
         plot_name = "bar-regions-3-duration-at-liberty",
-        data = tag_data_3,
+        data = tag_data,
         size_range = 400:800, # Released size
         year_range = 1979:2017,
         regions = toupper(names(list_regions_3)),
@@ -2028,11 +1716,7 @@ list(
       format = "file"
     )
   ),
-  # Plot map regions 3 released ------------------------------------------------
-
-  # Copied from sablefish-data/ to preserve data privacy
-
-  # Plot map regions 3 recovered -----------------------------------------------
+  # Plot map regions 3 released recovered --------------------------------------
 
   # Copied from sablefish-data/ to preserve data privacy
 
