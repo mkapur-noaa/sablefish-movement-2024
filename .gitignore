@@ -25,6 +25,7 @@ _targets/
 *.so
 
 # Visuals
+temp/
 *.html
 Rplots.pdf
 
