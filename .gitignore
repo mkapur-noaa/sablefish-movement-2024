@@ -24,6 +24,9 @@ _targets/
 *.o
 *.so
 
+# Troubleshoot
+troubleshoot/
+
 # Visuals
 temp/
 *.html
@@ -33,17 +36,25 @@ Rplots.pdf
 *.aux
 *.bbl
 *.blg
+*.dvi
 *.fdb_latexmk
 *.fls
 *.gz
 *.log
 *.odt
 *.out
+*.prv
+*_.tex
+auto/
 manuscript.pdf
+equations.pdf
 
 # Org
 *org#
 .#*
+
+# Emacs
+*.el
 
 # Vignettes
 inst/doc
