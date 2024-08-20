@@ -20,7 +20,6 @@ tar_option_set(
     "magrittr",
     "mmmstan",
     "readr",
-    "rgeos",
     "rlang",
     "rnaturalearth",
     "rnaturalearthdata",
