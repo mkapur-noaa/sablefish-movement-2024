@@ -1,0 +1,384 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{bm}
+\usepackage{gensymb}
+\usepackage{lineno}
+\usepackage{lscape}
+\renewcommand\linenumberfont{\normalfont\bfseries\small\color{darkgrey}}
+\usepackage{booktabs}
+\usepackage[round]{natbib}
+\bibliographystyle{plainnat}
+\usepackage{authblk}
+% Linux Libertine:
+\usepackage{textcomp}
+\usepackage[sb]{libertine}
+\usepackage[varqu,varl]{inconsolata}% sans serif typewriter
+\usepackage[libertine,bigdelims,vvarbb]{newtxmath} % bb from STIX
+\usepackage[cal=boondoxo]{mathalfa} % mathcal
+\useosf % osf for text, not math
+\usepackage{setspace}
+\usepackage{siunitx}
+\usepackage[section]{placeins} % Keep floats (figs, tabs, eqns) in the right section
+% I assume these all work together to make nice colour
+\usepackage[dvipsnames]{xcolor}
+\definecolor{niceblue}{HTML}{236899} % Depends \usepackage[dvipsnames]{xcolor}
+\definecolor{darkgrey}{HTML}{A9A9A9} % Depends \usepackage[dvipsnames]{xcolor}
+% End nice colour
+\usepackage{pgfplotstable} % For tables
+\pgfplotsset{compat=1.16} % For tables
+\usepackage{graphicx}
+\graphicspath{ {./figs/} }
+% hyperref must be last in preamble
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=black,      
+    urlcolor=niceblue,
+    citecolor=niceblue,
+    linkbordercolor = white
+}
+
+% Title
+\title{Sablefish equations }
+
+% Authors
+\author[1]{Luke A. Rogers}
+\author[]{...}
+
+%Affiliations
+\affil[1]{Pacific Biological Station, Fisheries and Oceans Canada, Nanaimo, BC, V9T 6N7, Canada}
+
+\begin{document}
+
+\maketitle
+\linenumbers
+\setcounter{secnumdepth}{0}
+
+
+\section{Proposed movement model}
+
+$\boldsymbol{s}$ gives the spatial index vector $(s_1, s)$ whose elements are the initial and current regions
+
+$\boldsymbol{t}$ gives the temporal vector $(i, d)$ whose elements are time step at release and the duration beginning in the release step. Symbol $t = i + d - 1$ gives the current time step.
+
+$N_{s_1}$ and $N_{s}$
+
+% Sampling model
+\begin{equation}
+  \label{eq:model-sampling}
+  y_{\boldsymbol{s}, \boldsymbol{t},l} \sim \mathrm{NegBinom2} \!
+    \left[\mu_{\boldsymbol{s}, \boldsymbol{t},l} \mathrm{,} \: \phi \right]
+\end{equation}
+
+% % Observation model
+% \begin{equation}
+%   \label{eq:model-observation}
+%   \widehat{y}^{\:\mathrm{obs}}_{a,b,c,d,e} \sim 
+%     \mathrm{Distrn} \! \left[\widehat{y}^{\:\mathrm{proc}}_{a,b,c,d,e} \mathrm{,} \: \mathrm{param} \right]
+% \end{equation}
+
+% Process model
+\begin{equation}
+  \label{eq:model-process}
+  \mu_{\boldsymbol{s}, \boldsymbol{t},l} = 
+    N_{\boldsymbol{s}, \boldsymbol{t},l} \left(1 - \mathrm{exp} \! \left[ - \lambda_{s,l} \,
+    \omega_{s, k[t]} F_{s,\mathrm{year}\left[ t \right]} \right] \right) W_{s}
+\end{equation}
+
+% Numbers model
+\begin{equation}
+  \label{eq:model-numbers}
+  \boldsymbol{N}_{\mathrm{now}} = \boldsymbol{N}_{\mathrm{prev}} 
+    \boldsymbol{S}_{\mathrm{prev}} \boldsymbol{\Gamma}_{\mathrm{prev}}
+\end{equation}
+
+% Survival model
+\begin{equation}
+  \label{eq:model-survival}
+  S_{s,t,l} = 
+    \mathrm{exp} \! \left[-\lambda_{s,l} \omega_{s,k[t]} F_{s,\mathrm{year}[t]} 
+    - \frac{1}{K} M_{s} - \frac{\eta}{K} \right]
+\end{equation}
+
+% Release model
+\begin{equation}
+  \label{eq:model-release}
+  N_{\mathrm{init, diag}} \sim \mathrm{Binom} \! \left[ x_{a,b,c,d,e} \mathrm{,} \: v  \right]
+\end{equation}
+
+% Movement model
+\begin{equation}
+  \label{eq:model-movement}
+  \boldsymbol{P}_{\mathrm{year}[t]} = \boldsymbol{\Gamma}^{K}_{\mathrm{year}[t]}
+\end{equation}
+
+% Seasons model
+\begin{equation}
+  \label{eq:model-seasons}
+  K = 6
+\end{equation}
+
+% Variance model
+\begin{equation}
+  \label{eq:model-variance}
+  \mathrm{Var} \! \left[ y  \right] = \mu + \frac{\mu^2}{\phi}
+\end{equation}
+
+\subsection{Priors}
+
+% Prior phi
+\begin{equation}
+  \label{eq:prior-dispersion}
+  \phi \sim \mathrm{Distrn} \! \left[ \mathrm{param} \right]
+\end{equation}
+
+% Prior selectivity
+\begin{equation}
+  \label{eq:prior-selectivity}
+  \lambda_{a,b,c,d,e} \sim \mathrm{Beta} \! \left[ \mathrm{val, val} \right]
+\end{equation}
+
+% Prior fishing weight
+\begin{equation}
+  \label{eq:prior-weight}
+  \boldsymbol{\omega}_{\mathrm{area}} \sim \mathrm{MultiDistrn} \! \left[  \mathrm{val, val} \right]
+\end{equation}
+
+% Prior fishing
+\begin{equation}
+  \label{eq:prior-fishing}
+  F_{a,b,c,d,e} \sim \mathrm{Distrn} \! \left[ F^{\mathrm{assess}}_{a,b,c,d,e} \mathrm{, val} \right]
+\end{equation}
+
+% Prior reporting
+\begin{equation}
+  \label{eq:prior-reporting}
+  W_{a,b,c,d,e} \sim \mathrm{Beta} \! \left[ \mathrm{val, val} \right]
+\end{equation}
+
+% Prior mortality
+\begin{equation}
+  \label{eq:prior-mortality}
+  M_{a,b,c,d,e}  \sim \mathrm{Distrn} \! \left[ \mathrm{param} \right]
+\end{equation}
+
+% Prior tagloss
+\begin{equation}
+  \label{eq:prior-tagloss}
+  \eta \sim \mathrm{Distrn} \! \left[ \mathrm{val, val} \right]
+\end{equation}
+
+% Prior initloss
+\begin{equation}
+  \label{eq:prior-initloss}
+  v \sim \mathrm{Beta} \! \left[  \right]
+\end{equation}
+
+
+\subsection{Tables}
+
+
+
+
+\section{Movement model}
+
+\noindent Note: needs updates to language, possibly symbols (C to Q; s to lambda; theta to W?) 
+
+We modeled sablefish movement as a hidden Markov process \cite[][]{langrock-2012-flexible-practical} observed by tag recoveries. Sablefish entered the model as counts of tag releases identified by release region, time-step, and size class. The time-step in our analysis was one quarter-year. For a given release time-step and size class, the initial abundances of tagged sablefish were represented by a square diagonal matrix 
+
+% Survival
+\begin{equation}
+  \label{eq:abundance-initial}
+  \mathrm{diag} \! \left[\boldsymbol{A}_{i,d=1,l}\right] = \boldsymbol{R}_{i,l} \left(1 - \nu \right)
+\end{equation}
+
+
+where row corresponded to release region and diagonal elements were counts of tags released in each region diminished by the initial tag loss rate $\upsilon$. Subsequent tag abundances from the same release time-step and size class were defined recursively as 
+
+% Abundance
+\begin{equation}
+    \label{eq:abundance}
+    \boldsymbol{A}_{i,d,l} = \boldsymbol{A}_{i,d-1,l} \, \boldsymbol{\Gamma}_{n[i,d-1],l}
+\end{equation}
+
+\noindent where $n$ was some time-step after release, $\boldsymbol{\Gamma}_n$ acted as a transition matrix, and $\boldsymbol{A}_n$ encoded the projected tag abundances at the beginning of time-step $n$ with rows indicating the release region and columns indicating the destination region. 
+
+What we refer to as the transition matrix $\boldsymbol{\Gamma}_n$ combined survival and movement rates as the matrix product
+
+% Transition
+\begin{equation}
+    \label{eq:transition}
+    \boldsymbol{\Gamma}_{n,l} = \boldsymbol{S}_{n,l} \, \boldsymbol{\Delta}_{l}
+\end{equation}
+
+\noindent where $\boldsymbol{S}_t$ was a diagonal matrix of step-wise survival rates in year $t$, $\boldsymbol{\Delta}_t$ was a square matrix of step-wise movement rates in year $t$, and $t[n]$ indexed year as a function of model step. While $\boldsymbol{\Delta}_t$ was a proper right stochastic matrix in the sense that its elements were probabilities and rows summed to one, $\boldsymbol{\Gamma}_n$ was not, because mortality removed some tagged sablefish from the model during each time-step. Consequently, mortality (including tag loss) formed an absorbing Markov state that could not be departed, in addition to the eight discrete non-absorbing states defined by the management regions. We chose to encode the mortality state implicitly via removal for clarity rather than assign an additional row and column to $\boldsymbol{\Gamma}_n$, and we refer to $\boldsymbol{\Gamma}_n$ as a transition matrix for convenience with the understanding that its rows did not sum to one.
+
+Sablefish survival rates depended on mortality and tag loss as
+
+% Survival
+\begin{equation}
+  \label{eq:survival}
+  \mathrm{diag} \! \left[\boldsymbol{S}_{n,l}\right] = 
+    \exp\!{\left[-\boldsymbol{s}_l \boldsymbol{f}_n - \boldsymbol{m} - \eta \right]}
+\end{equation}
+
+\noindent where $\boldsymbol{f}_n$ and $\boldsymbol{m}$ were row vectors of step-wise fishing and natural mortality, and $\eta$ was step-wise ongoing tag loss including tag-induced mortality. 
+
+We modeled expected tag recoveries by the matrix product of tagged sablefish abundance and a step-wise observation rate. For a given release time-step and size class this was defined as
+
+% Expected
+\begin{equation}
+  \label{eq:expected}
+  \boldsymbol{\widehat{C}}_{i,d,l} = \boldsymbol{A}_{i,d,l} \boldsymbol{B}_{n[i,d],l}
+\end{equation}
+
+\noindent where $\boldsymbol{\widehat{C}}_{i,d,l}$ was a square matrix of expected tag recoveries with rows indicating release region and columns indicating recovery region, and $\boldsymbol{B}_{n,l}$ was a diagonal matrix of observation rates defined by the element-wise vector product
+
+% Observation
+\begin{equation}
+  \label{eq:observation}
+  \mathrm{diag} \! \left[\boldsymbol{B}_{n,l}\right] = 
+    \boldsymbol{\theta} \left(1 - \exp\!{\left[-\boldsymbol{s}_l \boldsymbol{f}_{n} \right]} \right) 
+\end{equation}
+
+\noindent where $\boldsymbol{\theta}$ was a row vector of per-tag reporting rates and $\boldsymbol{f}_n$ was a vector of step-wise fishing mortality rates.
+
+For a given release size class, we defined annual sablefish movement rates by a matrix power of the corresponding step-wise movement rates
+
+% Movement rate
+\begin{equation}
+    \label{eq:movement}
+    \boldsymbol{P}_{l} = \boldsymbol{\Delta}_{l}^K
+\end{equation}
+
+\noindent where $\boldsymbol{P}_{l}$ was the square matrix of annual movement rates, and $K$ was the number of time-steps per year.
+
+% The matrix of step-wise movement rate deviations $\boldsymbol{\Lambda}_t = \boldsymbol{\Delta}_t - \boldsymbol{\bar{\Delta}}$ from the step-wise mean movement rates $\boldsymbol{\bar{\Delta}}$ was constrained by an autoregressive process on its diagonal
+
+% Timevary
+%\begin{equation}
+%  \label{eq:timevary}
+%  \mathrm{diag}\!\left[\boldsymbol{\Lambda}_t\right] = \mathrm{diag}\!\left[\boldsymbol{\Lambda}_{t-1}\right]\! \boldsymbol{\Psi} + \boldsymbol{\epsilon}_t, \, \boldsymbol{\epsilon}_t \sim \mathrm{N}\!\left[\boldsymbol{0},\,\boldsymbol{\Sigma}_\Lambda\right]
+%\end{equation}
+
+%\noindent where $\boldsymbol{\Psi}$ was a diagonal matrix of autocorrelation coefficients, and $\boldsymbol{\Sigma}_\Lambda$ was a diagonal variance matrix.
+
+We used the NB2 parameterization of the negative binomial distribution with probability mass function
+
+% Sampling
+\begin{equation}
+  \label{eq:sampling}
+  \mathrm{NB2} \! \left[ C_* \mid \widehat{C}_*,\, \phi \right] = \binom{C_* + \phi - 1}{C_*} \left(\frac{\widehat{C}_*}{\widehat{C}_* + \phi}\right)^{C_*} \left( \frac{\phi}{\widehat{C}_* + \phi} \right)^{\phi}
+\end{equation}
+
+\noindent where $C_*$ and $\widehat{C}_*$ were the observed and expected tag recovery counts corresponding to a given release region, time-step and length class, and recovery region and time-step.
+
+
+% Model indexes
+\begin{table}[ht]
+  \centering
+  \caption{Movement model indexes}
+  \renewcommand\arraystretch{1.2}
+  \label{tab:model-indexes}
+  \begin{tabular}{l l l l r}
+    \toprule
+    \textbf{Symbol} & \textbf{Condition} & \textbf{Dimension} & \textbf{Definition} & \textbf{Type} \\
+    \toprule
+    % Index limits
+    $X$ & $\in \mathbb{Z}^{+}$ & Scalar & Number of geographic regions & Index limit \\
+    $T$ & $\in \mathbb{Z}^{+}$ & Scalar & Number of years & Index limit \\
+    $K$ & $\in \mathbb{Z}^{+}$ & Scalar & Number of time steps per year & Index limit \\
+    $N$ & $ = TK $ & Scalar & Number of time steps & Index limit \\
+    $D$ & $\in \mathbb{Z}^{+}$ & Scalar & Maximum time steps at liberty & Index limit \\
+    $L$ & $\in \mathbb{Z}^{+}$ & Scalar & Number of release size classes & Index limit \\
+    \midrule
+    % Index variables
+    $x, \, y$ & $\in \left[1 \, .. \, X \right]$ & Scalar & Geographic region & Index \\
+    $t$ & $\in \left[1 \, .. \, T \right]$ & Scalar & Year & Index \\
+    $n$ & $\in \left[1 \, .. \, N \right]$ & Scalar & Time step & Index \\
+    $i$ & $\in \left[1 \, .. \, N\!-\!1 \right]$ & Scalar & Release time step & Index \\
+    $k$ & $\in \left[1 \, .. \, K \right]$ & Scalar & Time step within year & Index \\
+    $d$ & $\in \left[1 \, .. \, D \right]$ & Scalar & Time step at liberty & Index \\
+    $l$ & $\in \left[1 \, .. \, S \right]$ & Scalar & Release size class & Index \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% Data
+\begin{table}[ht]
+  \centering
+  \caption{Data}
+  \renewcommand\arraystretch{1.2}
+  \label{tab:data}
+  \begin{tabular}{l l l l r}
+    \toprule
+    \textbf{Symbol} & \textbf{Condition} & \textbf{Dimension} & \textbf{Definition} & \textbf{Type} \\
+    \toprule
+    $\bm{R}$ & $\in \mathbb{Z}^{+,0}$ & $[N\!-\!1, L][X]$ & Sablefish tags released (counts) & Stepwise \\
+    $\bm{C}$ & $\in \mathbb{Z}^{+,0}$ & $[N\!-\!1, D, L][X, X]$ & Sablefish tags recovered (counts) & Stepwise \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% Model derived quantities
+\begin{table}[ht]
+  \centering
+  \caption{Movement model derived quantities}
+  \renewcommand\arraystretch{1.2}
+  \label{tab:model-derived}
+  \begin{tabular}{l l l l r}
+    \toprule
+    \textbf{Symbol} & \textbf{Condition} & \textbf{Dimension} & \textbf{Definition} & \textbf{Type} \\
+    \toprule
+    $\bm{A}$ & $\in \mathbb{R}^{+,0}$ & $[N\!-\!1, D, L][X, X]$ & Sablefish tag abundance (numbers) & Stepwise \\
+    $\boldsymbol{\widehat{C}}$ & $\in \mathbb{R}^{+,0}$ & $[N\!-\!1, D, L][X, X]$ & Sablefish expected tags recovered (numbers) & Stepwise \\
+    $\boldsymbol{\Gamma}$ & $\in \left[0, 1 \right]$ & $[N, L][X, X]$ & Sablefish transition rates & Stepwise \\
+    $\bm{S}$ & $\in \left[0, 1 \right]$ & $[N, L][X, X]$ & Sablefish survival rates & Stepwise \\
+    $\bm{B}$ & $\in \left[0, 1 \right]$ & $[N, L][X]$ & Sablefish tag observation rates & Stepwise \\
+    \midrule
+    $\bm{P}$ & $\in \left[0, 1 \right]$ & $[L][X, X]$ & Sablefish movement rates & Annual \\
+    $\bm{F}$ & $\in \mathbb{R}^{+,0}$ & $[T, X]$ & Sablefish instantaneous fishing mortality rates & Annual \\
+    $\bm{M}$ & $\in \mathbb{R}^{+,0}$ & $[T, X]$ & Sablefish instantaneous natural mortality rates & Annual \\
+%    \midrule
+%    $\boldsymbol{\Lambda}$ & $\in \left[0, 1 \right]$ & $[L][X, X]$ & Sablefish movement rate deviations & Stepwise \\    
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+% Model parameters
+\begin{table}[ht]
+  \centering
+  \caption{Movement model parameters}
+  \renewcommand\arraystretch{1.2}
+  \label{tab:model-parameters}
+  \begin{tabular}{l l l l r}
+    \toprule
+    \textbf{Symbol} & \textbf{Condition} & \textbf{Dimension} & \textbf{Definition} & \textbf{Type} \\
+    \toprule
+    $\boldsymbol{\Delta}$ & $\in \left[0, 1 \right]$ & $[L][X, X]$ & Sablefish movement rates & Stepwise \\
+    $\bm{f}$ & $\in \mathbb{R}^{+,0}$ & $[N, X]$ & Sablefish instantaneous fishing mortality rates & Stepwise \\
+    $\bm{s}$ & $\in \left[0, 1 \right]$ & $[L, X]$ & Sablefish fisheries size selectivity & Per fish \\
+    $\bm{m}$ & $\in \mathbb{R}^{+,0}$ & $[X]$ & Sablefish instantaneous natural mortality rates & Stepwise \\
+    $\boldsymbol{\theta}$ & $\in \left[0, 1 \right]$ & $[X]$ & Sablefish tag reporting rates & Per tag \\
+    $\eta$ & $\in \mathbb{R}^{+,0}$ & Scalar & Sablefish instantaneous ongoing tag loss rate & Stepwise \\
+    $\nu$ & $\in \left[0, 1 \right]$ & Scalar & Sablefish initial tag loss rate & Per tag \\    
+    $\phi$ & $\in \mathbb{R}^{+}$ & Scalar & Negative binomial dispersion & NB2 \\
+%    \midrule
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+
+
+% End
+\end{document}
+
+%%% Local Variables:
+%%% mode: LaTeX
+%%% TeX-master: t
+%%% End:

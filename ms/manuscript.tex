@@ -18,9 +18,9 @@
 \usepackage[libertine,bigdelims,vvarbb]{newtxmath} % bb from STIX
 \usepackage[cal=boondoxo]{mathalfa} % mathcal
 \useosf % osf for text, not math
-\usepackage[supstfm=libertinesups,%
-  supscaled=1.2,%
-  raised=-.13em]{superiors}
+%\usepackage[supstfm=libertinesups,%
+%  supscaled=1.2,%
+%  raised=-.13em]{superiors}
 \usepackage{setspace}
 \usepackage{siunitx}
 \usepackage[section]{placeins} % Keep floats (figs, tabs, eqns) in the right section
@@ -76,7 +76,7 @@ Co-authorship and final author order to follow the PSTAT Data Sharing and Collab
 
 \noindent Note: needs updates to language, possibly symbols (C to Q; s to lambda; theta to W?) 
 
-We modeled sablefish movement as a hidden Markov process \cite[][]{langrock-2012-flexible-practical} observed by tag recoveries. Sablefish entered the model as counts of tag releases identified by release region, time-step, and size class. The time-step in our analysis was one quarter-year. For a given release time-step and size class, the initial abundances of tagged sablefish were represented by a square diagonal matrix 
+We modeled sablefish movement as a hidden Markov process \cite[][]{langrock-2012-flexible-practical} observed nby tag recoveries. Sablefish entered the model as counts of tag releases identified by release region, time-step, and size class. The time-step in our analysis was one quarter-year. For a given release time-step and size class, the initial abundances of tagged sablefish were represented by a square diagonal matrix 
 
 % Survival
 \begin{equation}
@@ -215,7 +215,7 @@ We used the NB2 parameterization of the negative binomial distribution with prob
 \end{figure}
 
 \begin{figure}[htb]
-    \centering
+p    \centering
     \includegraphics[width = 0.7\textwidth]{bar-percent-attributable}
     \caption{Proportion of sablefish abundance (90\%{} CI) within jurisdiction attributable to 1\degree{} movement between jurisdictions. Estimated from annual numbers of fish (age 2+) with uncertainty and annual movement rates with uncertainty. Annual movement rates were estimated by year block: 1979--1994; 1995--2006; 2007--2017. Top panel: proportion of numbers of sablefish in AK attributable to movement from BC (above horizontal axis) and proportion in BC attributable to movement from AK (below horizontal axis). Bottom panel: proportion of numbers of sablefish in BC attributable to movement from CC (above horizontal axis) and proportion in CC attributable to movement from BC (below horizontal axis). AK: Alaska; BC: British Columbia; CC: California Current.}
     \label{fig:bar-percent-attributable}
@@ -474,7 +474,7 @@ We used the NB2 parameterization of the negative binomial distribution with prob
 \begin{table}[h]
   \begin{center}
   \caption{Sablefish mean annual movement rates (per fish per year; 90\%{} CI) between three jurisdictions in the northeast Pacific Ocean for 1979--1994. AK: Alaska; BC: British Columbia; CC: California Current.}
-  \label{tab:movement-rate-regions-3-mean}
+%  \label{tab:movement-rate-regions-3-mean}
   \label{tab:movement-rate-regions-3-mean-block-1979-1994}
     \pgfplotstabletypeset[
       col sep=comma,                       % Commas separate .csv values
@@ -487,7 +487,7 @@ We used the NB2 parameterization of the negative binomial distribution with prob
 \begin{table}[h]
   \begin{center}
   \caption{Sablefish mean annual movement rates (per fish per year; 90\%{} CI) between three jurisdictions in the northeast Pacific Ocean for 1995--2006. AK: Alaska; BC: British Columbia; CC: California Current.}
-  \label{tab:movement-rate-regions-3-mean}
+%  \label{tab:movement-rate-regions-3-mean}
   \label{tab:movement-rate-regions-3-mean-block-1995-2006}
     \pgfplotstabletypeset[
       col sep=comma,                       % Commas separate .csv values
@@ -500,7 +500,7 @@ We used the NB2 parameterization of the negative binomial distribution with prob
 \begin{table}[h]
   \begin{center}
   \caption{Sablefish mean annual movement rates (per fish per year; 90\%{} CI) between three jurisdictions in the northeast Pacific Ocean for 2007--2017. AK: Alaska; BC: British Columbia; CC: California Current.}
-  \label{tab:movement-rate-regions-3-mean}
+%  \label{tab:movement-rate-regions-3-mean}
   \label{tab:movement-rate-regions-3-mean-block-2007-2017}
     \pgfplotstabletypeset[
       col sep=comma,                       % Commas separate .csv values
@@ -523,3 +523,9 @@ We used the NB2 parameterization of the negative binomial distribution with prob
 
 
 
+
+%%% Local Variables:
+%%% mode: LaTeX
+%%% TeX-master: t
+%%% TeX-master: t
+%%% End:
