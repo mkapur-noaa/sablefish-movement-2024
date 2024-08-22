@@ -193,13 +193,13 @@ The $\mathrm{diag} \! \left[ \cdot \right]$ function constructs a vector from th
 \begin{equation}
   \label{eq:model-release}
   N_{\boldsymbol{s}_{0},\boldsymbol{t}_{0},l} \sim 
-    \mathrm{Binom} \! \left[ x_{s_{0},t_{0},l} \mathrm{,} \: \nu \right]
+    \mathrm{Binom} \! \left[ x_{\boldsymbol{s}_{0},t_{0},l} \mathrm{,} \: \left( 1 - \nu \right) \right]
 \end{equation}
 
 % Movement model
 \begin{equation}
   \label{eq:model-movement}
-  \boldsymbol{P}_{\mathrm{year}[t]} = \boldsymbol{\Gamma}^{K}_{\mathrm{year}[t]}
+  \boldsymbol{P}_{\mathrm{block}[t],l} = \boldsymbol{\Gamma}^{K}_{\mathrm{block}[t],l}
 \end{equation}
 
 % % TODO Move to table
@@ -278,19 +278,19 @@ The $\mathrm{diag} \! \left[ \cdot \right]$ function constructs a vector from th
   \label{tab:model-indexes}
   \begin{tabular}{l l l l r}
     \toprule
-    \textbf{Symbol} & \textbf{Condition} & \textbf{Dimension} & \textbf{Definition} & \textbf{Type} \\
+    \textbf{Symbol} & \textbf{Value} & \textbf{Dimension} & \textbf{Definition} & \textbf{Type} \\
     \toprule
     % Index limits
-    $S$ & $= 3$ or $6$ & Scalar & Number of spatial regions & Index limit \\
-    $T$ & $\in \mathbb{Z}^{+}$ & Scalar & Number of model time steps & Index limit \\
-    $K$ & $= 6$ & Scalar & Number of time steps per year & Index limit \\
-    $L$ & $= 1$ or $2$ & Scalar & Number of release size classes & Index limit \\
+    $S$ & $= 3$ or $6$ & Scalar & Number of spatial regions & Limit \\
+    $T$ & $\in \mathbb{Z}^{+}$ & Scalar & Number of model time steps & Limit \\
+    $K$ & $= 6$ & Scalar & Number of time steps per year & Limit \\
+    $L$ & $= 1$ or $2$ & Scalar & Number of release size classes & Limit \\
     \midrule
     % Index variables
-    $\boldsymbol{s}$ & $= (s_0, s)$ & Vector & Spatial index vector & Vector index \\
-    $\boldsymbol{t}$ & $= (t_0, t)$ & Vector & Temporal index vector & Vector index \\
-    $\boldsymbol{s}_0$ & $= (s_0, s_0)$ & Vector & Initial spatial index vector & Vector index \\
-    $\boldsymbol{t}_0$ & $= (t_0, t_0)$ & Vector & Initial temporal index vector & Vector index \\
+    $\boldsymbol{s}$ & $= (s_0, s)$ & $[2]$ & Spatial index vector & Index \\
+    $\boldsymbol{t}$ & $= (t_0, t)$ & $[2]$ & Temporal index vector & Index \\
+    $\boldsymbol{s}_0$ & $= (s_0, s_0)$ & $[2]$ & Initial spatial index vector & Index \\
+    $\boldsymbol{t}_0$ & $= (t_0, t_0)$ & $[2]$ & Initial temporal index vector & Index \\
     \midrule
     $s$ & $\in \left[1 \, .. \, S \right]$ & Scalar & Spatial region & Index \\
     $t$ & $\in \left[1 \, .. \, T \right]$ & Scalar & Time step & Index \\
@@ -298,6 +298,69 @@ The $\mathrm{diag} \! \left[ \cdot \right]$ function constructs a vector from th
     $t_0$ & $\in \left[1 \, .. \, T \! - \! 1 \right]$ & Scalar & Initial model time step & Index \\
     $k$ & $\in \left[1 \, .. \, K \right]$ & Scalar & Time step within year & Index \\
     $l$ & $\in \left[1 \, .. \, L \right]$ & Scalar & Release size class & Index \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% Data
+\begin{table}[ht]
+  \centering
+  \caption{Data}
+  \renewcommand\arraystretch{1.2}
+  \label{tab:data}
+  \begin{tabular}{l l l l r}
+    \toprule
+    \textbf{Symbol} & \textbf{Value} & \textbf{Dimension} & \textbf{Definition} & \textbf{Type} \\
+    \toprule
+    $\boldsymbol{y}_{\boldsymbol{t},l}$ & $\in \mathbb{Z}^{+,0}$ & $[S,S][T\!-\!1,T,L]$ & Sablefish tags recovered & Count \\
+    $\boldsymbol{x}_{t_0,l}$ & $\in \mathbb{Z}^{+,0}$ & $[S,S][T\!-\!1,L]$ & Sablefish tags released & Count \\
+    $\boldsymbol{F}^{\mathrm{assess}}_{\mathrm{year}}$ & $\in \mathbb{R}^{+,0}$ & $[S,S][\mathrm{years}]$ & Annual sablefish fishing mortality & Inst. \\    
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% Model derived quantities
+\begin{table}[ht]
+  \centering
+  \caption{Movement model derived quantities}
+  \renewcommand\arraystretch{1.2}
+  \label{tab:model-derived}
+  \begin{tabular}{l l l l r}
+    \toprule
+    \textbf{Symbol} & \textbf{Value} & \textbf{Dimension} & \textbf{Definition}  & \textbf{Type} \\
+    \toprule
+    $\boldsymbol{N}_{\boldsymbol{t},l}$ & $\in \mathbb{R}^{+,0}$ & $[S,S][T\!-\!1,T,L]$ & Sablefish tag abundance & Numbers \\
+    $\boldsymbol{\mu}_{\boldsymbol{t},l}$ & $\in \mathbb{R}^{+,0}$ & $[S,S][T\!-\!1,T,L]$ & Expected tags recovered & Numbers \\
+    $\boldsymbol{\Psi}_{t,l}$ & $\in \left[0, 1 \right]$ & $[S,S][T,L]$ & Sablefish tag recovery rate & Stepwise \\
+    $\boldsymbol{\Lambda}_{t,l}$ & $\in \left[0, 1 \right]$ & $[S,S][T,L]$ & Sablefish tag survival rate & Stepwise \\    
+    $\boldsymbol{P}_{\mathrm{block},l}$ & $\in \left[0, 1 \right]$ & $[S,S][\mathrm{blocks},L]$ & Sablefish movement rate & Yearly \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% Model parameters
+\begin{table}[ht]
+  \centering
+  \caption{Movement model parameters}
+  \renewcommand\arraystretch{1.2}
+  \label{tab:model-parameters}
+  \begin{tabular}{l l l l r}
+    \toprule
+    \textbf{Symbol} & \textbf{Value} & \textbf{Dimension} & \textbf{Definition} & \textbf{Type} \\
+    \toprule
+    $\boldsymbol{\Gamma}_{\mathrm{block},l}$ & $\in \left[0, 1 \right]$ & $[S,S][\mathrm{blocks},L]$ & Sablefish movement rate & Stepwise \\
+    $\boldsymbol{\omega}_{k}$ &  $\in \left[0, 1 \right]$ & $[S,S][K]$ & Seasonal fishing mortality weight & Stepwise \\
+    \midrule
+    $\boldsymbol{F}_{\mathrm{year}}$ & $\in \mathbb{R}^{+,0}$ & $[S,S][\mathrm{years}]$ & Annual sablefish fishing mortality rate & Inst. \\
+    $\boldsymbol{M}$ & $\in \mathbb{R}^{+,0}$ & $[S,S]$ & Annual sablefish natural mortality rate & Inst. \\
+    $\eta$ & $\in \mathbb{R}^{+,0}$ & Scalar & Annual sablefish tag loss rate & Inst. \\    
+    \midrule
+    $\boldsymbol{\lambda}_{l}$ & $\in \left[0, 1 \right]$ & $[S,S][L]$ & Sablefish fisheries size selectivity & Per fish \\
+    $\boldsymbol{W}$ & $\in \left[0, 1 \right]$ & $[S,S]$ & Sablefish tag reporting rate & Per tag \\
+    $\nu$ & $\in \left[0, 1 \right]$ & Scalar & Sablefish initial tag loss rate & Per tag \\
+    \midrule
+    $\phi$ & $\in \mathbb{R}^{+}$ & Scalar & Negative binomial dispersion & NB2 \\
+%    \midrule
     \bottomrule
   \end{tabular}
 \end{table}
@@ -432,7 +495,7 @@ We used the NB2 parameterization of the negative binomial distribution with prob
   \centering
   \caption{Data}
   \renewcommand\arraystretch{1.2}
-  \label{tab:data}
+  \label{tab:data-0}
   \begin{tabular}{l l l l r}
     \toprule
     \textbf{Symbol} & \textbf{Condition} & \textbf{Dimension} & \textbf{Definition} & \textbf{Type} \\
@@ -448,7 +511,7 @@ We used the NB2 parameterization of the negative binomial distribution with prob
   \centering
   \caption{Movement model derived quantities}
   \renewcommand\arraystretch{1.2}
-  \label{tab:model-derived}
+  \label{tab:model-derived-0}
   \begin{tabular}{l l l l r}
     \toprule
     \textbf{Symbol} & \textbf{Condition} & \textbf{Dimension} & \textbf{Definition} & \textbf{Type} \\
