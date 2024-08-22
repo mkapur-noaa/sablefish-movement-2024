@@ -57,7 +57,7 @@
 \linenumbers
 \setcounter{secnumdepth}{0}
 
-\section{Movement model: decision point}
+\section{Notation: decision point}
 
 Briefly: I propose two options for index notation---compact and verbose---and I advocate for compact.
 \newline
@@ -81,11 +81,11 @@ Briefly: I propose two options for index notation---compact and verbose---and I 
                                               \left[\mu_{s_0,s,t_0,t,l} \mathrm{,} \: \phi \right]
 \end{align}
 
-\noindent Upshot: I recommend the compact notation because it is concise. I believe it gives a better `sense' of the model on a quick scan, and a more direct route to understanding the nuances on a deep dive.
+\noindent Upshot: I recommend the compact notation because it is concise. I believe it gives a better sense of the model on a quick scan, and a more direct route to understanding the nuances on a deep dive.
 
 \newpage
 
-\section{Movement model: compact indexes}
+\section{Movement model}
 
 \noindent Indexes: The index notation encodes the two spatial indexes in one vector $\boldsymbol{s} = \left( s_0,s \right)$ and the two temporal indexes in another vector $\boldsymbol{t} = \left( t_0, t \right)$ wherever possible. The components are shown explicitly where they are needed. Shorthands for the initial conditions $\boldsymbol{s}_0 = (s_0,s_0)$ and $\boldsymbol{t}_0 = (t_0,t_0)$ indicate the spatial and temporal indexes corresponding to a tag release event.
 \newline
@@ -268,36 +268,37 @@ The $\mathrm{diag} \! \left[ \cdot \right]$ function constructs a vector from th
   \nu \sim \mathrm{Beta} \! \left[ \mathrm{val, val}  \right]
 \end{equation}
 
-\subsection{Tables}
+\newpage
+\section{Tables}
 
 % Model indexes
 \begin{table}[ht]
   \centering
-  \caption{Movement model indexes}
+  \caption{Model indexes}
   \renewcommand\arraystretch{1.2}
   \label{tab:model-indexes}
   \begin{tabular}{l l l l r}
     \toprule
-    \textbf{Symbol} & \textbf{Value} & \textbf{Dimension} & \textbf{Definition} & \textbf{Type} \\
+    \textbf{Symbol} & \textbf{Value} & \textbf{Definition} & \textbf{Type} \\
     \toprule
     % Index limits
-    $S$ & $= 3$ or $6$ & Scalar & Number of spatial regions & Limit \\
-    $T$ & $\in \mathbb{Z}^{+}$ & Scalar & Number of model time steps & Limit \\
-    $K$ & $= 6$ & Scalar & Number of time steps per year & Limit \\
-    $L$ & $= 1$ or $2$ & Scalar & Number of release size classes & Limit \\
+    $S$ & $= 3$ or $6$ & Number of spatial regions & Limit \\
+    $T$ & $\in \mathbb{Z}^{+}$ & Number of model time steps & Limit \\
+    $K$ & $= 6$ & Number of time steps per year & Limit \\
+    $L$ & $= 1$ or $2$ & Number of release size classes & Limit \\
     \midrule
     % Index variables
-    $\boldsymbol{s}$ & $= (s_0, s)$ & $[2]$ & Spatial index vector & Index \\
-    $\boldsymbol{t}$ & $= (t_0, t)$ & $[2]$ & Temporal index vector & Index \\
-    $\boldsymbol{s}_0$ & $= (s_0, s_0)$ & $[2]$ & Initial spatial index vector & Index \\
-    $\boldsymbol{t}_0$ & $= (t_0, t_0)$ & $[2]$ & Initial temporal index vector & Index \\
+    $\boldsymbol{s}$ & $= (s_0, s)$ & Spatial index vector & Index \\
+    $\boldsymbol{t}$ & $= (t_0, t)$ & Temporal index vector & Index \\
+    $\boldsymbol{s}_0$ & $= (s_0, s_0)$ & Initial spatial index vector & Index \\
+    $\boldsymbol{t}_0$ & $= (t_0, t_0)$ & Initial temporal index vector & Index \\
     \midrule
-    $s$ & $\in \left[1 \, .. \, S \right]$ & Scalar & Spatial region & Index \\
-    $t$ & $\in \left[1 \, .. \, T \right]$ & Scalar & Time step & Index \\
-    $s_0$ & $\in \left[1 \, .. \, S \right]$ & Scalar & Initial spatial region & Index \\
-    $t_0$ & $\in \left[1 \, .. \, T \! - \! 1 \right]$ & Scalar & Initial model time step & Index \\
-    $k$ & $\in \left[1 \, .. \, K \right]$ & Scalar & Time step within year & Index \\
-    $l$ & $\in \left[1 \, .. \, L \right]$ & Scalar & Release size class & Index \\
+    $s$ & $\in \left[1 \, .. \, S \right]$ & Spatial region & Index \\
+    $t$ & $\in \left[1 \, .. \, T \right]$ & Time step & Index \\
+    $s_0$ & $\in \left[1 \, .. \, S \right]$ & Initial spatial region & Index \\
+    $t_0$ & $\in \left[1 \, .. \, T \! - \! 1 \right]$ & Initial model time step & Index \\
+    $k$ & $\in \left[1 \, .. \, K \right]$ & Time step within year & Index \\
+    $l$ & $\in \left[1 \, .. \, L \right]$ & Release size class & Index \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -310,11 +311,11 @@ The $\mathrm{diag} \! \left[ \cdot \right]$ function constructs a vector from th
   \label{tab:data}
   \begin{tabular}{l l l l r}
     \toprule
-    \textbf{Symbol} & \textbf{Value} & \textbf{Dimension} & \textbf{Definition} & \textbf{Type} \\
+    \textbf{Symbol} & \textbf{Value} & \textbf{Dim} & \textbf{Definition} & \textbf{Type} \\
     \toprule
-    $\boldsymbol{y}_{\boldsymbol{t},l}$ & $\in \mathbb{Z}^{+,0}$ & $[S,S][T\!-\!1,T,L]$ & Sablefish tags recovered & Count \\
-    $\boldsymbol{x}_{t_0,l}$ & $\in \mathbb{Z}^{+,0}$ & $[S,S][T\!-\!1,L]$ & Sablefish tags released & Count \\
-    $\boldsymbol{F}^{\mathrm{assess}}_{\mathrm{year}}$ & $\in \mathbb{R}^{+,0}$ & $[S,S][\mathrm{years}]$ & Annual sablefish fishing mortality & Inst. \\    
+    $\boldsymbol{y}_{\boldsymbol{t},l}$ & $\in \mathbb{Z}^{+,0}$ & $[S,S]$ & Sablefish tags recovered & Count \\
+    $\boldsymbol{x}_{t_0,l}$ & $\in \mathbb{Z}^{+,0}$ & $[S,S]$ & Sablefish tags released & Count \\
+    $\boldsymbol{F}^{\mathrm{assess}}_{\mathrm{year}}$ & $\in \mathbb{R}^{+,0}$ & $[S,S]$ & Annual sablefish fishing mortality rate & Inst. \\    
     \bottomrule
   \end{tabular}
 \end{table}
@@ -322,18 +323,18 @@ The $\mathrm{diag} \! \left[ \cdot \right]$ function constructs a vector from th
 % Model derived quantities
 \begin{table}[ht]
   \centering
-  \caption{Movement model derived quantities}
+  \caption{Derived quantities}
   \renewcommand\arraystretch{1.2}
   \label{tab:model-derived}
   \begin{tabular}{l l l l r}
     \toprule
-    \textbf{Symbol} & \textbf{Value} & \textbf{Dimension} & \textbf{Definition}  & \textbf{Type} \\
+    \textbf{Symbol} & \textbf{Value} & \textbf{Dim} & \textbf{Definition}  & \textbf{Type} \\
     \toprule
-    $\boldsymbol{N}_{\boldsymbol{t},l}$ & $\in \mathbb{R}^{+,0}$ & $[S,S][T\!-\!1,T,L]$ & Sablefish tag abundance & Numbers \\
-    $\boldsymbol{\mu}_{\boldsymbol{t},l}$ & $\in \mathbb{R}^{+,0}$ & $[S,S][T\!-\!1,T,L]$ & Expected tags recovered & Numbers \\
-    $\boldsymbol{\Psi}_{t,l}$ & $\in \left[0, 1 \right]$ & $[S,S][T,L]$ & Sablefish tag recovery rate & Stepwise \\
-    $\boldsymbol{\Lambda}_{t,l}$ & $\in \left[0, 1 \right]$ & $[S,S][T,L]$ & Sablefish tag survival rate & Stepwise \\    
-    $\boldsymbol{P}_{\mathrm{block},l}$ & $\in \left[0, 1 \right]$ & $[S,S][\mathrm{blocks},L]$ & Sablefish movement rate & Yearly \\
+    $\boldsymbol{N}_{\boldsymbol{t},l}$ & $\in \mathbb{R}^{+,0}$ & $[S,S]$ & Sablefish tag abundance & Numbers \\
+    $\boldsymbol{\mu}_{\boldsymbol{t},l}$ & $\in \mathbb{R}^{+,0}$ & $[S,S]$ & Expected tags recovered & Numbers \\
+    $\boldsymbol{\Psi}_{t,l}$ & $\in \left[0, 1 \right]$ & $[S,S]$ & Sablefish tag recovery rate & Stepwise \\
+    $\boldsymbol{\Lambda}_{t,l}$ & $\in \left[0, 1 \right]$ & $[S,S]$ & Sablefish tag survival rate & Stepwise \\    
+    $\boldsymbol{P}_{\mathrm{block},l}$ & $\in \left[0, 1 \right]$ & $[S,S]$ & Sablefish movement rate & Yearly \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -341,222 +342,25 @@ The $\mathrm{diag} \! \left[ \cdot \right]$ function constructs a vector from th
 % Model parameters
 \begin{table}[ht]
   \centering
-  \caption{Movement model parameters}
+  \caption{Model parameters}
   \renewcommand\arraystretch{1.2}
   \label{tab:model-parameters}
   \begin{tabular}{l l l l r}
     \toprule
-    \textbf{Symbol} & \textbf{Value} & \textbf{Dimension} & \textbf{Definition} & \textbf{Type} \\
+    \textbf{Symbol} & \textbf{Value} & \textbf{Dim} & \textbf{Definition} & \textbf{Type} \\
     \toprule
-    $\boldsymbol{\Gamma}_{\mathrm{block},l}$ & $\in \left[0, 1 \right]$ & $[S,S][\mathrm{blocks},L]$ & Sablefish movement rate & Stepwise \\
-    $\boldsymbol{\omega}_{k}$ &  $\in \left[0, 1 \right]$ & $[S,S][K]$ & Seasonal fishing mortality weight & Stepwise \\
-    \midrule
-    $\boldsymbol{F}_{\mathrm{year}}$ & $\in \mathbb{R}^{+,0}$ & $[S,S][\mathrm{years}]$ & Annual sablefish fishing mortality rate & Inst. \\
+    $\boldsymbol{\Gamma}_{\mathrm{block},l}$ & $\in \left[0, 1 \right]$ & $[S,S]$ & Sablefish movement rate & Stepwise \\
+    $\boldsymbol{\lambda}_{l}$ & $\in \left[0, 1 \right]$ & $[S,S]$ & Sablefish fisheries size selectivity & Per fish \\    
+    $\boldsymbol{\omega}_{k}$ &  $\in \left[0, 1 \right]$ & $[S,S]$ & Seasonal fishing mortality weight & Stepwise \\
+    $\boldsymbol{F}_{\mathrm{year}}$ & $\in \mathbb{R}^{+,0}$ & $[S,S]$ & Annual sablefish fishing mortality rate & Inst. \\
     $\boldsymbol{M}$ & $\in \mathbb{R}^{+,0}$ & $[S,S]$ & Annual sablefish natural mortality rate & Inst. \\
+    $\boldsymbol{W}$ & $\in \left[0, 1 \right]$ & $[S,S]$ & Sablefish tag reporting rate & Per tag \\        
     $\eta$ & $\in \mathbb{R}^{+,0}$ & Scalar & Annual sablefish tag loss rate & Inst. \\    
-    \midrule
-    $\boldsymbol{\lambda}_{l}$ & $\in \left[0, 1 \right]$ & $[S,S][L]$ & Sablefish fisheries size selectivity & Per fish \\
-    $\boldsymbol{W}$ & $\in \left[0, 1 \right]$ & $[S,S]$ & Sablefish tag reporting rate & Per tag \\
     $\nu$ & $\in \left[0, 1 \right]$ & Scalar & Sablefish initial tag loss rate & Per tag \\
-    \midrule
     $\phi$ & $\in \mathbb{R}^{+}$ & Scalar & Negative binomial dispersion & NB2 \\
-%    \midrule
     \bottomrule
   \end{tabular}
 \end{table}
-
-
-\section{Movement model}
-
-\noindent Note: needs updates to language, possibly symbols (C to Q; s to lambda; theta to W?) 
-
-We modeled sablefish movement as a hidden Markov process \cite[][]{langrock-2012-flexible-practical} observed by tag recoveries. Sablefish entered the model as counts of tag releases identified by release region, time-step, and size class. The time-step in our analysis was one quarter-year. For a given release time-step and size class, the initial abundances of tagged sablefish were represented by a square diagonal matrix 
-
-% Survival
-\begin{equation}
-  \label{eq:abundance-initial}
-  \mathrm{diag} \! \left[\boldsymbol{A}_{i,d=1,l}\right] = \boldsymbol{R}_{i,l} \left(1 - \nu \right)
-\end{equation}
-
-
-where row corresponded to release region and diagonal elements were counts of tags released in each region diminished by the initial tag loss rate $\upsilon$. Subsequent tag abundances from the same release time-step and size class were defined recursively as 
-
-% Abundance
-\begin{equation}
-    \label{eq:abundance}
-    \boldsymbol{A}_{i,d,l} = \boldsymbol{A}_{i,d-1,l} \, \boldsymbol{\Gamma}_{n[i,d-1],l}
-\end{equation}
-
-\noindent where $n$ was some time-step after release, $\boldsymbol{\Gamma}_n$ acted as a transition matrix, and $\boldsymbol{A}_n$ encoded the projected tag abundances at the beginning of time-step $n$ with rows indicating the release region and columns indicating the destination region. 
-
-What we refer to as the transition matrix $\boldsymbol{\Gamma}_n$ combined survival and movement rates as the matrix product
-
-% Transition
-\begin{equation}
-    \label{eq:transition}
-    \boldsymbol{\Gamma}_{n,l} = \boldsymbol{S}_{n,l} \, \boldsymbol{\Delta}_{l}
-\end{equation}
-
-\noindent where $\boldsymbol{S}_t$ was a diagonal matrix of step-wise survival rates in year $t$, $\boldsymbol{\Delta}_t$ was a square matrix of step-wise movement rates in year $t$, and $t[n]$ indexed year as a function of model step. While $\boldsymbol{\Delta}_t$ was a proper right stochastic matrix in the sense that its elements were probabilities and rows summed to one, $\boldsymbol{\Gamma}_n$ was not, because mortality removed some tagged sablefish from the model during each time-step. Consequently, mortality (including tag loss) formed an absorbing Markov state that could not be departed, in addition to the eight discrete non-absorbing states defined by the management regions. We chose to encode the mortality state implicitly via removal for clarity rather than assign an additional row and column to $\boldsymbol{\Gamma}_n$, and we refer to $\boldsymbol{\Gamma}_n$ as a transition matrix for convenience with the understanding that its rows did not sum to one.
-
-Sablefish survival rates depended on mortality and tag loss as
-
-% Survival
-\begin{equation}
-  \label{eq:survival}
-  \mathrm{diag} \! \left[\boldsymbol{S}_{n,l}\right] = 
-    \exp\!{\left[-\boldsymbol{s}_l \boldsymbol{f}_n - \boldsymbol{m} - \eta \right]}
-\end{equation}
-
-\noindent where $\boldsymbol{f}_n$ and $\boldsymbol{m}$ were row vectors of step-wise fishing and natural mortality, and $\eta$ was step-wise ongoing tag loss including tag-induced mortality. 
-
-We modeled expected tag recoveries by the matrix product of tagged sablefish abundance and a step-wise observation rate. For a given release time-step and size class this was defined as
-
-% Expected
-\begin{equation}
-  \label{eq:expected}
-  \boldsymbol{\widehat{C}}_{i,d,l} = \boldsymbol{A}_{i,d,l} \boldsymbol{B}_{n[i,d],l}
-\end{equation}
-
-\noindent where $\boldsymbol{\widehat{C}}_{i,d,l}$ was a square matrix of expected tag recoveries with rows indicating release region and columns indicating recovery region, and $\boldsymbol{B}_{n,l}$ was a diagonal matrix of observation rates defined by the element-wise vector product
-
-% Observation
-\begin{equation}
-  \label{eq:observation}
-  \mathrm{diag} \! \left[\boldsymbol{B}_{n,l}\right] = 
-    \boldsymbol{\theta} \left(1 - \exp\!{\left[-\boldsymbol{s}_l \boldsymbol{f}_{n} \right]} \right) 
-\end{equation}
-
-\noindent where $\boldsymbol{\theta}$ was a row vector of per-tag reporting rates and $\boldsymbol{f}_n$ was a vector of step-wise fishing mortality rates.
-
-For a given release size class, we defined annual sablefish movement rates by a matrix power of the corresponding step-wise movement rates
-
-% Movement rate
-\begin{equation}
-    \label{eq:movement}
-    \boldsymbol{P}_{l} = \boldsymbol{\Delta}_{l}^K
-\end{equation}
-
-\noindent where $\boldsymbol{P}_{l}$ was the square matrix of annual movement rates, and $K$ was the number of time-steps per year.
-
-% The matrix of step-wise movement rate deviations $\boldsymbol{\Lambda}_t = \boldsymbol{\Delta}_t - \boldsymbol{\bar{\Delta}}$ from the step-wise mean movement rates $\boldsymbol{\bar{\Delta}}$ was constrained by an autoregressive process on its diagonal
-
-% Timevary
-%\begin{equation}
-%  \label{eq:timevary}
-%  \mathrm{diag}\!\left[\boldsymbol{\Lambda}_t\right] = \mathrm{diag}\!\left[\boldsymbol{\Lambda}_{t-1}\right]\! \boldsymbol{\Psi} + \boldsymbol{\epsilon}_t, \, \boldsymbol{\epsilon}_t \sim \mathrm{N}\!\left[\boldsymbol{0},\,\boldsymbol{\Sigma}_\Lambda\right]
-%\end{equation}
-
-%\noindent where $\boldsymbol{\Psi}$ was a diagonal matrix of autocorrelation coefficients, and $\boldsymbol{\Sigma}_\Lambda$ was a diagonal variance matrix.
-
-We used the NB2 parameterization of the negative binomial distribution with probability mass function
-
-% Sampling
-\begin{equation}
-  \label{eq:sampling}
-  \mathrm{NB2} \! \left[ C_* \mid \widehat{C}_*,\, \phi \right] = \binom{C_* + \phi - 1}{C_*} \left(\frac{\widehat{C}_*}{\widehat{C}_* + \phi}\right)^{C_*} \left( \frac{\phi}{\widehat{C}_* + \phi} \right)^{\phi}
-\end{equation}
-
-\noindent where $C_*$ and $\widehat{C}_*$ were the observed and expected tag recovery counts corresponding to a given release region, time-step and length class, and recovery region and time-step.
-
-
-% Model indexes
-\begin{table}[ht]
-  \centering
-  \caption{Movement model indexes}
-  \renewcommand\arraystretch{1.2}
-  \label{tab:model-indexes-0}
-  \begin{tabular}{l l l l r}
-    \toprule
-    \textbf{Symbol} & \textbf{Condition} & \textbf{Dimension} & \textbf{Definition} & \textbf{Type} \\
-    \toprule
-    % Index limits
-    $X$ & $\in \mathbb{Z}^{+}$ & Scalar & Number of geographic regions & Index limit \\
-    $T$ & $\in \mathbb{Z}^{+}$ & Scalar & Number of years & Index limit \\
-    $K$ & $\in \mathbb{Z}^{+}$ & Scalar & Number of time steps per year & Index limit \\
-    $N$ & $ = TK $ & Scalar & Number of time steps & Index limit \\
-    $D$ & $\in \mathbb{Z}^{+}$ & Scalar & Maximum time steps at liberty & Index limit \\
-    $L$ & $\in \mathbb{Z}^{+}$ & Scalar & Number of release size classes & Index limit \\
-    \midrule
-    % Index variables
-    $x, \, y$ & $\in \left[1 \, .. \, X \right]$ & Scalar & Geographic region & Index \\
-    $t$ & $\in \left[1 \, .. \, T \right]$ & Scalar & Year & Index \\
-    $n$ & $\in \left[1 \, .. \, N \right]$ & Scalar & Time step & Index \\
-    $i$ & $\in \left[1 \, .. \, N\!-\!1 \right]$ & Scalar & Release time step & Index \\
-    $k$ & $\in \left[1 \, .. \, K \right]$ & Scalar & Time step within year & Index \\
-    $d$ & $\in \left[1 \, .. \, D \right]$ & Scalar & Time step at liberty & Index \\
-    $l$ & $\in \left[1 \, .. \, S \right]$ & Scalar & Release size class & Index \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-% Data
-\begin{table}[ht]
-  \centering
-  \caption{Data}
-  \renewcommand\arraystretch{1.2}
-  \label{tab:data-0}
-  \begin{tabular}{l l l l r}
-    \toprule
-    \textbf{Symbol} & \textbf{Condition} & \textbf{Dimension} & \textbf{Definition} & \textbf{Type} \\
-    \toprule
-    $\bm{R}$ & $\in \mathbb{Z}^{+,0}$ & $[N\!-\!1, L][X]$ & Sablefish tags released (counts) & Stepwise \\
-    $\bm{C}$ & $\in \mathbb{Z}^{+,0}$ & $[N\!-\!1, D, L][X, X]$ & Sablefish tags recovered (counts) & Stepwise \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-% Model derived quantities
-\begin{table}[ht]
-  \centering
-  \caption{Movement model derived quantities}
-  \renewcommand\arraystretch{1.2}
-  \label{tab:model-derived-0}
-  \begin{tabular}{l l l l r}
-    \toprule
-    \textbf{Symbol} & \textbf{Condition} & \textbf{Dimension} & \textbf{Definition} & \textbf{Type} \\
-    \toprule
-    $\bm{A}$ & $\in \mathbb{R}^{+,0}$ & $[N\!-\!1, D, L][X, X]$ & Sablefish tag abundance (numbers) & Stepwise \\
-    $\boldsymbol{\widehat{C}}$ & $\in \mathbb{R}^{+,0}$ & $[N\!-\!1, D, L][X, X]$ & Sablefish expected tags recovered (numbers) & Stepwise \\
-    $\boldsymbol{\Gamma}$ & $\in \left[0, 1 \right]$ & $[N, L][X, X]$ & Sablefish transition rates & Stepwise \\
-    $\bm{S}$ & $\in \left[0, 1 \right]$ & $[N, L][X, X]$ & Sablefish survival rates & Stepwise \\
-    $\bm{B}$ & $\in \left[0, 1 \right]$ & $[N, L][X]$ & Sablefish tag observation rates & Stepwise \\
-    \midrule
-    $\bm{P}$ & $\in \left[0, 1 \right]$ & $[L][X, X]$ & Sablefish movement rates & Annual \\
-    $\bm{F}$ & $\in \mathbb{R}^{+,0}$ & $[T, X]$ & Sablefish instantaneous fishing mortality rates & Annual \\
-    $\bm{M}$ & $\in \mathbb{R}^{+,0}$ & $[T, X]$ & Sablefish instantaneous natural mortality rates & Annual \\
-%    \midrule
-%    $\boldsymbol{\Lambda}$ & $\in \left[0, 1 \right]$ & $[L][X, X]$ & Sablefish movement rate deviations & Stepwise \\    
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-
-% Model parameters
-\begin{table}[ht]
-  \centering
-  \caption{Movement model parameters}
-  \renewcommand\arraystretch{1.2}
-  \label{tab:model-parameters-0}
-  \begin{tabular}{l l l l r}
-    \toprule
-    \textbf{Symbol} & \textbf{Condition} & \textbf{Dimension} & \textbf{Definition} & \textbf{Type} \\
-    \toprule
-    $\boldsymbol{\Delta}$ & $\in \left[0, 1 \right]$ & $[L][X, X]$ & Sablefish movement rates & Stepwise \\
-    $\bm{f}$ & $\in \mathbb{R}^{+,0}$ & $[N, X]$ & Sablefish instantaneous fishing mortality rates & Stepwise \\
-    $\bm{s}$ & $\in \left[0, 1 \right]$ & $[L, X]$ & Sablefish fisheries size selectivity & Per fish \\
-    $\bm{m}$ & $\in \mathbb{R}^{+,0}$ & $[X]$ & Sablefish instantaneous natural mortality rates & Stepwise \\
-    $\boldsymbol{\theta}$ & $\in \left[0, 1 \right]$ & $[X]$ & Sablefish tag reporting rates & Per tag \\
-    $\eta$ & $\in \mathbb{R}^{+,0}$ & Scalar & Sablefish instantaneous ongoing tag loss rate & Stepwise \\
-    $\nu$ & $\in \left[0, 1 \right]$ & Scalar & Sablefish initial tag loss rate & Per tag \\    
-    $\phi$ & $\in \mathbb{R}^{+}$ & Scalar & Negative binomial dispersion & NB2 \\
-%    \midrule
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-
-
 
 % End
 \end{document}
