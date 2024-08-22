@@ -75,10 +75,9 @@ Briefly: I propose two options for index notation---compact and verbose---and I 
 % Example
 \begin{align}
   \mathrm{Compact:}\qquad \quad y_{\boldsymbol{s}, \boldsymbol{t},l} &\sim \mathrm{NegBinom2} \!
-                                                                 \left[\mu_{\boldsymbol{s}, \boldsymbol{t},l}
-                                                                 \mathrm{,} \: \phi \right] \\
+     \left[\mu_{\boldsymbol{s}, \boldsymbol{t},l} \mathrm{,} \: \phi \right] \\
   \mathrm{Verbose:}\qquad y_{s_0,s,t_0,t,l} &\sim \mathrm{NegBinom2} \!
-                                              \left[\mu_{s_0,s,t_0,t,l} \mathrm{,} \: \phi \right]
+     \left[\mu_{s_0,s,t_0,t,l} \mathrm{,} \: \phi \right] \\
 \end{align}
 
 \noindent Upshot: I recommend the compact notation because it is concise. I believe it gives a better sense of the model on a quick scan, and a more direct route to understanding the nuances on a deep dive.
@@ -87,15 +86,15 @@ Briefly: I propose two options for index notation---compact and verbose---and I 
 
 \section{Movement model}
 
-\noindent Indexes: The index notation encodes the two spatial indexes in one vector $\boldsymbol{s} = \left( s_0,s \right)$ and the two temporal indexes in another vector $\boldsymbol{t} = \left( t_0, t \right)$ wherever possible. The components are shown explicitly where they are needed. Shorthands for the initial conditions $\boldsymbol{s}_0 = (s_0,s_0)$ and $\boldsymbol{t}_0 = (t_0,t_0)$ indicate the spatial and temporal indexes corresponding to a tag release event.
+\noindent Indexes: The index notation encodes the two spatial indexes in vector $\boldsymbol{s} = \left( s_0,s \right)$ and the two temporal indexes in vector $\boldsymbol{t} = \left( t_0, t \right)$ wherever possible. The components are shown explicitly where they are needed. Shorthands for the initial conditions $\boldsymbol{s}_0 = (s_0,s_0)$ and $\boldsymbol{t}_0 = (t_0,t_0)$ indicate the spatial and temporal indexes corresponding to a tag release event.
 \newline
 
-\noindent Symbols: Bold face symbols (other than indexes) correspond to square (sometimes diagonal) matrix slices of larger arrays. Matrix rows correspond to initial or previous spatial regions, while columns correspond to current regions. Consequently, the first two subscript index slots ($\boldsymbol{s} = (s_0, s)$) are suppressed for matrices. Matrix location within an array is given by the values in the remaining subscript index slots. 
+\noindent Symbols: Bold face symbols (other than indexes) correspond to square (and sometimes diagonal) matrix slices of larger arrays. Matrix rows correspond to initial or previous spatial regions, while columns correspond to current regions. Consequently, the first two subscript index slots ($\boldsymbol{s} = (s_0, s)$) are suppressed for matrices. Matrix location within an array is given by the values in the remaining subscript index slots. 
 
-Plane face symbols are scalars (often elements of arrays). Matrix symbols are used except where values are inherently univariate, for example the scalar outcome of a univariate sampling distribution. Scalar membership in an array is identified by symbol letter (greek or latin) and letter case. Consequently, different letter cases (e.g. $\boldsymbol{\lambda}_{l}$ and $\boldsymbol{\Lambda}_{t,l}$) correspond to different arrays.
+Plain face symbols are scalars (often elements of arrays). Matrix symbols are used except where values are inherently univariate, for example the scalar outcome of a univariate sampling distribution. Scalar membership in an array is identified by symbol letter (greek or latin) and letter case. Consequently, different letter cases (e.g. $\boldsymbol{\lambda}_{l}$ and $\boldsymbol{\Lambda}_{t,l}$) correspond to different arrays.
+\newline
 
-The $\mathrm{diag} \! \left[ \cdot \right]$ function constructs a vector from the diagonal of a square (and diagonal) matrix.
-
+\noindent The function $\mathrm{row} \! \left[ \cdot \right]^{+}_{s}$ takes a square matrix and returns the vector of positive elements of matrix row $s$. This is used to construct Dirichlet priors for rows of the movement matrix $\boldsymbol{\Gamma}_{\mathrm{block},l}$. The function $\mathrm{diag} \! \left[ \cdot \right]$ takes a square matrix and returns the vector of elements on the matrix diagonal. This is used to construct Dirichlet priors for seasonal fishing mortality weights.
 
 % Sampling model
 \begin{equation}
@@ -221,45 +220,52 @@ The $\mathrm{diag} \! \left[ \cdot \right]$ function constructs a vector from th
 % Prior phi
 \begin{equation}
   \label{eq:prior-dispersion}
-  \phi \sim \mathrm{Distrn} \! \left[ \mathrm{param} \right]
+  \phi \sim \mathrm{Gamma} \! \left[ \mathrm{val, val} \right]
 \end{equation}
+
+% Prior movement
+\begin{equation}
+  \label{eq:prior-movement}
+  \mathrm{row} \! \left[ \boldsymbol{\Gamma}_{\mathrm{block},l} \right]^{+}_{s_0} \sim
+    \mathrm{Dirichlet} \! \left[ \left( \mathrm{val,val,val}  \right)  \right]
+\end{equation}  
 
 % Prior selectivity
 \begin{equation}
   \label{eq:prior-selectivity}
-  \lambda_{s,l} \sim \mathrm{Beta} \! \left[ \mathrm{val, val} \right]
+  \lambda_{s,s,1} \sim \mathrm{Beta} \! \left[ \mathrm{val, val} \right]
 \end{equation}
 
 % Prior fishing weight
 \begin{equation}
   \label{eq:prior-weight}
   \mathrm{diag} \! \left[ \boldsymbol{\omega}_{k[t]} \right] \sim 
-    \mathrm{MultiDistrn} \! \left[  \mathrm{val, val} \right]
+    \mathrm{Dirichlet} \! \left[ \left(  \mathrm{val,\ldots,val} \right) \right]
 \end{equation}
 
 % Prior fishing
 \begin{equation}
   \label{eq:prior-fishing}
-  F_{s,\mathrm{year}} \sim 
-    \mathrm{Distrn} \! \left[ F^{\mathrm{assess}}_{s,\mathrm{year}} \mathrm{, val} \right]
+  F_{s,s,\mathrm{year}} \sim 
+    \mathrm{Normal} \! \left[ F^{\mathrm{assess}}_{s,s,\mathrm{year}} \mathrm{, val} \right]
 \end{equation}
 
 % Prior reporting
 \begin{equation}
   \label{eq:prior-reporting}
-  W_{s} \sim \mathrm{Beta} \! \left[ \mathrm{val, val} \right]
+  W_{s,s} \sim \mathrm{Beta} \! \left[ \mathrm{val, val} \right]
 \end{equation}
 
 % Prior mortality
 \begin{equation}
   \label{eq:prior-mortality}
-  M_{s}  \sim \mathrm{Distrn} \! \left[ \mathrm{param} \right]
+  M_{s,s}  \sim \mathrm{Gamma} \! \left[ \mathrm{val, val} \right]
 \end{equation}
 
 % Prior tagloss
 \begin{equation}
   \label{eq:prior-tagloss}
-  \eta \sim \mathrm{Distrn} \! \left[ \mathrm{val, val} \right]
+  \eta \sim \mathrm{Gamma} \! \left[ \mathrm{val, val} \right]
 \end{equation}
 
 % Prior initloss
