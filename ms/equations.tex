@@ -57,14 +57,45 @@
 \linenumbers
 \setcounter{secnumdepth}{0}
 
+\section{Movement model: decision point}
 
-\section{Proposed movement model}
+Briefly: I propose two options for index notation---compact and verbose---and I advocate for compact.
+\newline
 
-$\boldsymbol{s}$ gives the spatial index vector $(s_1, s)$ whose elements are the initial and current regions
+\noindent Background: The largest model arrays have 5 dimensions that correspond to 5 index slots. Two slots are spatial, two are temporal, and one is size.
+\newline
 
-$\boldsymbol{t}$ gives the temporal vector $(i, d)$ whose elements are time step at release and the duration beginning in the release step. Symbol $t = i + d - 1$ gives the current time step.
+\noindent Details: The compact option encodes the two spatial indexes in one vector $\boldsymbol{s} = \left( s_0,s \right)$ and the two temporal indexes in another vector $\boldsymbol{t} = \left( t_0, t \right)$ wherever possible. This reduces the number of subscript slots displayed in the equations.
+\newline
 
-$N_{s_1}$ and $N_{s}$
+\noindent Tradeoffs: The compact option uses more symbols (vectors, scalars) and faces (bold, plain) in the subscripts, but never uses more than three subscript slots. The verbose option uses fewer symbols and only one face (plain) in the subscripts, but uses up to five subscript slots.
+\newline
+
+\noindent Example:
+% Example
+\begin{align}
+  \mathrm{Compact:}\qquad \quad y_{\boldsymbol{s}, \boldsymbol{t},l} &\sim \mathrm{NegBinom2} \!
+                                                                 \left[\mu_{\boldsymbol{s}, \boldsymbol{t},l}
+                                                                 \mathrm{,} \: \phi \right] \\
+  \mathrm{Verbose:}\qquad y_{s_0,s,t_0,t,l} &\sim \mathrm{NegBinom2} \!
+                                              \left[\mu_{s_0,s,t_0,t,l} \mathrm{,} \: \phi \right]
+\end{align}
+
+\noindent Upshot: I recommend the compact notation because it is concise. I believe it gives a better `sense' of the model on a quick scan, and a more direct route to understanding the nuances on a deep dive.
+
+\newpage
+
+\section{Movement model: compact indexes}
+
+\noindent Indexes: The index notation encodes the two spatial indexes in one vector $\boldsymbol{s} = \left( s_0,s \right)$ and the two temporal indexes in another vector $\boldsymbol{t} = \left( t_0, t \right)$ wherever possible. The components are shown explicitly where they are needed. Shorthands for the initial conditions $\boldsymbol{s}_0 = (s_0,s_0)$ and $\boldsymbol{t}_0 = (t_0,t_0)$ indicate the spatial and temporal indexes corresponding to a tag release event.
+\newline
+
+\noindent Symbols: Bold face symbols (other than indexes) correspond to square (sometimes diagonal) matrix slices of larger arrays. Matrix rows correspond to initial or previous spatial regions, while columns correspond to current regions. Consequently, the first two subscript index slots ($\boldsymbol{s} = (s_0, s)$) are suppressed for matrices. Matrix location within an array is given by the values in the remaining subscript index slots. 
+
+Plane face symbols are scalars (often elements of arrays). Matrix symbols are used except where values are inherently univariate, for example the scalar outcome of a univariate sampling distribution. Scalar membership in an array is identified by symbol letter (greek or latin) and letter case. Consequently, different letter cases (e.g. $\boldsymbol{\lambda}_{l}$ and $\boldsymbol{\Lambda}_{t,l}$) correspond to different arrays.
+
+The $\mathrm{diag} \! \left[ \cdot \right]$ function constructs a vector from the diagonal of a square (and diagonal) matrix.
+
 
 % Sampling model
 \begin{equation}
@@ -80,33 +111,89 @@ $N_{s_1}$ and $N_{s}$
 %     \mathrm{Distrn} \! \left[\widehat{y}^{\:\mathrm{proc}}_{a,b,c,d,e} \mathrm{,} \: \mathrm{param} \right]
 % \end{equation}
 
+% % Process model
+% \begin{equation}
+%   \label{eq:model-process}
+%   \mu_{\boldsymbol{s}, \boldsymbol{t},l} = 
+%     N_{\boldsymbol{s}, \boldsymbol{t},l} \left(1 - \mathrm{exp} \! \left[ - \lambda_{s,l} \,
+%     \omega_{s, k[t]} F_{s,\mathrm{year}\left[ t \right]} \right] \right) W_{s}
+% \end{equation}
+
 % Process model
 \begin{equation}
   \label{eq:model-process}
-  \mu_{\boldsymbol{s}, \boldsymbol{t},l} = 
-    N_{\boldsymbol{s}, \boldsymbol{t},l} \left(1 - \mathrm{exp} \! \left[ - \lambda_{s,l} \,
-    \omega_{s, k[t]} F_{s,\mathrm{year}\left[ t \right]} \right] \right) W_{s}
+  \boldsymbol{\mu}_{\boldsymbol{t},l} = \boldsymbol{N}_{\boldsymbol{t},l} \, \boldsymbol{\Psi}_{t,l}
 \end{equation}
+
+% % Numbers model
+% \begin{equation}
+%   \label{eq:model-numbers}
+%   \boldsymbol{N}_{t_{0}, t, l} = \boldsymbol{N}_{t_{0}, t-1, l} \:
+%     \mathrm{diag} \! \left[ - \mathrm{exp} \! \left[ - \boldsymbol{Z}_{t-1,l} \right]  \right]
+%     \boldsymbol{\Gamma}_{\mathrm{block}[t-1],l} \mathrm{,} \quad t > t_0
+% \end{equation}
 
 % Numbers model
 \begin{equation}
   \label{eq:model-numbers}
-  \boldsymbol{N}_{\mathrm{now}} = \boldsymbol{N}_{\mathrm{prev}} 
-    \boldsymbol{S}_{\mathrm{prev}} \boldsymbol{\Gamma}_{\mathrm{prev}}
+  \boldsymbol{N}_{t_{0}, t+1, l} = \boldsymbol{N}_{t_{0}, t, l} \,
+    \boldsymbol{\Lambda}_{t,l} \,
+    \boldsymbol{\Gamma}_{\mathrm{block}[t],l} \mathrm{,} \quad t \geq t_0
 \end{equation}
+
+% Reporting model
+\begin{equation}
+  \label{eq:model-reporting}
+  \boldsymbol{\Psi}_{t,l} = \left( \boldsymbol{I} - \mathrm{exp} \! \left[ -
+    \boldsymbol{\lambda}_{l} \boldsymbol{\omega}_{k[t]}  
+    \boldsymbol{F}_{\mathrm{year}[t]} \right] \right) \boldsymbol{W}
+\end{equation}
+
+% % Reporting model
+% \begin{equation}
+%   \label{eq:model-reporting}
+%   \boldsymbol{\Psi}_{t,l} = \mathrm{diag} \! \left[ \left( 1 - \mathrm{exp} \! \left[ -
+%     \boldsymbol{\lambda}_{l} \odot \boldsymbol{\omega}_{k[t]} \odot 
+%     \boldsymbol{F}_{\mathrm{year}[t]} \right] \right) \odot \boldsymbol{W} \right]
+% \end{equation}
+
+% % Mortality model
+% \begin{equation}
+%   \label{eq:model-mortality}
+%   \boldsymbol{Z}_{t,l} = \boldsymbol{\lambda}_{l} \odot \boldsymbol{\omega}_{k[t]} \odot 
+%     \boldsymbol{F}_{\mathrm{year}[t]} + \frac{1}{K} \boldsymbol{M} + \frac{\eta}{K}
+% \end{equation}
+
+% % Mortality model
+% \begin{equation}
+%   \label{eq:model-mortality}
+%   Z_{s,t,l} = \lambda_{s,l} \omega_{s,k[t]} 
+%     F_{s,\mathrm{year}[t]} + \frac{1}{K} M_{s} + \frac{\eta}{K}
+% \end{equation}
 
 % Survival model
 \begin{equation}
   \label{eq:model-survival}
-  S_{s,t,l} = 
-    \mathrm{exp} \! \left[-\lambda_{s,l} \omega_{s,k[t]} F_{s,\mathrm{year}[t]} 
-    - \frac{1}{K} M_{s} - \frac{\eta}{K} \right]
+    \boldsymbol{\Lambda}_{t,l} = 
+    - \mathrm{exp} \! \left[ -
+    \boldsymbol{\lambda}_{l} \boldsymbol{\omega}_{k[t]}  
+    \boldsymbol{F}_{\mathrm{year}[t]} + \frac{1}{K} \boldsymbol{M} + \frac{\eta}{K} \right]
 \end{equation}
+
+% % Survival model
+% \begin{equation}
+%   \label{eq:model-survival}
+%     \boldsymbol{\Lambda}_{t,l} = 
+%     \mathrm{diag} \! \left[ - \mathrm{exp} \! \left[ -
+%     \boldsymbol{\lambda}_{l} \odot \boldsymbol{\omega}_{k[t]} \odot 
+%     \boldsymbol{F}_{\mathrm{year}[t]} + \frac{1}{K} \boldsymbol{M} + \frac{\eta}{K} \right] \right]
+% \end{equation}
 
 % Release model
 \begin{equation}
   \label{eq:model-release}
-  N_{\mathrm{init, diag}} \sim \mathrm{Binom} \! \left[ x_{a,b,c,d,e} \mathrm{,} \: v  \right]
+  N_{\boldsymbol{s}_{0},\boldsymbol{t}_{0},l} \sim 
+    \mathrm{Binom} \! \left[ x_{s_{0},t_{0},l} \mathrm{,} \: \nu \right]
 \end{equation}
 
 % Movement model
@@ -115,17 +202,19 @@ $N_{s_1}$ and $N_{s}$
   \boldsymbol{P}_{\mathrm{year}[t]} = \boldsymbol{\Gamma}^{K}_{\mathrm{year}[t]}
 \end{equation}
 
-% Seasons model
-\begin{equation}
-  \label{eq:model-seasons}
-  K = 6
-\end{equation}
+% % TODO Move to table
+% % Seasons model
+% \begin{equation}
+%   \label{eq:model-seasons}
+%   K = 6
+% \end{equation}
 
-% Variance model
-\begin{equation}
-  \label{eq:model-variance}
-  \mathrm{Var} \! \left[ y  \right] = \mu + \frac{\mu^2}{\phi}
-\end{equation}
+% % Move to text
+% % Variance model
+% \begin{equation}
+%   \label{eq:model-variance}
+%   \mathrm{Var} \! \left[ y  \right] = \mu + \frac{\mu^2}{\phi}
+% \end{equation}
 
 \subsection{Priors}
 
@@ -138,31 +227,33 @@ $N_{s_1}$ and $N_{s}$
 % Prior selectivity
 \begin{equation}
   \label{eq:prior-selectivity}
-  \lambda_{a,b,c,d,e} \sim \mathrm{Beta} \! \left[ \mathrm{val, val} \right]
+  \lambda_{s,l} \sim \mathrm{Beta} \! \left[ \mathrm{val, val} \right]
 \end{equation}
 
 % Prior fishing weight
 \begin{equation}
   \label{eq:prior-weight}
-  \boldsymbol{\omega}_{\mathrm{area}} \sim \mathrm{MultiDistrn} \! \left[  \mathrm{val, val} \right]
+  \mathrm{diag} \! \left[ \boldsymbol{\omega}_{k[t]} \right] \sim 
+    \mathrm{MultiDistrn} \! \left[  \mathrm{val, val} \right]
 \end{equation}
 
 % Prior fishing
 \begin{equation}
   \label{eq:prior-fishing}
-  F_{a,b,c,d,e} \sim \mathrm{Distrn} \! \left[ F^{\mathrm{assess}}_{a,b,c,d,e} \mathrm{, val} \right]
+  F_{s,\mathrm{year}} \sim 
+    \mathrm{Distrn} \! \left[ F^{\mathrm{assess}}_{s,\mathrm{year}} \mathrm{, val} \right]
 \end{equation}
 
 % Prior reporting
 \begin{equation}
   \label{eq:prior-reporting}
-  W_{a,b,c,d,e} \sim \mathrm{Beta} \! \left[ \mathrm{val, val} \right]
+  W_{s} \sim \mathrm{Beta} \! \left[ \mathrm{val, val} \right]
 \end{equation}
 
 % Prior mortality
 \begin{equation}
   \label{eq:prior-mortality}
-  M_{a,b,c,d,e}  \sim \mathrm{Distrn} \! \left[ \mathrm{param} \right]
+  M_{s}  \sim \mathrm{Distrn} \! \left[ \mathrm{param} \right]
 \end{equation}
 
 % Prior tagloss
@@ -174,13 +265,42 @@ $N_{s_1}$ and $N_{s}$
 % Prior initloss
 \begin{equation}
   \label{eq:prior-initloss}
-  v \sim \mathrm{Beta} \! \left[  \right]
+  \nu \sim \mathrm{Beta} \! \left[ \mathrm{val, val}  \right]
 \end{equation}
-
 
 \subsection{Tables}
 
-
+% Model indexes
+\begin{table}[ht]
+  \centering
+  \caption{Movement model indexes}
+  \renewcommand\arraystretch{1.2}
+  \label{tab:model-indexes}
+  \begin{tabular}{l l l l r}
+    \toprule
+    \textbf{Symbol} & \textbf{Condition} & \textbf{Dimension} & \textbf{Definition} & \textbf{Type} \\
+    \toprule
+    % Index limits
+    $S$ & $= 3$ or $6$ & Scalar & Number of spatial regions & Index limit \\
+    $T$ & $\in \mathbb{Z}^{+}$ & Scalar & Number of model time steps & Index limit \\
+    $K$ & $= 6$ & Scalar & Number of time steps per year & Index limit \\
+    $L$ & $= 1$ or $2$ & Scalar & Number of release size classes & Index limit \\
+    \midrule
+    % Index variables
+    $\boldsymbol{s}$ & $= (s_0, s)$ & Vector & Spatial index vector & Vector index \\
+    $\boldsymbol{t}$ & $= (t_0, t)$ & Vector & Temporal index vector & Vector index \\
+    $\boldsymbol{s}_0$ & $= (s_0, s_0)$ & Vector & Initial spatial index vector & Vector index \\
+    $\boldsymbol{t}_0$ & $= (t_0, t_0)$ & Vector & Initial temporal index vector & Vector index \\
+    \midrule
+    $s$ & $\in \left[1 \, .. \, S \right]$ & Scalar & Spatial region & Index \\
+    $t$ & $\in \left[1 \, .. \, T \right]$ & Scalar & Time step & Index \\
+    $s_0$ & $\in \left[1 \, .. \, S \right]$ & Scalar & Initial spatial region & Index \\
+    $t_0$ & $\in \left[1 \, .. \, T \! - \! 1 \right]$ & Scalar & Initial model time step & Index \\
+    $k$ & $\in \left[1 \, .. \, K \right]$ & Scalar & Time step within year & Index \\
+    $l$ & $\in \left[1 \, .. \, L \right]$ & Scalar & Release size class & Index \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 
 \section{Movement model}
@@ -282,7 +402,7 @@ We used the NB2 parameterization of the negative binomial distribution with prob
   \centering
   \caption{Movement model indexes}
   \renewcommand\arraystretch{1.2}
-  \label{tab:model-indexes}
+  \label{tab:model-indexes-0}
   \begin{tabular}{l l l l r}
     \toprule
     \textbf{Symbol} & \textbf{Condition} & \textbf{Dimension} & \textbf{Definition} & \textbf{Type} \\
@@ -354,7 +474,7 @@ We used the NB2 parameterization of the negative binomial distribution with prob
   \centering
   \caption{Movement model parameters}
   \renewcommand\arraystretch{1.2}
-  \label{tab:model-parameters}
+  \label{tab:model-parameters-0}
   \begin{tabular}{l l l l r}
     \toprule
     \textbf{Symbol} & \textbf{Condition} & \textbf{Dimension} & \textbf{Definition} & \textbf{Type} \\
@@ -380,5 +500,8 @@ We used the NB2 parameterization of the negative binomial distribution with prob
 
 %%% Local Variables:
 %%% mode: LaTeX
+%%% TeX-master: t
+%%% TeX-master: t
+%%% TeX-master: t
 %%% TeX-master: t
 %%% End:
