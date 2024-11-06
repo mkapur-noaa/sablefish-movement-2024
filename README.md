@@ -35,6 +35,33 @@ devtools::install_github("luke-a-rogers/mmmstan")
 devtools::install_github("seananderson/ggsidekick")
 ```
 
+5. Install from CRAN
+
+``` r
+install.packages(
+  c(
+    "dplyr",
+    "fs",
+    "ggraph",
+    "ggplot2",
+    "ggpubr",
+    "ggspatial",
+    "here",
+    "magrittr",
+    "readr",
+    "rlang",
+    "rnaturalearth",
+    "rnaturalearthdata",
+    "sf",
+    "tictoc",
+    "tidygraph",
+    "tidyr",
+    "usethis"
+  )
+)
+
+```
+
 ## Use
 The R targets workflow is found in the _targets.R file. To run the workflow, first load the targets library via
 
