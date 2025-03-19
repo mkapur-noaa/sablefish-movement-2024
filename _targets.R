@@ -1159,7 +1159,33 @@ list(
       )
     )
   ),
-  # Compute abundance exchange -------------------------------------------------
+  # Compute abundance exchange for base -------------------------------------------------
+  list(
+    tar_target(
+      abundance_exchange,
+      create_abundance_exchange(
+        abundance = abundance,
+        movement_list = list(mmmstan_regions_3_mean$summary$movement_rate),
+        index_list = NULL,
+        years = c(1979:2017),
+        n_draws = 1000
+      )
+    )
+  ),
+  # Compute percent attributable for base -----------------------------------------------
+  list(
+    tar_target(
+      percent_attributable,
+      create_percent_attributable(
+        abundance = abundance,
+        movement_list = list(mmmstan_regions_3_mean$summary$movement_rate),
+        index_list = NULL,
+        years = c(1979:2017),
+        n_draws = 1000
+      )
+    )
+  ),
+  # Compute abundance exchange for blocks -------------------------------------------------
   list(
     tar_target(
       abundance_exchange,
@@ -1172,7 +1198,7 @@ list(
       )
     )
   ),
-  # Compute percent attributable -----------------------------------------------
+  # Compute percent attributable for blocks -----------------------------------------------
   list(
     tar_target(
       percent_attributable,

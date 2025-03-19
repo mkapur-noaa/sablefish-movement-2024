@@ -53,7 +53,18 @@ create_abundance_exchange <- function (abundance,
         }
       }
     }
-  }
+  } else{ ## no index_list, no blocks
+        for (k in 1:9) { # 9 rows each block
+          # For clarity
+          x <- movement_list[[1]]$x[k]
+          y <- movement_list[[1]]$y[k]
+          m_mean <- movement_list[[1]]$mean[k]
+          m_sd <- movement_list[[1]]$sd[k]
+          # Assign value
+          movement_array[x, y, , ] <- stats::rnorm(n_draws, m_mean, m_sd)
+        }
+    } ## end no indexing nor blocks
+
 
 
   # Compute abundance exchange draws array of matrices -------------------------
@@ -152,6 +163,7 @@ create_percent_attributable <- function (abundance,
   # Instantiate movement array
   movement_array <- array(0, dim = c(3, 3, n_draws, n_years))
   # Populate movement array
+  if(!is.null(index_list)){
   for (i in seq_len(n_blocks)) {
     for (j in seq_along(index_list[[i]])) {
       for (k in 1:9) { # 9 rows each block
@@ -166,6 +178,18 @@ create_percent_attributable <- function (abundance,
       }
     }
   }
+  } else{
+    for (k in 1:9) { # 9 rows each block
+      # For clarity
+      x <- movement_list[[1]]$x[k]
+      y <- movement_list[[1]]$y[k]
+      m_mean <- movement_list[[1]]$mean[k]
+      m_sd <- movement_list[[1]]$sd[k]
+      # Assign value
+      movement_array[x, y, , ] <- stats::rnorm(n_draws, m_mean, m_sd)
+    }
+
+  } ## end not null index list
 
   # Compute abundance exchange draws array of matrices -------------------------
 
