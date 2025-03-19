@@ -78,7 +78,7 @@ list(
   ),
   # Define minimum duration for tag mixing before recovery ---------------------
   list(
-    tar_target(days_duration_min, 90),
+    tar_target(days_duration_min, 180),
     list()
   ),
   # Column name arguments ------------------------------------------------------
@@ -143,7 +143,7 @@ list(
   ),
   # Define CmdStanR arguments --------------------------------------------------
   list(
-    tar_target(chains, 1L), # TODO: Update to 3 for analysis
+    tar_target(chains, 3),
     tar_target(step_size, 0.01),
     tar_target(adapt_delta, 0.95),
     tar_target(iter_warmup, 250),
