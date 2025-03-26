@@ -78,7 +78,7 @@ list(
   ),
   # Define minimum duration for tag mixing before recovery ---------------------
   list(
-    tar_target(days_duration_min, 180),
+    tar_target(days_duration_min, 120),
     list()
   ),
   # Column name arguments ------------------------------------------------------
@@ -147,7 +147,7 @@ list(
     tar_target(step_size, 0.01),
     tar_target(adapt_delta, 0.95),
     tar_target(iter_warmup, 250),
-    tar_target(iter_sampling, 1000),
+    tar_target(iter_sampling, 750),
     tar_target(max_treedepth, 10),
     tar_target(use_reduce_sum, TRUE),
     tar_target(threads_per_chain, parallel::detectCores() / (2 * chains)),
@@ -1188,7 +1188,7 @@ list(
   # Compute abundance exchange for blocks -------------------------------------------------
   list(
     tar_target(
-      abundance_exchange,
+      abundance_exchange_block,
       create_abundance_exchange(
         abundance = abundance,
         movement_list = movement_block_list,
@@ -1201,7 +1201,7 @@ list(
   # Compute percent attributable for blocks -----------------------------------------------
   list(
     tar_target(
-      percent_attributable,
+      percent_attributable_block,
       create_percent_attributable(
         abundance = abundance,
         movement_list = movement_block_list,
@@ -1745,6 +1745,75 @@ list(
 
   # Copied from sablefish-data/ to preserve data privacy
 
+  # Plot abundance exchange blocks ----------------------------------------------------
+  list(
+    tar_target(
+      bar_abundance_exchange_block,
+      plot_abundance(
+        data = abundance_exchange_block,
+        plot_name = "bar-abundance-exchange-block",
+        x_axis_label = "Year",
+        y_axis_label = "Abundance exchange (millions)",
+        toptop = "bcak",
+        topbottom = "akbc",
+        bottomtop = "ccbc",
+        bottombottom = "bccc",
+        toptop_annotation = "AK",
+        topbottom_annotation = "BC",
+        bottomtop_annotation = "BC",
+        bottombottom_annotation = "CC",
+        linewidth_hline = 0.5,
+        linewidth_error = 0.5,
+        x_limits = c(1978, 2020),
+        y_limits_top = c(-20, 20),
+        y_limits_bottom = c(-10, 80),
+        y_limits_top_breaks = round(seq(-20, 20, 10), 0),
+        y_limits_bottom_breaks = round(seq(-10, 80, 10), 0),
+        relative_panel_height = c(40, 90),
+        x_annotation = 2019,
+        y_annotation = 8,
+        width = 190,
+        height = 140,
+        dpi = figure_dpi,
+        file_type = figure_ext
+      ),
+      format = "file"
+    )
+  ),
+  # Plot percent attributable --------------------------------------------------
+  list(
+    tar_target(
+      bar_percent_attributable_block,
+      plot_abundance(
+        data = percent_attributable_block,
+        plot_name = "bar-percent-attributable-block",
+        y_axis_label = "Abundance proportion attributable to movement",
+        toptop = "bcak",
+        topbottom = "akbc",
+        bottomtop = "ccbc",
+        bottombottom = "bccc",
+        toptop_annotation = "AK",
+        topbottom_annotation = "BC",
+        bottomtop_annotation = "BC",
+        bottombottom_annotation = "CC",
+        linewidth_hline = 0.5,
+        linewidth_error = 0.5,
+        x_limits = c(1978, 2020),
+        y_limits_top = c(-0.6, 0.2),
+        y_limits_bottom = c(-0.2, 0.8),
+        y_limits_top_breaks = round(seq(-0.6, 0.2, 0.2), 1),
+        y_limits_bottom_breaks = round(seq(-0.2, 0.8, 0.2), 1),
+        relative_panel_height = c(0.8, 1),
+        x_annotation = 2019,
+        y_annotation = 0.1,
+        width = 190,
+        height = 140,
+        dpi = figure_dpi,
+        file_type = figure_ext
+      ),
+      format = "file"
+    )
+  ),
   # Plot abundance exchange ----------------------------------------------------
   list(
     tar_target(
@@ -1765,8 +1834,8 @@ list(
         linewidth_hline = 0.5,
         linewidth_error = 0.5,
         x_limits = c(1978, 2020),
-        y_limits_top = c(-20, 20),
-        y_limits_bottom = c(-10, 80),
+        y_limits_top = c(-50, 50),
+        y_limits_bottom = c(-10, 30),
         y_limits_top_breaks = round(seq(-20, 20, 10), 0),
         y_limits_bottom_breaks = round(seq(-10, 80, 10), 0),
         relative_panel_height = c(40, 90),
