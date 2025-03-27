@@ -338,7 +338,7 @@ plot_network <- function (regions,
       label_size = size_label,
       strength = strength,
       arrow = ggplot2::arrow(
-        length = grid::unit(0.5 + 3 * edges$weight, "mm"),
+        length = grid::unit(0.5 + 2 * edges$weight, "mm"),
         type = "closed"
       ),
       end_cap = ggraph::circle(2.5, "mm")
