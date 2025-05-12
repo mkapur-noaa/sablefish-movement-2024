@@ -3,13 +3,19 @@
 ## maia.kapur@noaa.gov
 
 ## setup ----
-load("~/projects/sab-move/data/tag_data.rda")
-load("~/projects/sab-move/data/abundance.rda")
-source("~/projects/sablefish-data-2024/R/plot.R", echo=TRUE)
+load("~/other projects/sab-move/data/tag_data.rda")
+load("~/other projects/sab-move/data/abundance.rda")
+source("~/other projects/sablefish-data-2024/R/plot.R", echo=TRUE)
 library(dplyr)
-library(akgfmaps)
+library(reshape2)
+library(tidyr)
 library(ggplot2)
 library(patchwork)
+library(targets)
+
+## fixed colors for three regions, greyscale friendly
+regPal  <- c("#26252D","#706677","#A6808C")
+
 
 ## save things from model run ----
 abundance_exchange <-tar_read(abundance_exchange)
@@ -106,8 +112,9 @@ plot_map(regions = sf_regions_6,
 
 #* Figure 2 ----
 ## panel of map tags and size histograms
-load("~/projects/sablefish-data-2024/data/tags_latlon_recovered.rda")
-load("~/projects/sablefish-data-2024/data/tags_latlon_released.rda")
+load(here::here("data","tags_latlon_recovered.rda"))
+load(here::here("data/tags_latlon_released.rda"))
+load(here::here("data/sf_regions_3.rda"))
 
 tags_latlon_released <- tags_latlon_released %>% mutate(
   year = lubridate::year(date_released), src = 'released',
@@ -125,11 +132,6 @@ tag_dat <- bind_rows(tags_latlon_released,
 
 tag_n <- summarise(tag_dat, n = n(), .by = c(region, src)) %>%
   mutate(n_plot = prettyNum(n,big.mark = ','))
-
-
-
-
-
 
 
 mappanel <- ggplot2::ggplot(data = sf_regions_3) +
@@ -151,25 +153,48 @@ mappanel <- ggplot2::ggplot(data = sf_regions_3) +
             aes(x = 180, y = 31,
                 label = paste0("n = ", n_plot)))+
   facet_grid(region ~ src) +
-  ggsidekick::theme_sleek() +
+  theme_minimal() +
+  # ggsidekick::theme_sleek() +
   theme(legend.position = 'none',
-        axis.text = element_text(size = 5),
+        strip.text.y = element_blank(),
+        axis.text = element_text(size = 10),
         axis.title = element_blank())
-# ggplot2::ggsave(
-#   last_plot(),
-#   file = here::here("ms","figs",  "tag_release_hist.png"),
-#   width = 3,
-#   dpi = 520,
-#   height = 6)
+
+
+ggplot2::ggsave(
+  last_plot(),
+  file = here::here("ms","figs",  "tag_release_map.png"),
+  width = 9,
+  dpi = 520,
+  height = 9)
+
+
 hist <- ggplot( ) +
-  geom_histogram(data = subset(tag_dat, src == 'released'), aes(x = size_released), fill = 'grey75', alpha = 0.5) +
-  geom_histogram(data = subset(tag_dat, src == 'released' & size_released >= 400 & size_released <= 800), aes(x = size_released), fill = 'grey50') +
+  geom_histogram(data = subset(tag_dat, src == 'released'),
+                 aes(x = size_released, fill = region),
+                 # fill = 'grey75',
+                 alpha = 0.5) +
+  geom_histogram(data = subset(tag_dat, src == 'released' & size_released >= 400
+                               & size_released <= 800), aes(x = size_released, fill = region)) +
   geom_vline(xintercept = 550, linetype = 'dashed')+
   scale_x_continuous(limits = c(200,1000))+
   facet_grid(region~.)+
-  ggsidekick::theme_sleek() + theme(axis.title.y = element_blank()) +
+  scale_fill_manual(values = regPal)+
+  # ggsidekick::theme_sleek() +
+  theme_minimal()+
+  theme(axis.title.y = element_blank(),
+        legend.position = 'none',
+        strip.text = element_text(size = 10),
+        axis.text = element_text(size = 10)) +
   labs(x = 'Sablefish Length at Release (mm)')
 
+
+ggplot2::ggsave(
+  last_plot(),
+  file = here::here("ms","figs",  "tag_release_hist.png"),
+  width = 4,
+  dpi = 520,
+  height = 9)
 
 
 ggplot2::ggsave(
@@ -185,14 +210,18 @@ ggplot2::ggsave(
 #   file = here::here("ms","figs",  "tag_release_recovered.png"),
 #   width = 6,
 # dpi = 520,
-#   height = 8)
+#   height = 6)
 
 #* Figure 3 ----
 ## panel with networks and abundance exchange, saved separately and munged in .ppt
 ## these don't play nicely with patchwork, so make and save them separately and paste
 #** Network maps ----
 ## reboot the network maps: include the 3 and 6 and 8 area models and tweak the arrows
-load("~/projects/sab-move/data/sf_regions_3.rda")
+load("~/other projects/sab-move/data/sf_regions_3.rda")
+
+
+
+
 
 plot_network(
   regions = sf_regions_3,
@@ -477,6 +506,66 @@ ggplot2::ggsave(
   width = 10,
   dpi = 520,
   height = 10)
+
+#* Figure S5 ----
+#* Reporting & mortality priors posteriors
+load("C:/Users/kapur/Dropbox/other projects/sab-move/ms/tabs/mmmstan_regions_3_mean.Rda")
+rr <- bind_cols(t(rbind(tar_read(mu_reporting_rate_3),tar_read(sd_reporting_rate_3)) ),
+mmmstan_regions_3_mean$summary$reporting_rate)
+names(rr)[1:2] <- c('prior_mu','prior_sd')
+names(rr)[c(5,7)] <- c('posterior_mu','posterior_sd')
+rr$region = c('Alaska', 'British Columbia','California Current')
+
+# Reshape the data
+rr_long <- rr %>%
+  select(region, prior_mu, prior_sd, posterior_mu, posterior_sd) %>%
+  pivot_longer(
+    cols = c(prior_mu, prior_sd, posterior_mu, posterior_sd),
+    names_to = c("variable", ".value"),
+    names_sep = "_"
+  ) 
+  
+
+# Create the barplot
+ggplot(rr_long, aes(x = region, y = mu, 
+      fill = region, alpha = variable)) +
+  geom_bar(stat = "identity", position = "dodge", 
+  color = NA) +
+  geom_errorbar(aes(ymin = mu - 1.96*sd, ymax = mu + 1.96*sd), 
+                width = 0.2, position = position_dodge(0.9)) +
+  scale_fill_manual(values = regPal) +
+  scale_alpha_manual(values = c(1,0.7)) +
+  labs(x = "", y = "Reporting Rate",alpha = "") +
+  theme_minimal(base_size = 12) +
+  guides(fill = FALSE) +  
+  theme(legend.position = "top")
+
+# Save the plot
+ggsave(
+  filename = here::here("ms", "figs", "reporting_rate_barplot.png"),
+  plot = last_plot(),
+  width = 6,
+  height = 6,
+  dpi = 520
+)
+ 
+
+#* Figure S6 ----
+## catches/F by region
+frate <- reshape2::melt(tar_read(mu_fishing_rate_3))
+frate$Var2 <- factor(frate$Var2 , levels = c('cc', 'bc', 'ak'))
+ggplot(data = frate, aes(x =Var1+1979, fill = Var2, color = Var2, y = value)) +
+  geom_bar(stat = 'identity') +
+  scale_color_manual(values = regPal, labels = c('Alaska', 'British Columbia', 'California Current')) +
+  scale_fill_manual(values = regPal, labels = c('Alaska', 'British Columbia', 'California Current')) +
+  theme_minimal() +
+  labs(x = 'Year', y = 'Fishing Rate', color = '', fill = '')
+ggsave(last_plot(),
+       file = here::here('ms','figs','figure_s6_frates.png'),
+       width = 6, height = 4, unit = 'in', dpi = 500)
+
+
+
 ## bar regions 6 size ----
 list_regions_6=list(wak = 1, eak = 2, nbc = 3, sbc = 4, ncc = 5, scc = 6)
 plot_cols(
