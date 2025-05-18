@@ -33,8 +33,7 @@ troubleshoot/
 temp/
 *.html
 Rplots.pdf
-ms/
-
+ms/*
 # Tex
 *.aux
 *.bbl
