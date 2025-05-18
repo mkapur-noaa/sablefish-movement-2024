@@ -142,11 +142,11 @@ create_percent_attributable <- function (abundance,
   n_rows <- nrow(abundance)
   n_years <- length(years)
   n_blocks <- length(movement_list)
-
+  n_areas <-  length(unique(movement_list[[1]]$x))
   # Create abundance draws array of matrices -----------------------------------
 
   # Instantiate abundance array
-  abundance_array <- array(0, dim = c(3, 3, n_draws, n_years))
+  abundance_array <- array(0, dim = c(n_areas, n_areas, n_draws, n_years))
   # Populate abundance array
   for (i in seq_len(n_rows)) {
     # For clarity
@@ -161,12 +161,12 @@ create_percent_attributable <- function (abundance,
   # Create movement rate draws array of matrices -------------------------------
 
   # Instantiate movement array
-  movement_array <- array(0, dim = c(3, 3, n_draws, n_years))
+  movement_array <- array(0, dim = c(n_areas, n_areas, n_draws, n_years))
   # Populate movement array
   if(!is.null(index_list)){
   for (i in seq_len(n_blocks)) {
     for (j in seq_along(index_list[[i]])) {
-      for (k in 1:9) { # 9 rows each block
+      for (k in 1:(n_areas^2)) { # 9 rows each block
         # For clarity
         x <- movement_list[[i]]$x[k]
         y <- movement_list[[i]]$y[k]
@@ -179,7 +179,7 @@ create_percent_attributable <- function (abundance,
     }
   }
   } else{
-    for (k in 1:9) { # 9 rows each block
+    for (k in 1:(n_areas^2)) { # 9 rows each block
       # For clarity
       x <- movement_list[[1]]$x[k]
       y <- movement_list[[1]]$y[k]
@@ -194,7 +194,7 @@ create_percent_attributable <- function (abundance,
   # Compute abundance exchange draws array of matrices -------------------------
 
   # Instantiate abundance exchange array
-  exchange_array <- array(0, dim = c(3, 3, n_draws, n_years))
+  exchange_array <- array(0, dim = c(n_areas, n_areas, n_draws, n_years))
   # Populate abundance exchange array
   for (n in seq_len(n_years)) {
     for (d in seq_len(n_draws)) {
@@ -206,8 +206,16 @@ create_percent_attributable <- function (abundance,
   # Create tibble --------------------------------------------------------------
 
   # Create regions matrix
-  v_regions <- c("akak","akbc","akcc","bcak","bcbc","bccc","ccak","ccbc","cccc")
-  m_regions <- matrix(v_regions, nrow = 3, ncol = 3, byrow = TRUE)
+  if(n_areas == 3){
+    v_regions <- c("akak","akbc","akcc","bcak","bcbc","bccc","ccak","ccbc","cccc")
+    m_regions <- matrix(v_regions, nrow = 3, ncol = 3, byrow = TRUE)
+  } else if (n_areas == 6){
+    v_regions <- c("wakak","wakbc","wakcc","wbcak","wbcbc","wbcbb",
+                   "eakak","eakbc","eakcc","ebcak","ebcbc","ebcbb",
+                   "nccak","nccbc","nccbb","sccak","sccbc","sccbb")
+    m_regions <- matrix(v_regions, nrow = 6, ncol = 6, byrow = TRUE)
+ # v_regions <- c("akak","akbc","akcc","bcak","bcbc","bccc","ccak","ccbc","cccc")
+  }
   # Instantiate tibble
   t_percent <- tibble::tibble(
     index = NA_integer_,
@@ -216,18 +224,28 @@ create_percent_attributable <- function (abundance,
     mean = NA_real_,
     q5 = NA_real_,
     q95 = NA_real_,
-    .rows = 9 * n_years
+    .rows = n_areas^2 * n_years
   )
   # Populate tibble
   row_count <- 0
   for (n in seq_len(n_years)) {
-    for (y in 1:3) {
+    for (y in 1:n_areas) {
       # Compute denominator: abundance draws in region y (col) after movement
-      v_denom <- exchange_array[1, y, , n] +
-        exchange_array[2, y, , n] +
-        exchange_array[3, y, , n]
+     if(n_areas == 3){
+        v_denom <- exchange_array[1, y, , n] +
+          exchange_array[2, y, , n] +
+          exchange_array[3, y, , n]
+      } else if (n_areas == 6){
+        v_denom <- exchange_array[1, y, , n] +
+          exchange_array[2, y, , n] +
+          exchange_array[3, y, , n]+
+          exchange_array[4, y, , n] +
+          exchange_array[5, y, , n] +
+          exchange_array[6, y, , n]
+      }
+
       # Compute values: percent abundance draws in y attributable to x
-      for (x in 1:3) {
+      for (x in 1:n_areas) {
         # Increment row count
         row_count <- row_count + 1
         # Compute values
