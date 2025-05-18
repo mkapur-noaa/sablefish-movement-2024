@@ -19,6 +19,8 @@ _targets/
 *.xls
 *.xlsx
 *~*
+*.rda
+data-raw/
 
 # C++
 *.o
@@ -31,6 +33,7 @@ troubleshoot/
 temp/
 *.html
 Rplots.pdf
+ms/
 
 # Tex
 *.aux
